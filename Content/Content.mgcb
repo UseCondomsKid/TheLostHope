@@ -1,0 +1,56 @@
+
+#----------------------------- Global Properties ----------------------------#
+
+/outputDir:bin/$(Platform)
+/intermediateDir:obj/$(Platform)
+/platform:DesktopGL
+/config:
+/profile:Reach
+/compress:False
+
+#-------------------------------- References --------------------------------#
+
+/reference:C:/Users/Amen/.nuget/packages/ldtkmonogame.contentpipeline/1.0.1/lib/net6.0/LDtk.ContentPipeline.dll
+/reference:C:/Users/Amen/.nuget/packages/monogame.aseprite/5.0.1/content/MonoGame.Aseprite.Content.Pipeline.dll
+
+#---------------------------------- Content ---------------------------------#
+
+#begin Crawler.aseprite
+/importer:AsepriteFileContentImporter
+/processor:AsepriteFileContentProcessor
+/build:Crawler.aseprite
+
+#begin Font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Font.spritefont
+
+#begin Pistol.aseprite
+/importer:AsepriteFileContentImporter
+/processor:AsepriteFileContentProcessor
+/build:Pistol.aseprite
+
+#begin Player.aseprite
+/importer:AsepriteFileContentImporter
+/processor:AsepriteFileContentProcessor
+/build:Player.aseprite
+
+#begin spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:spritesheet.png
+
+#begin Static.aseprite
+/importer:AsepriteFileContentImporter
+/processor:AsepriteFileContentProcessor
+/build:Static.aseprite
+
