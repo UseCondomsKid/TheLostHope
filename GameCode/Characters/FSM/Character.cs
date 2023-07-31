@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using LostHope.Engine;
 using LostHope.Engine.Animations;
 using Humper;
 using Humper.Responses;
@@ -23,6 +22,7 @@ namespace LostHope.GameCode.Characters.FSM
         public IBox Body { get { return _body; }}
         public int FacingDirection { get { return _facingDirection; } }
         public bool IFrame { get; set; }
+        public IMovement currentMovement { get; private protected set; }
 
         // The collider
         protected IBox _body;
@@ -36,9 +36,8 @@ namespace LostHope.GameCode.Characters.FSM
         private Vector2 velWorkspace;
 
         // Required funtion that creates the collider, when inheriting from this class,
-        // every child has to implement this function
-        public abstract List<Rectangle> GetCurrentLevelTiles();
-        public abstract Vector2 ReadInput();
+        // every child has to implement these functions
+        public abstract Func<ICollision, CollisionResponses> GetCollisionFilter();
         public abstract int GetMaxHealth();
         public abstract float GetIFrameTimer();
         protected abstract void OnTakeDamage();
@@ -61,6 +60,10 @@ namespace LostHope.GameCode.Characters.FSM
             _currentHealth = GetMaxHealth();
         }
 
+        public virtual void SpawnCharacter(Vector2 position)
+        {
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -74,6 +77,9 @@ namespace LostHope.GameCode.Characters.FSM
 
             // Update the state machine
             StateMachine.CurrentState.Update(delta);
+
+            // Update Physics
+            currentMovement = MovementStep(delta);
 
             // Set facing direction
             if (Math.Abs(Velocity.X) > 0f && Math.Sign(Velocity.X) != Math.Sign(_facingDirection))
@@ -112,11 +118,6 @@ namespace LostHope.GameCode.Characters.FSM
                 OnDeath();
             }
         }
-        #endregion
-
-        #region Collisions
-        // TODO: Figure out how to dynamically add/remove level tiles, and sort them so that
-        // collisions are always accurate.
         #endregion
 
         #region Movement
@@ -184,10 +185,10 @@ namespace LostHope.GameCode.Characters.FSM
         /// <summary>
         /// This moves the character body and sets it's position, should be called after all velocity operations are done.
         /// </summary>
-        public IMovement MovementStep(float delta, Func<ICollision, CollisionResponses> collisionFilter)
+        public IMovement MovementStep(float delta)
         {
             var movement = _body.Move(_body.X + delta * Velocity.X,
-                _body.Y + delta * Velocity.Y, collisionFilter);
+                _body.Y + delta * Velocity.Y, GetCollisionFilter());
 
             Position = new Vector2(_body.X, _body.Y);
 

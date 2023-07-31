@@ -5,9 +5,8 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using LostHope.Engine.Camera;
 using LostHope.GameCode.Characters.PlayerCharacter;
-using Humper;
 
-namespace LostHope.Engine
+namespace LostHope.GameCode
 {
     public static class Globals
     {

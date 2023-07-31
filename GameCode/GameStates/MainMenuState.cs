@@ -1,5 +1,4 @@
-﻿using LostHope.Engine;
-using LostHope.Engine.Rendering;
+﻿using LostHope.Engine.Rendering;
 using LostHope.Engine.StateManagement;
 using LostHope.Engine.UI;
 using Microsoft.Xna.Framework;

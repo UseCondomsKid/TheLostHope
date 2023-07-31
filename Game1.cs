@@ -5,10 +5,10 @@ using LostHope.Engine.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using LostHope.Engine;
 using LostHope.GameCode.GameStates;
 using MonoGame.Aseprite;
 using LostHope.Engine.Animations;
+using LostHope.GameCode;
 
 namespace LostHope
 {
@@ -38,7 +38,7 @@ namespace LostHope
 
         #region Game States
         public MainMenuState MainMenuState { get; private set; }
-        public DungeonTesting DungeonTesting { get; private set; }
+        public GameplayState GameplayState { get; private set; }
         #endregion
 
         public Game1()
@@ -87,10 +87,10 @@ namespace LostHope
 
             // Initilize game states here
             MainMenuState = new MainMenuState(this, _stateManager);
-            DungeonTesting = new DungeonTesting(this, _stateManager);
+            GameplayState = new GameplayState(this, _stateManager);
             // TODO: initialize other states here
             // Set an active game state
-            _stateManager.SetState(DungeonTesting);
+            _stateManager.SetState(GameplayState);
 
             base.Initialize();
         }

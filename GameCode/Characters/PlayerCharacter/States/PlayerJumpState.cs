@@ -38,7 +38,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
             // Move player
             //_player.PlayerMove(delta);
 
-            if (_player.IsGrounded)
+            if (_player.IsGrounded(_player.currentMovement))
             {
                 _player.Velocity.Y = 0f;
 

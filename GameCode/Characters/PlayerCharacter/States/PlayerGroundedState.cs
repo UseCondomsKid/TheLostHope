@@ -21,6 +21,10 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
         {
             base.Update(delta);
 
+            _player.MoveX(delta, InputManager.IsKeyDown(Keys.D) ? 1 : InputManager.IsKeyDown(Keys.A) ? -1 : 0,
+                _player.playerData.Speed, _player.playerData.Acceleration, _player.playerData.Deacceleration,
+                1.2f);
+
             // Apply friction
             // _player.Velocity.X -= _player.Velocity.X * _player.PlayerData.Deacceleration;
 
@@ -69,7 +73,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
             // _player.PlayerMove(delta);
 
             // Set the y velocity to 0 when on the ground
-            if (!_player.IsGrounded)
+            if (!_player.IsGrounded(_player.currentMovement))
             {
                 _stateMachine.ChangeState(_player.PlayerJumpState);
             }

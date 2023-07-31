@@ -1,4 +1,5 @@
 ﻿using LostHope.Engine.Input;
+using LostHope.GameCode;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;

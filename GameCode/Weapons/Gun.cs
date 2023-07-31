@@ -1,5 +1,4 @@
 ﻿using Humper;
-using LostHope.Engine;
 using LostHope.Engine.Animations;
 using LostHope.Engine.Input;
 using Microsoft.Xna.Framework;

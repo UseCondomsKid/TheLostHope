@@ -5,12 +5,20 @@ using MonoGame.Aseprite;
 using LostHope.GameCode.Weapons;
 using LostHope.GameCode.Characters.PlayerCharacter.States;
 using Humper.Responses;
+using System;
+using LostHope.Engine.Input;
+using Microsoft.Xna.Framework.Input;
+using LDtkTypes;
 
 namespace LostHope.GameCode.Characters.PlayerCharacter
 {
     public class Player : Character
     {
         public Gun HeldGun { get; set; }
+
+        // -----  Player Data  ------
+        public LDtkPlayer playerData { get; private set; }
+        // --------------------------
 
         // ----- Player States ------
         public PlayerIdleState PlayerIdleState { get; private set; }
@@ -35,25 +43,28 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
             StateMachine.Initialize(PlayerIdleState);
         }
 
-        //public void SpawnPlayer(World physicsWorld, LDtkPlayer playerData, Vector2 spawnPos, bool newMap, LDtkLevel level)
-        //{
-        //    _physicsWorld = physicsWorld;
+        public void SpawnPlayer(World physicsWorld, LDtkPlayer playerData, Vector2 spawnPos)
+        {
+            _physicsWorld = physicsWorld;
+            Position = spawnPos;
+            this.playerData = playerData;
 
-        //    Position = spawnPos;
+            //if (newMap)
+            //{
+            //    LDtkGun gunData = level.GetEntityRef<LDtkGun>(playerData.StarterGun);
+            //    HeldGun = new Gun(Game.GraphicsDevice, gunData, _physicsWorld);
+            //}
 
-        //    if (newMap)
-        //    {
-        //        LDtkGun gunData = level.GetEntityRef<LDtkGun>(playerData.StarterGun);
-        //        HeldGun = new Gun(Game.GraphicsDevice, gunData, _physicsWorld);
-        //    }
+            // Call create body function
+            _body = _physicsWorld.Create(Position.X, Position.Y, playerData.Size.X,
+                playerData.Size.Y).AddTags(CollisionTags.Player);
 
-        //    // Call create body function
-        //    CreateBody(Position);
+            _body.Data = this;
 
-        //    _currentHealth = GetMaxHealth();
+            _currentHealth = GetMaxHealth();
 
-        //    HeldGun.OnClipChanged += ClipSizeChanged;
-        //}
+            HeldGun.OnClipChanged += ClipSizeChanged;
+        }
 
         private void ClipSizeChanged(int clip)
         {
@@ -93,19 +104,6 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
             }
         }
 
-        //public IMovement PlayerMove(float delta)
-        //{
-        //    return Move(delta, PlayerData.Speed, PlayerData.GravityScale, (collision) =>
-        //    {
-        //        if (collision.Other.HasTag(CollisionTags.Enemy))
-        //        {
-        //            return CollisionResponses.Cross;
-        //        }
-
-        //        return CollisionResponses.Slide;
-        //    });
-        //}
-
         protected override void OnDeath()
         {
         }
@@ -113,6 +111,22 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
         public override float GetIFrameTimer()
         {
             return 0.7f;
+        }
+
+        protected override void OnTakeDamage()
+        {
+        }
+
+        public override Func<ICollision, CollisionResponses> GetCollisionFilter()
+        {
+            return new Func<ICollision, CollisionResponses>((collision) =>
+            {
+                if (collision.Other.HasTag(CollisionTags.Enemy))
+                {
+                    return CollisionResponses.Cross;
+                }
+                return CollisionResponses.Slide;
+            });
         }
     }
 }

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace LostHope.GameCode.GameStates
 {
-    public class Playgroud : GameState
+    public class GameplayState : GameState
     {
-        public Playgroud(Game1 gameRef, GameStateManager stateManager) : base(gameRef, stateManager)
+        public GameplayState(Game1 gameRef, GameStateManager stateManager) : base(gameRef, stateManager)
         {
         }
     }
