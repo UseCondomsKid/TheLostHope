@@ -1,4 +1,5 @@
 ﻿using LostHope.Engine.StateManagement;
+using LostHope.Engine.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace LostHope.GameCode.GameStates
 {
     public class GameplayState : GameState
     {
-        public GameplayState(Game1 gameRef, GameStateManager stateManager) : base(gameRef, stateManager)
+        public GameplayState(Game1 gameRef, GameStateManager stateManager, UIManager uiManager) : base(gameRef, stateManager, uiManager)
         {
         }
     }

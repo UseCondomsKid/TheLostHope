@@ -12,7 +12,7 @@ using System.Collections.Generic;
 namespace LostHope.GameCode.Characters.FSM
 {
     // Base character class for all the game character aka player, enemies, npcs
-    public abstract class Character : GameEntity
+    public abstract class Character : Object
     {
         // State machine
         public CharacterStateMachine StateMachine { get; private set; }
@@ -60,8 +60,16 @@ namespace LostHope.GameCode.Characters.FSM
             _currentHealth = GetMaxHealth();
         }
 
+        public abstract IBox CreateCharacterBox(float xPos, float yPos);
+
         public virtual void SpawnCharacter(Vector2 position)
         {
+            _body = CreateCharacterBox(position.X, position.Y);
+            _body.Data = this;
+            Position = position;
+            Velocity = Vector2.Zero;
+
+            _currentHealth = GetMaxHealth();
         }
 
         public override void Update(GameTime gameTime)

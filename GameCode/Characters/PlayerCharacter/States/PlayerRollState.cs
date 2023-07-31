@@ -27,10 +27,10 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
         {
             base.Update(delta);
 
-            if (_player.HeldGun != null)
-            {
-                // _player.HeldGun.HandleGunReload();
-            }
+            //if (_player.HeldGun != null)
+            //{
+            //    _player.HeldGun.HandleGunReload();
+            //}
 
             if (_isAnimationFinished)
             {

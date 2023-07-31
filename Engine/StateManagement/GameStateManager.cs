@@ -77,6 +77,9 @@ namespace LostHope.Engine.StateManagement
 
             // Invoke changed event
             OnStateChanged?.Invoke();
+
+            // Call Post Enter of the new state
+            _currentGameState.PostEnter();
         }
     }
 }

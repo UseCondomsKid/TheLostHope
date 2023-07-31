@@ -12,7 +12,7 @@ namespace LostHope.Engine.UI
     // This class represents a base for anything that can be selected in the UI.
     // For example a button. Check the Button.cs script for an implementation example.
     // Note that every selectable inherits from DrawableGameComponent.
-    public abstract class Selectable : DrawableGameComponent
+    public abstract class Selectable : UIElement
     {
         // Is triggered when the mouse enters the selectable's zone.
         public event Action OnEnter;
@@ -27,12 +27,6 @@ namespace LostHope.Engine.UI
         protected bool _isFocused;
         // Is true when the mouse was inside the selectable's zone in the previous frame, and false otherwise
         protected bool _wasFocused;
-        // The anchor. This allows UI elements to be anchored to different locations to the screen.
-        // Check the UIManager.cs script for more info.
-        protected UIAnchor _anchor;
-
-        // Reference to the UI manager.
-        protected UIManager _manager;
 
         protected bool _isSelected;
         protected bool _wasSelected;
@@ -40,13 +34,8 @@ namespace LostHope.Engine.UI
         // The mouse position
         protected Vector2 _mousePosition;
 
-        // Public property that references the selectable's anchor
-        public UIAnchor Anchor { get { return _anchor; }  set { _anchor = value; } }
-
-        public Selectable(Game1 game, UIManager uiManager, UIAnchor anchor = UIAnchor.Center, bool selectOnRegister = true) : base(game)
+        public Selectable(UIManager uiManager, UIAnchor anchor = UIAnchor.Center, bool selectOnRegister = true) : base(uiManager, anchor = UIAnchor.Center)
         {
-            _manager = uiManager;
-
             _manager.RegisterSelectable(this, selectOnRegister);
 
             _isFocused = false;
@@ -54,8 +43,6 @@ namespace LostHope.Engine.UI
 
             _isSelected = selectOnRegister;
             _wasSelected = false;
-
-            _anchor = anchor;
         }
 
         // This needs to be implemented in every selectable
@@ -87,9 +74,6 @@ namespace LostHope.Engine.UI
 
         public override void Update(GameTime gameTime)
         {
-            // if the selectable is disabled we return
-            if (!Enabled) return;
-
             _wasFocused = _isFocused;
             _wasSelected = _isSelected;
 
@@ -138,32 +122,6 @@ namespace LostHope.Engine.UI
             else if (!_isSelected && _wasSelected)
             {
                 InvokeOnDeselect();
-            }
-
-            base.Update(gameTime);
-        }
-
-        // This needs to be called at the start of every selectable's draw function.
-        // All this does is call Begin on the SpriteBatch with the correct transformation matrix.
-        public virtual void BeginSpriteBatch()
-        {
-            switch (_anchor)
-            {
-                case UIAnchor.Center:
-                    Globals.SpriteBatch.Begin(transformMatrix: _manager.CenterAnchorMatrix);
-                    break;
-                case UIAnchor.Left:
-                    Globals.SpriteBatch.Begin(transformMatrix: _manager.LeftAnchorMatrix);
-                    break;
-                case UIAnchor.Right:
-                    Globals.SpriteBatch.Begin(transformMatrix: _manager.RightAnchorMatrix);
-                    break;
-                case UIAnchor.Top:
-                    Globals.SpriteBatch.Begin(transformMatrix: _manager.TopAnchorMatrix);
-                    break;
-                case UIAnchor.Bottom:
-                    Globals.SpriteBatch.Begin(transformMatrix: _manager.BottomAnchorMatrix);
-                    break;
             }
         }
     }

@@ -14,7 +14,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
 {
     public class Player : Character
     {
-        public Gun HeldGun { get; set; }
+        // public Gun HeldGun { get; set; }
 
         // -----  Player Data  ------
         public LDtkPlayer playerData { get; private set; }
@@ -42,66 +42,42 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
             // Initialize state machine and Set active state
             StateMachine.Initialize(PlayerIdleState);
         }
-
-        public void SpawnPlayer(World physicsWorld, LDtkPlayer playerData, Vector2 spawnPos)
+        public override IBox CreateCharacterBox(float xPos, float yPos)
         {
-            _physicsWorld = physicsWorld;
-            Position = spawnPos;
-            this.playerData = playerData;
-
-            //if (newMap)
-            //{
-            //    LDtkGun gunData = level.GetEntityRef<LDtkGun>(playerData.StarterGun);
-            //    HeldGun = new Gun(Game.GraphicsDevice, gunData, _physicsWorld);
-            //}
-
-            // Call create body function
-            _body = _physicsWorld.Create(Position.X, Position.Y, playerData.Size.X,
+            return _physicsWorld.Create(Position.X, Position.Y, playerData.Size.X,
                 playerData.Size.Y).AddTags(CollisionTags.Player);
-
-            _body.Data = this;
-
-            _currentHealth = GetMaxHealth();
-
-            HeldGun.OnClipChanged += ClipSizeChanged;
         }
 
-        private void ClipSizeChanged(int clip)
+        public override void SpawnCharacter(Vector2 position)
         {
-            _currentHealth = clip;
+            base.SpawnCharacter(position);
         }
-
-        //public override void CreateBody(Vector2 position)
-        //{
-        //    _body = _physicsWorld.Create(position.X, position.Y, PlayerData.Size.X,
-        //        PlayerData.Size.Y).AddTags(CollisionTags.Player);
-
-        //    _body.Data = this;
-        //}
 
         public override int GetMaxHealth()
         {
-            if (HeldGun == null) return 666;
-            return HeldGun.CurrentClip;
+            // if (HeldGun == null) return 666;
+            // return HeldGun.CurrentClip;
+
+            return 10;
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            if (HeldGun != null)
-            {
-                HeldGun.Update(gameTime);
-            }
+            //if (HeldGun != null)
+            //{
+            //    HeldGun.Update(gameTime);
+            //}
         }
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
 
-            if (HeldGun != null)
-            {
-                HeldGun.Draw();
-            }
+            //if (HeldGun != null)
+            //{
+            //    HeldGun.Draw();
+            //}
         }
 
         protected override void OnDeath()

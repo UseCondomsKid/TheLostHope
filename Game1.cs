@@ -86,8 +86,8 @@ namespace LostHope
             Components.Add(_gameCamera);
 
             // Initilize game states here
-            MainMenuState = new MainMenuState(this, _stateManager);
-            GameplayState = new GameplayState(this, _stateManager);
+            MainMenuState = new MainMenuState(this, _stateManager, _uiManager);
+            GameplayState = new GameplayState(this, _stateManager, _uiManager);
             // TODO: initialize other states here
             // Set an active game state
             _stateManager.SetState(GameplayState);

@@ -35,7 +35,7 @@ namespace LostHope.Engine.UI
         public Color TextColor { get { return _textColor; } set { _textColor = value; } }
 
         // Constructor
-        public Button(Game1 game, UIManager uiManager, Rectangle buttonRect, UIAnchor anchor = UIAnchor.Center, bool selectOnRegister = true) : base(game, uiManager, anchor, selectOnRegister)
+        public Button(UIManager uiManager, Rectangle buttonRect, UIAnchor anchor = UIAnchor.Center, bool selectOnRegister = true) : base(uiManager, anchor, selectOnRegister)
         {
             _buttonRect = buttonRect;
 
@@ -75,10 +75,6 @@ namespace LostHope.Engine.UI
 
         public override void Draw(GameTime gameTime)
         {
-            // Selectable's BeginSpriteBatch(). Calls SpriteBatch.Begin() with the correct transformation matrix
-            // that corresponds to the anchor. Implemetation can be found in Selectable.cs
-            BeginSpriteBatch();
-
             // If a texture was specified, we render it.
             if (_buttonTexture != null)
             {
@@ -89,10 +85,6 @@ namespace LostHope.Engine.UI
             {
                 Globals.SpriteBatch.DrawString(_buttonTextFont, _buttonText, SpriteBatchExtensions.GetTextPosition(_buttonTextFont, _buttonText, new Vector2(_buttonRect.X, _buttonRect.Y)), TextColor);
             }
-
-            Globals.SpriteBatch.End();
-
-            base.Draw(gameTime);
         }
     }
 }

@@ -43,11 +43,11 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
             //    _player.IsGrounded = false;
             //}
 
-            if (_player.HeldGun != null)
-            {
-                //_player.HeldGun.HandleGunShoot();
-                //_player.HeldGun.HandleGunReload();
-            }
+            //if (_player.HeldGun != null)
+            //{
+            //    _player.HeldGun.HandleGunShoot();
+            //    _player.HeldGun.HandleGunReload();
+            //}
 
             if (InputManager.MousePressed(MouseButton.Right))
             {

@@ -17,8 +17,10 @@ namespace LostHope.Engine.UI
     public enum UIAnchor { Center, Left, Top, Right, Bottom }
 
     // A class that manages UI in the game.
-    public class UIManager : GameComponent
+    public class UIManager : DrawableGameComponent
     {
+        public List<UIElement> UIElements { get {  return _uiElements; } }
+        private List<UIElement> _uiElements;
         // Selectables
         private List<Selectable> _selectables;
         private Selectable _selectedSelectable;
@@ -52,16 +54,29 @@ namespace LostHope.Engine.UI
         // public getter for the Canvas Scale
         public float CanvasZoom { get { return _canvasScale; } }
 
+        private bool _changingGameState = false;
+
         // Constructor
         public UIManager(Game1 game) : base(game)
         {
             // Initilization
             _gameRef = game;
+            _uiElements = new List<UIElement>();
             _selectables = new List<Selectable>();
+            _changingGameState = false;
 
             // Before we load any new state, we reset our selectables list. This needs to happen
             // because every new state is a new scene.
-            GameStateManager.OnStatePreChanged += () => { _selectables = new List<Selectable>(); };
+            GameStateManager.OnStatePreChanged += () => 
+            {
+                _changingGameState = true;
+                _uiElements = new List<UIElement>();
+                _selectables = new List<Selectable>();
+            };
+
+            // After the state is changed, we set the bool to false, so that we can go back to updating and rendering the
+            // ui elements
+            GameStateManager.OnStateChanged += () => { _changingGameState = false; };
 
             // When the window size changes, we update the canvas scale to suit the new size.
             game.Window.ClientSizeChanged += WindowSizeChanged;
@@ -75,6 +90,11 @@ namespace LostHope.Engine.UI
             _canvasScale = _pixelScale;
         }
 
+        public void RegisterUIElement(UIElement uIElement)
+        {
+            if (_uiElements.Contains(uIElement)) return;
+            _uiElements.Add(uIElement);
+        }
         public void RegisterSelectable(Selectable selectable, bool setAsSelected)
         {
             if (_selectables.Contains(selectable)) return;
@@ -114,9 +134,29 @@ namespace LostHope.Engine.UI
             _topAnchorMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 0)) * Matrix.CreateScale(_canvasScale) * Matrix.CreateTranslation(Game.GraphicsDevice.Viewport.Width / 2f, 0, 0);
             _bottomAnchorMatrix = Matrix.CreateTranslation(new Vector3(0, 0, 0)) * Matrix.CreateScale(_canvasScale) * Matrix.CreateTranslation(Game.GraphicsDevice.Viewport.Width / 2f, Game.GraphicsDevice.Viewport.Height, 0);
 
-            base.Update(gameTime);
+            if (_changingGameState) return;
+            foreach (var e in _uiElements)
+            {
+                e.Update(gameTime);
+            }
         }
 
+        public Matrix GetMatrixFromAnchor(UIAnchor uIAnchor)
+        {
+            switch (uIAnchor)
+            {
+                case UIAnchor.Left:
+                    return _leftAnchorMatrix;
+                case UIAnchor.Right:
+                    return _rightAnchorMatrix;
+                case UIAnchor.Top:
+                    return _topAnchorMatrix;
+                case UIAnchor.Bottom:
+                    return _bottomAnchorMatrix;
+                default:
+                    return _centerAnchorMatrix;
+            }
+        }
         // Function that converts Screen positions to UICanvas positions, depending on the anchor.
         public Vector2 UIScreenToCanvas(Vector2 position, UIAnchor anchor)
         {
