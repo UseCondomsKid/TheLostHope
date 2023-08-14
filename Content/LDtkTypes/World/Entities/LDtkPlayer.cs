@@ -2,8 +2,9 @@
 #pragma warning disable
 namespace LDtkTypes;
 
-using Microsoft.Xna.Framework;
 using LDtk;
+
+using Microsoft.Xna.Framework;
 
 public class LDtkPlayer : ILDtkEntity
 {
@@ -23,6 +24,5 @@ public class LDtkPlayer : ILDtkEntity
     public float Deacceleration { get; set; }
     public float JumpForce { get; set; }
     public float RollVelocity { get; set; }
-    public EntityRef StarterGun { get; set; }
 }
 #pragma warning restore

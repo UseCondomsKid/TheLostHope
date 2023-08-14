@@ -73,7 +73,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
             // _player.PlayerMove(delta);
 
             // Set the y velocity to 0 when on the ground
-            if (!_player.IsGrounded(_player.currentMovement))
+            if (!_player.IsGrounded())
             {
                 _stateMachine.ChangeState(_player.PlayerJumpState);
             }

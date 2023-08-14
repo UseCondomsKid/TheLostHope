@@ -27,19 +27,19 @@ namespace LostHope.GameCode.Characters.FSM
         // Called when we enter this state
         public virtual void Enter()
         {
+            Debug.WriteLine("Entering character state: " + _animKey.ToString());
+
             _animation = _character.Animator.SetActiveAnimation(_animKey);
             _animation.OnAnimationFinished += AnimationFinished;
 
             _isAnimationFinished = false;
-            // character.Animator.CurrentAnimation.OnAnimationFinished += AnimationFinished;
-
-            Debug.WriteLine("Entering character state: " + _animKey.ToString());
         }
         // Called when we exit this state
         public virtual void Exit()
         {
-            _animation.OnAnimationFinished -= AnimationFinished;
             Debug.WriteLine("Exiting character state: " + _animKey.ToString());
+
+            _animation.OnAnimationFinished -= AnimationFinished;
         }
 
         protected virtual void AnimationFinished()

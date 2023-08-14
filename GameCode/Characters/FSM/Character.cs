@@ -22,7 +22,7 @@ namespace LostHope.GameCode.Characters.FSM
         public IBox Body { get { return _body; }}
         public int FacingDirection { get { return _facingDirection; } }
         public bool IFrame { get; set; }
-        public IMovement currentMovement { get; private protected set; }
+        public IMovement CurrentMovement { get; private protected set; }
 
         // The collider
         protected IBox _body;
@@ -87,7 +87,7 @@ namespace LostHope.GameCode.Characters.FSM
             StateMachine.CurrentState.Update(delta);
 
             // Update Physics
-            currentMovement = MovementStep(delta);
+            CurrentMovement = MovementStep(delta);
 
             // Set facing direction
             if (Math.Abs(Velocity.X) > 0f && Math.Sign(Velocity.X) != Math.Sign(_facingDirection))
@@ -100,15 +100,11 @@ namespace LostHope.GameCode.Characters.FSM
 
             if (Animator.SpriteSheetTexture == null) return;
 
-            var spriteBatch = Globals.SpriteBatch;
-
             // Draw using the position, scale, rotation, texture and animation
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, transformMatrix: Globals.GameCamera.Transform);
-            spriteBatch.Draw(Animator.SpriteSheetTexture, Position, Animator.GetSourceRectangle(),
+            Globals.SpriteBatch.Draw(Animator.SpriteSheetTexture, Position, Animator.GetSourceRectangle(),
                 IFrame ? Color.DodgerBlue : _iFrameTimer > 0 ? Color.Black : Color.White, Rotation,
                 Vector2.Zero, Scale, _facingDirection == 1 ? SpriteEffects.None :
                 SpriteEffects.FlipHorizontally, 0);
-            spriteBatch.End();
         }
 
         #region Health
@@ -205,29 +201,29 @@ namespace LostHope.GameCode.Characters.FSM
         #endregion
 
         #region Checks
-        public bool IsGrounded(IMovement movement)
+        public bool IsGrounded()
         {
-            return movement.Hits.Any((c) => c.Box.HasTag(CollisionTags.Ground) &&
+            return CurrentMovement.Hits.Any((c) => c.Box.HasTag(CollisionTags.Ground) &&
                                  (c.Normal.Y < 0));
         }
-        public bool IsTouchingCeiling(IMovement movement)
+        public bool IsTouchingCeiling()
         {
-            return movement.Hits.Any((c) => c.Box.HasTag(CollisionTags.Ground) &&
+            return CurrentMovement.Hits.Any((c) => c.Box.HasTag(CollisionTags.Ground) &&
                                  (c.Normal.Y > 0));
         }
-        public bool IsTouchingRightWall(IMovement movement)
+        public bool IsTouchingRightWall()
         {
-            return movement.Hits.Any((c) => c.Box.HasTag(CollisionTags.Ground) &&
+            return CurrentMovement.Hits.Any((c) => c.Box.HasTag(CollisionTags.Ground) &&
                                  (c.Normal.X > 0));
         }
-        public bool IsTouchingLeftWall(IMovement movement)
+        public bool IsTouchingLeftWall()
         {
-            return movement.Hits.Any((c) => c.Box.HasTag(CollisionTags.Ground) &&
+            return CurrentMovement.Hits.Any((c) => c.Box.HasTag(CollisionTags.Ground) &&
                                  (c.Normal.X < 0));
         }
-        public bool IsTouchingWall(IMovement movement)
+        public bool IsTouchingWall()
         {
-            return IsTouchingRightWall(movement) || IsTouchingLeftWall(movement);
+            return IsTouchingRightWall() || IsTouchingLeftWall();
         }
         #endregion
     }
