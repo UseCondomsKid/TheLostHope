@@ -53,8 +53,12 @@ namespace LostHope
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             Globals.SpriteBatch = SpriteBatch;
 
+            // Load all global things here.
             ContentLoader.Initialize(Content);
+            // Font
             ContentLoader.LoadSpriteFont("Font");
+            // LDtk File
+            ContentLoader.LoadLDtkFile("World");
 
             IsPaused = false;
 

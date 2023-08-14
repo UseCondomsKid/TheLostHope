@@ -2,10 +2,11 @@
 #pragma warning disable
 namespace LDtkTypes;
 
-using Microsoft.Xna.Framework;
 using LDtk;
 
-public class LDtkTutorialNpc : ILDtkEntity
+using Microsoft.Xna.Framework;
+
+public class LDtkEnemy : ILDtkEntity
 {
     public string Identifier { get; set; }
     public System.Guid Iid { get; set; }
@@ -17,7 +18,6 @@ public class LDtkTutorialNpc : ILDtkEntity
 
     public Color SmartColor { get; set; }
 
-    public string? AsepriteFileName { get; set; }
-    public string[] Dialogue { get; set; }
+    public EnemyType Type { get; set; }
 }
 #pragma warning restore
