@@ -9,6 +9,7 @@ using LostHope.GameCode.GameStates;
 using MonoGame.Aseprite;
 using LostHope.Engine.Animations;
 using LostHope.GameCode;
+using LostHope.Engine.ContentLoading;
 
 namespace LostHope
 {
@@ -45,8 +46,6 @@ namespace LostHope
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
-            Globals.Content = Content;
         }
 
         protected override void Initialize()
@@ -54,7 +53,8 @@ namespace LostHope
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             Globals.SpriteBatch = SpriteBatch;
 
-            Globals.Font = Content.Load<SpriteFont>("Font");
+            ContentLoader.Initialize(Content);
+            ContentLoader.LoadSpriteFont("Font");
 
             IsPaused = false;
 
