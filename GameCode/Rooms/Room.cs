@@ -2,27 +2,24 @@
 using LDtk;
 using LDtkTypes;
 using LostHope.Engine.ContentLoading;
+using LostHope.Engine.Rendering;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LostHope.GameCode.Rooms
 {
+    public struct RoomData
+    {
+        public LDtkLevel LevelData;
+        public ModifiedLDtkRenderer LevelRenderer;
+        public World PhysicsWorld;
+        public LDtkPlayer PlayerData;
+        public List<LDtkEnemy> EnemyDataList;
+        public List<LDtkGun> GunDataList;
+        public List<LDtkLevelTransition> LevelTransitionDataList;
+    }
     public class Room
     {
-        public struct RoomData
-        {
-            public LDtkLevel LevelData;
-            public World PhysicsWorld;
-            public LDtkPlayer PlayerData;
-            public List<LDtkEnemy> EnemyDataList;
-            public List<LDtkGun> GunDataList;
-            public List<LDtkLevelTransition> LevelTransitionDataList;
-        }
-
         public RoomData Initialize(string levelName)
         {
             RoomData data = new RoomData();
@@ -34,6 +31,11 @@ namespace LostHope.GameCode.Rooms
 
             // Load the level
             data.LevelData = world.LoadLevel(levelName);
+
+            // Create the renderer
+            data.LevelRenderer = new ModifiedLDtkRenderer(Globals.SpriteBatch, ContentLoader.Content);
+            // Pre-render the level
+            data.LevelRenderer.PrerenderLevel(data.LevelData);
 
             // Debug and check
             Console.Write($"Level: {levelName}. Loaded? : {data.LevelData.Loaded}");
@@ -65,18 +67,19 @@ namespace LostHope.GameCode.Rooms
             data.PhysicsWorld = new World(data.LevelData.Size.X, data.LevelData.Size.Y, collisions.GridSize.X);
 
             // Spawn all tiles
-            for (int x = 0; x < data.LevelData.; x++)
+            for (int x = 0; x < data.LevelData.Size.X / collisions.GridSize.X; x++)
             {
-                for (int y = 0; y < bottomRightGrid.Y; y++)
+                for (int y = 0; y < data.LevelData.Size.X / collisions.GridSize.X; y++)
                 {
                     long intGridValue = collisions.GetValueAt(x, y);
-                    if (intGridValue is 6 or 7)
+                    if (intGridValue is 1)
                     {
-                        tiles.Add(new Box(level.Position.ToVector2() + new Vector2(x * collisions.TileSize, y * collisions.TileSize), new Vector2(collisions.TileSize), Vector2.Zero));
+                        IBox tile = data.PhysicsWorld.Create(x * collisions.GridSize.X, y * collisions.GridSize.X,
+                            collisions.GridSize.X, collisions.GridSize.X);
+                        tile.AddTags(CollisionTags.Ground);
                     }
                 }
             }
-
 
             return data;
         }

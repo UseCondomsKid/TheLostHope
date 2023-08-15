@@ -1,6 +1,8 @@
 ﻿using LostHope.Engine.StateManagement;
 using LostHope.Engine.UI;
 using LostHope.GameCode.Characters.PlayerCharacter;
+using LostHope.GameCode.Rooms;
+using Microsoft.Xna.Framework;
 using MonoGame.Aseprite;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,8 @@ namespace LostHope.GameCode.GameStates
 {
     public class GameplayState : GameState
     {
+        private RoomData _roomData;
+
         public GameplayState(Game1 gameRef, GameStateManager stateManager, UIManager uiManager) : base(gameRef, stateManager, uiManager)
         {
         }
@@ -20,7 +24,16 @@ namespace LostHope.GameCode.GameStates
         {
             base.Enter();
 
-            // Get level
+            Room room = new Room();
+            _roomData = room.Initialize("Level_0");
+        }
+
+        protected override void DrawGameplay(GameTime gameTime)
+        {
+            // Draw Room
+            _roomData.LevelRenderer.RenderPrerenderedLevel(_roomData.LevelData);
+
+            base.DrawGameplay(gameTime);
         }
     }
 }

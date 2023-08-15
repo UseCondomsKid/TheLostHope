@@ -1787,7 +1787,7 @@
 					"entityInstances": [
 						{
 							"__identifier": "LDtkPlayer",
-							"__grid": [1,13],
+							"__grid": [2,13],
 							"__pivot": [0,0],
 							"__tags": ["Player"],
 							"__tile": null,
@@ -1796,7 +1796,7 @@
 							"width": 32,
 							"height": 64,
 							"defUid": 9,
-							"px": [32,416],
+							"px": [64,416],
 							"fieldInstances": [
 								{ "__identifier": "GravityScale", "__type": "Float", "__value": 4, "__tile": null, "defUid": 23, "realEditorValues": [] },
 								{ "__identifier": "Speed", "__type": "Float", "__value": 65, "__tile": null, "defUid": 19, "realEditorValues": [] },

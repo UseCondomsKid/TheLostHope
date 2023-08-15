@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LDtk;
@@ -37,24 +38,16 @@ namespace LostHope.Engine.Rendering
         //
         // Summary:
         //     This is used to intizialize the renderer for use with direct file loading
-        public ModifiedLDtkRenderer(SpriteBatch spriteBatch)
+        public ModifiedLDtkRenderer(SpriteBatch spriteBatch, ContentManager content)
         {
             SpriteBatch = spriteBatch;
+            this.content = content;
             graphicsDevice = spriteBatch.GraphicsDevice;
             if (pixel == null)
             {
                 pixel = new Texture2D(graphicsDevice, 1, 1);
                 pixel.SetData(new byte[4] { 255, 255, 255, 255 });
             }
-        }
-
-        //
-        // Summary:
-        //     This is used to intizialize the renderer for use with content Pipeline
-        public ModifiedLDtkRenderer(SpriteBatch spriteBatch, ContentManager content)
-            : this(spriteBatch)
-        {
-            this.content = content;
         }
 
         //
@@ -149,17 +142,6 @@ namespace LostHope.Engine.Rendering
 
         private Texture2D GetTexture(LDtkLevel level, string path)
         {
-            if (content == null)
-            {
-                if (!string.IsNullOrWhiteSpace(level.FilePath))
-                {
-                    string fullPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(level.WorldFilePath), path));
-                    return Texture2D.FromFile(graphicsDevice, fullPath);
-                }
-
-                return Texture2D.FromFile(graphicsDevice, Path.Combine("Content", path));
-            }
-
             string assetName = Path.ChangeExtension(path, null);
             return content.Load<Texture2D>(assetName);
         }

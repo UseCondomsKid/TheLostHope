@@ -51,6 +51,7 @@ namespace LostHope.Engine.ContentLoading
 
 
         private static ContentManager _content;
+        public static ContentManager Content { get { return _content; } }
 
         public static void Initialize(ContentManager content)
         {

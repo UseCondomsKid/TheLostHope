@@ -10,7 +10,7 @@
 
 #-------------------------------- References --------------------------------#
 
-/reference:C:/Users/amenb/.nuget/packages/ldtkmonogame.contentpipeline/1.0.1/lib/net6.0/LDtk.ContentPipeline.dll
+/reference:C:/Users/amenb/.nuget/packages/ldtkmonogame.contentpipeline/1.1.0/lib/net6.0/LDtk.ContentPipeline.dll
 /reference:C:/Users/amenb/.nuget/packages/monogame.aseprite/5.0.1/content/MonoGame.Aseprite.Content.Pipeline.dll
 
 #---------------------------------- Content ---------------------------------#
@@ -53,4 +53,9 @@
 /importer:AsepriteFileContentImporter
 /processor:AsepriteFileContentProcessor
 /build:Static.aseprite
+
+#begin World.ldtk
+/importer:
+/processor:
+/build:World.ldtk
 
