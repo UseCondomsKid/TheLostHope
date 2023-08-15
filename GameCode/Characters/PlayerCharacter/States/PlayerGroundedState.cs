@@ -22,7 +22,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
             base.Update(delta);
 
             _player.MoveX(delta, InputManager.IsKeyDown(Keys.D) ? 1 : InputManager.IsKeyDown(Keys.A) ? -1 : 0,
-                _player.playerData.Speed, _player.playerData.Acceleration, _player.playerData.Deacceleration,
+                _player.PlayerData.Speed, _player.PlayerData.Acceleration, _player.PlayerData.Deacceleration,
                 1.2f);
 
             // Apply friction

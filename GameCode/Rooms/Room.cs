@@ -37,10 +37,6 @@ namespace LostHope.GameCode.Rooms
             // Pre-render the level
             data.LevelRenderer.PrerenderLevel(data.LevelData);
 
-            // Debug and check
-            Console.Write($"Level: {levelName}. Loaded? : {data.LevelData.Loaded}");
-            if (!data.LevelData.Loaded) return data;
-
             // Load entities
             data.PlayerData = data.LevelData.GetEntity<LDtkPlayer>();
 
@@ -67,9 +63,9 @@ namespace LostHope.GameCode.Rooms
             data.PhysicsWorld = new World(data.LevelData.Size.X, data.LevelData.Size.Y, collisions.GridSize.X);
 
             // Spawn all tiles
-            for (int x = 0; x < data.LevelData.Size.X / collisions.GridSize.X; x++)
+            for (int x = 0; x < (data.LevelData.Size.X - 1) / collisions.GridSize.X; x++)
             {
-                for (int y = 0; y < data.LevelData.Size.X / collisions.GridSize.X; y++)
+                for (int y = 0; y < (data.LevelData.Size.Y - 1) / collisions.GridSize.X; y++)
                 {
                     long intGridValue = collisions.GetValueAt(x, y);
                     if (intGridValue is 1)

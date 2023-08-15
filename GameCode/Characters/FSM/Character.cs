@@ -203,21 +203,29 @@ namespace LostHope.GameCode.Characters.FSM
         #region Checks
         public bool IsGrounded()
         {
+            if (CurrentMovement == null) return false;
+
             return CurrentMovement.Hits.Any((c) => c.Box.HasTag(CollisionTags.Ground) &&
                                  (c.Normal.Y < 0));
         }
         public bool IsTouchingCeiling()
         {
+            if (CurrentMovement == null) return false;
+
             return CurrentMovement.Hits.Any((c) => c.Box.HasTag(CollisionTags.Ground) &&
                                  (c.Normal.Y > 0));
         }
         public bool IsTouchingRightWall()
         {
+            if (CurrentMovement == null) return false;
+
             return CurrentMovement.Hits.Any((c) => c.Box.HasTag(CollisionTags.Ground) &&
                                  (c.Normal.X > 0));
         }
         public bool IsTouchingLeftWall()
         {
+            if (CurrentMovement == null) return false;
+
             return CurrentMovement.Hits.Any((c) => c.Box.HasTag(CollisionTags.Ground) &&
                                  (c.Normal.X < 0));
         }

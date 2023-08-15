@@ -45,8 +45,8 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
             }
             else
             {
-                _player.MoveX(delta, _player.FacingDirection, _player.playerData.RollVelocity,
-                    _player.playerData.Acceleration, _player.playerData.Deacceleration, 1.2f);
+                _player.MoveX(delta, _player.FacingDirection, _player.PlayerData.RollVelocity,
+                    _player.PlayerData.Acceleration, _player.PlayerData.Deacceleration, 1.2f);
             }
         }
     }

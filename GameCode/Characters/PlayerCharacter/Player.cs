@@ -17,7 +17,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
         // public Gun HeldGun { get; set; }
 
         // -----  Player Data  ------
-        public LDtkPlayer playerData { get; private set; }
+        public LDtkPlayer PlayerData { get; private set; }
         // --------------------------
 
         // ----- Player States ------
@@ -29,8 +29,11 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
         public PlayerParryState PlayerParryState { get; private set; }
         // --------------------------
 
-        public Player(Game game, World physicsWorld, AsepriteFile asepriteFile) : base(game, physicsWorld, asepriteFile)
+        public Player(Game game, World physicsWorld, AsepriteFile asepriteFile, LDtkPlayer playerData) : base(game, physicsWorld, asepriteFile)
         {
+            // Set the player data
+            PlayerData = playerData;
+
             // Initilize the states
             PlayerIdleState = new PlayerIdleState(this, "Idle");
             PlayerRunState = new PlayerRunState(this, "Run");
@@ -39,13 +42,15 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
             PlayerRollState = new PlayerRollState(this, "Roll");
             PlayerParryState = new PlayerParryState(this, "Parry");
 
+            SpawnCharacter(playerData.Position);
+
             // Initialize state machine and Set active state
             StateMachine.Initialize(PlayerIdleState);
         }
         public override IBox CreateCharacterBox(float xPos, float yPos)
         {
-            return _physicsWorld.Create(Position.X, Position.Y, playerData.Size.X,
-                playerData.Size.Y).AddTags(CollisionTags.Player);
+            return _physicsWorld.Create(Position.X, Position.Y, PlayerData.Size.X,
+                PlayerData.Size.Y).AddTags(CollisionTags.Player);
         }
 
         public override void SpawnCharacter(Vector2 position)
