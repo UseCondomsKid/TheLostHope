@@ -1798,12 +1798,12 @@
 							"defUid": 9,
 							"px": [64,416],
 							"fieldInstances": [
-								{ "__identifier": "GravityScale", "__type": "Float", "__value": 4, "__tile": null, "defUid": 23, "realEditorValues": [] },
-								{ "__identifier": "Speed", "__type": "Float", "__value": 65, "__tile": null, "defUid": 19, "realEditorValues": [] },
-								{ "__identifier": "Acceleration", "__type": "Float", "__value": 1.5, "__tile": null, "defUid": 20, "realEditorValues": [] },
-								{ "__identifier": "Deacceleration", "__type": "Float", "__value": 1, "__tile": null, "defUid": 21, "realEditorValues": [] },
-								{ "__identifier": "JumpForce", "__type": "Float", "__value": 92, "__tile": null, "defUid": 22, "realEditorValues": [] },
-								{ "__identifier": "RollVelocity", "__type": "Float", "__value": 1.8, "__tile": null, "defUid": 61, "realEditorValues": [] }
+								{ "__identifier": "GravityScale", "__type": "Float", "__value": 10, "__tile": null, "defUid": 23, "realEditorValues": [{ "id": "V_Float", "params": [10] }] },
+								{ "__identifier": "Speed", "__type": "Float", "__value": 90, "__tile": null, "defUid": 19, "realEditorValues": [{ "id": "V_Float", "params": [90] }] },
+								{ "__identifier": "Acceleration", "__type": "Float", "__value": 1, "__tile": null, "defUid": 20, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "Deacceleration", "__type": "Float", "__value": 1, "__tile": null, "defUid": 21, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "JumpForce", "__type": "Float", "__value": 50, "__tile": null, "defUid": 22, "realEditorValues": [{ "id": "V_Float", "params": [50] }] },
+								{ "__identifier": "RollVelocity", "__type": "Float", "__value": 200, "__tile": null, "defUid": 61, "realEditorValues": [{ "id": "V_Float", "params": [200] }] }
 							]
 						},
 						{

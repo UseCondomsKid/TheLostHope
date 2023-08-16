@@ -123,13 +123,13 @@ namespace LostHope.Engine.Animations
         }
 
         // Updates the animation
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, float animationSpeedMultiplier = 1f)
         {
             // If the animation is not active, we return.
             if (!_active) return;
 
             // Increment the timer.
-            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _timer += ((float)gameTime.ElapsedGameTime.TotalSeconds * animationSpeedMultiplier);
 
             // Get the currently active frame
             var frame = GetCurrentAnimationFrame();

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LostHope.Engine.Animations;
 
 namespace LostHope.GameCode.Characters.PlayerCharacter.States
 {
@@ -69,14 +70,10 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
                 _stateMachine.ChangeState(_player.PlayerIdleState);
             }
 
-            // Move player
-            // _player.PlayerMove(delta);
-
-            // Set the y velocity to 0 when on the ground
-            if (!_player.IsGrounded())
-            {
-                _stateMachine.ChangeState(_player.PlayerJumpState);
-            }
+            //if (!_player.IsGrounded())
+            //{
+            //    _stateMachine.ChangeState(_player.PlayerJumpState);
+            //}
         }
     }
 }

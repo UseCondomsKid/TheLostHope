@@ -127,7 +127,7 @@ namespace LostHope.GameCode.Characters.FSM
         #region Movement
         public bool IsMoving()
         {
-            return Math.Abs(Velocity.X) > 0.01f;
+            return Math.Abs(Velocity.X) > 0.7f;
         }
         public void SetVelocity(float velocity, Vector2 angle, int direction)
         {

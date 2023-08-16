@@ -34,14 +34,15 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
 
             if (_isAnimationFinished)
             {
-                if (!_player.IsGrounded())
-                {
-                    _stateMachine.ChangeState(_player.PlayerJumpState);
-                }
-                else
-                {
-                    _stateMachine.ChangeState(_player.PlayerIdleState);
-                }
+                //if (_player.IsGrounded())
+                //{
+                //}
+                //else
+                //{
+                //    _stateMachine.ChangeState(_player.PlayerJumpState);
+                //}
+                
+                _stateMachine.ChangeState(_player.PlayerIdleState);
             }
             else
             {

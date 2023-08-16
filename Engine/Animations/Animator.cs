@@ -18,6 +18,8 @@ namespace LostHope.Engine.Animations
 
         // Public property to access the variable above
         public Animation CurrentAnimation { get { return _currentAnimation; } }
+        // Public property to change the animation speed
+        public float AnimationSpeedMultiplier { get; set; }
 
         // In case of using Monogame.Aseprite
         public Texture2D SpriteSheetTexture { get; private set; }
@@ -56,6 +58,8 @@ namespace LostHope.Engine.Animations
                 Animation animation = new Animation(frames, animationTag.IsLooping);
                 AddAnimation(tagName, animation);
             }
+
+            AnimationSpeedMultiplier = 1.0f;
         }
 
         // Adds animation to the dict
@@ -90,7 +94,7 @@ namespace LostHope.Engine.Animations
         {
             if (_currentAnimation != null)
             {
-                _currentAnimation.Update(gameTime);
+                _currentAnimation.Update(gameTime, AnimationSpeedMultiplier);
             }
         }
 
