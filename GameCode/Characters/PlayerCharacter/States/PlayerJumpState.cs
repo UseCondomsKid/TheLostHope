@@ -17,26 +17,16 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
         {
             base.Update(delta);
 
-            // Apply friction
-            // _player.Velocity.X -= _player.Velocity.X * _player.PlayerData.Deacceleration;
+            _player.MoveX(delta, InputManager.IsKeyDown(Keys.D) ? 1 : InputManager.IsKeyDown(Keys.A) ? -1 : 0,
+                _player.PlayerData.Speed, _player.PlayerData.Acceleration, _player.PlayerData.Deacceleration,
+                1.2f);
 
-            // Input
-            //if (InputManager.IsKeyDown(Keys.D))
-            //{
-            //    _player.Velocity.X += _player.PlayerData.Acceleration;
-            //}
-            //else if (InputManager.IsKeyDown(Keys.A))
-            //{
-            //    _player.Velocity.X -= _player.PlayerData.Acceleration;
-            //}
+            _player.SetVelocityY(_player.PlayerData.GravityScale);
             //if (_player.HeldGun != null)
             //{
             //    _player.HeldGun.HandleGunShoot();
             //    _player.HeldGun.HandleGunReload();
             //}
-
-            // Move player
-            //_player.PlayerMove(delta);
 
             if (_player.IsGrounded())
             {

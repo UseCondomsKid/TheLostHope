@@ -3,8 +3,10 @@ using LDtk;
 using LDtkTypes;
 using LostHope.Engine.ContentLoading;
 using LostHope.Engine.Rendering;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace LostHope.GameCode.Rooms
 {
@@ -60,18 +62,18 @@ namespace LostHope.GameCode.Rooms
 
             // Physics
             LDtkIntGrid collisions = data.LevelData.GetIntGrid("Collisions");
-            data.PhysicsWorld = new World(data.LevelData.Size.X, data.LevelData.Size.Y, collisions.GridSize.X);
+            data.PhysicsWorld = new World(data.LevelData.Size.X, data.LevelData.Size.Y, collisions.TileSize);
 
             // Spawn all tiles
-            for (int x = 0; x < (data.LevelData.Size.X - 1) / collisions.GridSize.X; x++)
+            for (int x = 0; x < (data.LevelData.Size.X / collisions.TileSize); x++)
             {
-                for (int y = 0; y < (data.LevelData.Size.Y - 1) / collisions.GridSize.X; y++)
+                for (int y = 0; y < (data.LevelData.Size.Y / collisions.TileSize); y++)
                 {
                     long intGridValue = collisions.GetValueAt(x, y);
                     if (intGridValue is 1)
                     {
-                        IBox tile = data.PhysicsWorld.Create(x * collisions.GridSize.X, y * collisions.GridSize.X,
-                            collisions.GridSize.X, collisions.GridSize.X);
+                        IBox tile = data.PhysicsWorld.Create(x * collisions.TileSize, y * collisions.TileSize,
+                            collisions.TileSize, collisions.TileSize);
                         tile.AddTags(CollisionTags.Ground);
                     }
                 }

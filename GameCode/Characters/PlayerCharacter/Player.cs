@@ -9,6 +9,7 @@ using System;
 using LostHope.Engine.Input;
 using Microsoft.Xna.Framework.Input;
 using LDtkTypes;
+using System.Diagnostics;
 
 namespace LostHope.GameCode.Characters.PlayerCharacter
 {
@@ -42,20 +43,13 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
             PlayerRollState = new PlayerRollState(this, "Roll");
             PlayerParryState = new PlayerParryState(this, "Parry");
 
-            SpawnCharacter(playerData.Position);
-
             // Initialize state machine and Set active state
             StateMachine.Initialize(PlayerIdleState);
         }
         public override IBox CreateCharacterBox(float xPos, float yPos)
         {
-            return _physicsWorld.Create(Position.X, Position.Y, PlayerData.Size.X,
+            return _physicsWorld.Create(xPos, yPos, PlayerData.Size.X,
                 PlayerData.Size.Y).AddTags(CollisionTags.Player);
-        }
-
-        public override void SpawnCharacter(Vector2 position)
-        {
-            base.SpawnCharacter(position);
         }
 
         public override int GetMaxHealth()

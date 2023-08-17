@@ -70,10 +70,10 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
                 _stateMachine.ChangeState(_player.PlayerIdleState);
             }
 
-            //if (!_player.IsGrounded())
-            //{
-            //    _stateMachine.ChangeState(_player.PlayerJumpState);
-            //}
+            if (!_player.IsGrounded())
+            {
+                _stateMachine.ChangeState(_player.PlayerJumpState);
+            }
         }
     }
 }
