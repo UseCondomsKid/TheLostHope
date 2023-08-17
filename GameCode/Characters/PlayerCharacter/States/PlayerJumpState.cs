@@ -21,7 +21,6 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
                 _player.PlayerData.Speed, _player.PlayerData.Acceleration, _player.PlayerData.Deacceleration,
                 1.2f);
 
-            _player.SetVelocityY(_player.PlayerData.GravityScale);
             //if (_player.HeldGun != null)
             //{
             //    _player.HeldGun.HandleGunShoot();
@@ -30,8 +29,6 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
 
             if (_player.IsGrounded())
             {
-                _player.Velocity.Y = 0f;
-
                 if (_player.IsMoving())
                 {
                     _stateMachine.ChangeState(_player.PlayerRunState);

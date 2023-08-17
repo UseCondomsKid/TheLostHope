@@ -1871,7 +1871,7 @@
 								{ "__identifier": "Speed", "__type": "Float", "__value": 130, "__tile": null, "defUid": 19, "realEditorValues": [{ "id": "V_Float", "params": [130] }] },
 								{ "__identifier": "Acceleration", "__type": "Float", "__value": 4.5, "__tile": null, "defUid": 20, "realEditorValues": [{ "id": "V_Float", "params": [4.5] }] },
 								{ "__identifier": "Deacceleration", "__type": "Float", "__value": 5, "__tile": null, "defUid": 21, "realEditorValues": [{ "id": "V_Float", "params": [5] }] },
-								{ "__identifier": "JumpForce", "__type": "Float", "__value": 50, "__tile": null, "defUid": 22, "realEditorValues": [{ "id": "V_Float", "params": [50] }] },
+								{ "__identifier": "JumpForce", "__type": "Float", "__value": 3000, "__tile": null, "defUid": 22, "realEditorValues": [{ "id": "V_Float", "params": [3000] }] },
 								{ "__identifier": "RollVelocity", "__type": "Float", "__value": 200, "__tile": null, "defUid": 61, "realEditorValues": [{ "id": "V_Float", "params": [200] }] }
 							]
 						}

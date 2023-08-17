@@ -8,6 +8,13 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
         {
         }
 
+        public override void Enter()
+        {
+            base.Enter();
+
+            _player.SetVelocityX(0);
+        }
+
         public override void Update(float delta)
         {
             base.Update(delta);
