@@ -24,5 +24,6 @@ public class LDtkPlayer : ILDtkEntity
     public float Deacceleration { get; set; }
     public float JumpForce { get; set; }
     public float RollVelocity { get; set; }
+    public float MaxGravityVelocity { get; set; }
 }
 #pragma warning restore

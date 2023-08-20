@@ -27,22 +27,17 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
         {
             base.Update(delta);
 
-            //if (_player.HeldGun != null)
-            //{
-            //    _player.HeldGun.HandleGunReload();
-            //}
-
             if (_isAnimationFinished)
             {
-                //if (_player.IsGrounded())
-                //{
-                //}
-                //else
-                //{
-                //    _stateMachine.ChangeState(_player.PlayerJumpState);
-                //}
-                
-                _stateMachine.ChangeState(_player.PlayerIdleState);
+                if (_player.IsGrounded())
+                {
+                    _stateMachine.ChangeState(_player.PlayerIdleState);
+                }
+                else
+                {
+                    _stateMachine.ChangeState(_player.PlayerJumpState);
+                }
+
             }
             else
             {

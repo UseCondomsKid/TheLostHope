@@ -19,7 +19,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
 
         public override void Update(float delta)
         {
-            _player.SetVelocityY(_player.PlayerData.GravityScale);
+            _player.ApplyGravity();
         }
     }
 }

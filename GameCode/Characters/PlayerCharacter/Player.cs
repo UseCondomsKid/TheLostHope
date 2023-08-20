@@ -63,20 +63,10 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            //if (HeldGun != null)
-            //{
-            //    HeldGun.Update(gameTime);
-            //}
         }
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
-
-            //if (HeldGun != null)
-            //{
-            //    HeldGun.Draw();
-            //}
         }
 
         protected override void OnDeath()
@@ -102,6 +92,21 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
                 }
                 return CollisionResponses.Slide;
             });
+        }
+
+
+        public void Move(float delta)
+        {
+            MoveX(delta, InputManager.IsKeyDown(Keys.D) ? 1 : InputManager.IsKeyDown(Keys.A) ? -1 : 0,
+                PlayerData.Speed, PlayerData.Acceleration, PlayerData.Deacceleration,
+                1.2f);
+        }
+        public void ApplyGravity()
+        {
+            if (!IsGrounded())
+            {
+                SetVelocityY(Velocity.Y >= PlayerData.MaxGravityVelocity ? PlayerData.MaxGravityVelocity : Velocity.Y + PlayerData.GravityScale);
+            }
         }
     }
 }

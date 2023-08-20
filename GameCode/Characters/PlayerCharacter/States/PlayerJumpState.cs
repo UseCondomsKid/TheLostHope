@@ -17,15 +17,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
         {
             base.Update(delta);
 
-            _player.MoveX(delta, InputManager.IsKeyDown(Keys.D) ? 1 : InputManager.IsKeyDown(Keys.A) ? -1 : 0,
-                _player.PlayerData.Speed, _player.PlayerData.Acceleration, _player.PlayerData.Deacceleration,
-                1.2f);
-
-            //if (_player.HeldGun != null)
-            //{
-            //    _player.HeldGun.HandleGunShoot();
-            //    _player.HeldGun.HandleGunReload();
-            //}
+            _player.Move(delta);
 
             if (_player.IsGrounded())
             {

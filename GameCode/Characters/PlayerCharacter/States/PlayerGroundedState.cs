@@ -22,20 +22,12 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
         {
             base.Update(delta);
 
-            _player.MoveX(delta, InputManager.IsKeyDown(Keys.D) ? 1 : InputManager.IsKeyDown(Keys.A) ? -1 : 0,
-                _player.PlayerData.Speed, _player.PlayerData.Acceleration, _player.PlayerData.Deacceleration,
-                1.2f);
+            _player.Move(delta);
 
             if (InputManager.KeyPressed(Keys.W))
             {
                 _player.SetVelocityY(-_player.PlayerData.JumpForce);
             }
-
-            //if (_player.HeldGun != null)
-            //{
-            //    _player.HeldGun.HandleGunShoot();
-            //    _player.HeldGun.HandleGunReload();
-            //}
 
             if (InputManager.MousePressed(MouseButton.Right))
             {
