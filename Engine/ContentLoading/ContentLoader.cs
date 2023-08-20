@@ -61,6 +61,15 @@ namespace LostHope.Engine.ContentLoading
 
             _content = content;
         }
+        public static void Unload()
+        {
+            Font = null;
+            LDtkFile = null;
+
+            UnloadTextures();
+            UnloadAsepriteFiles();
+            UnloadSfx();
+        }
 
         public static void LoadSpriteFont(string contentName)
         {
@@ -73,7 +82,13 @@ namespace LostHope.Engine.ContentLoading
 
         public static void LoadTexture(string name, string contentName)
         {
+            if (_textures.ContainsKey(name)) return;
             _textures.Add(name, _content.Load<Texture2D>(contentName));
+        }
+        public static void UnloadTextures()
+        {
+            _textures.Clear();
+            _textures = null;
         }
         public static Texture2D GetTexture(string name)
         {
@@ -82,7 +97,13 @@ namespace LostHope.Engine.ContentLoading
 
         public static void LoadAsepriteFile(string name, string contentName)
         {
+            if (_asepriteFiles.ContainsKey(name)) return;
             _asepriteFiles.Add(name, _content.Load<AsepriteFile>(contentName));
+        }
+        public static void UnloadAsepriteFiles()
+        {
+            _asepriteFiles.Clear();
+            _asepriteFiles = null;
         }
         public static AsepriteFile GetAsepriteFile(string name)
         {
@@ -91,11 +112,17 @@ namespace LostHope.Engine.ContentLoading
 
         public static void LoadSfx(string name, string path)
         {
-            Sfx.Add(name, _content.Load<SoundEffect>(path));
+            if (_sfx.ContainsKey(name)) return;
+            _sfx.Add(name, _content.Load<SoundEffect>(path));
         }
-        public static void PlaySoundEffect(string name)
+        public static void UnloadSfx()
         {
-            Sfx[name].Play();
+            _sfx.Clear();
+            _sfx = null;
+        }
+        public static SoundEffect GetSfx(string name)
+        {
+            return _sfx[name];
         }
     }
 }

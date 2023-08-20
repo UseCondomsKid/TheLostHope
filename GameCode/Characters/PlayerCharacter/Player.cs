@@ -9,7 +9,6 @@ using System;
 using LostHope.Engine.Input;
 using Microsoft.Xna.Framework.Input;
 using LDtkTypes;
-using System.Diagnostics;
 
 namespace LostHope.GameCode.Characters.PlayerCharacter
 {

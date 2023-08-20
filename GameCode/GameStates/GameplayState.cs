@@ -30,8 +30,15 @@ namespace LostHope.GameCode.GameStates
         {
             base.Enter();
 
+
             Room room = new Room();
             _roomData = room.Initialize("Level_0");
+
+            // Camera setup zoom
+            float widthRatio = _gameRef.GameCamera.Size.X / _roomData.LevelData.Size.X;
+            float heightRatio = _gameRef.GameCamera.Size.Y / _roomData.LevelData.Size.Y;
+            float zoom = Math.Min(widthRatio, heightRatio) * 1.6f;
+            _gameRef.GameCamera.Zoom = zoom;
 
             ContentLoader.LoadAsepriteFile("Player", "Player");
             _player = new Player(_gameRef, _roomData.PhysicsWorld, ContentLoader.GetAsepriteFile("Player"),
@@ -44,7 +51,28 @@ namespace LostHope.GameCode.GameStates
         {
             base.Update(gameTime);
 
+            // Set the camera's position to be the player's position
             _gameRef.GameCamera.Position = _player.Position;
+
+            // Make sure that the camera is still in the bounderies of the level
+            // X Bounds
+            if (_gameRef.GameCamera.Position.X - (_gameRef.GameCamera.Size.X / 2f) < 0)
+            {
+                _gameRef.GameCamera.Position = new Vector2(_gameRef.GameCamera.Size.X / 2f, _gameRef.GameCamera.Position.Y);
+            }
+            else if (_gameRef.GameCamera.Position.X + (_gameRef.GameCamera.Size.X / 2f) > _roomData.LevelData.Size.X)
+            {
+                _gameRef.GameCamera.Position = new Vector2(_roomData.LevelData.Size.X - (_gameRef.GameCamera.Size.X / 2f), _gameRef.GameCamera.Position.Y);
+            }
+            // Y Bounds
+            if (_gameRef.GameCamera.Position.Y - (_gameRef.GameCamera.Size.Y / 2f) < 0)
+            {
+                _gameRef.GameCamera.Position = new Vector2(_gameRef.GameCamera.Position.X, _gameRef.GameCamera.Size.Y / 2f);
+            }
+            else if (_gameRef.GameCamera.Position.Y + (_gameRef.GameCamera.Size.Y / 2f) > _roomData.LevelData.Size.Y)
+            {
+                _gameRef.GameCamera.Position = new Vector2(_gameRef.GameCamera.Position.X, _roomData.LevelData.Size.Y - (_gameRef.GameCamera.Size.Y / 2f));
+            }
         }
 
         protected override void DrawGameplay(GameTime gameTime)

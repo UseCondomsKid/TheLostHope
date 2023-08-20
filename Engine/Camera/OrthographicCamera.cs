@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System;
+using LostHope.GameCode.Characters.PlayerCharacter;
+using LostHope.GameCode;
+using System.Reflection.Emit;
 
 namespace LostHope.Engine.Camera
 {
@@ -19,7 +22,6 @@ namespace LostHope.Engine.Camera
         // Camera's zoom
         private float _zoom;
         private int _startingScreenHeight;
-
         // tmp zoom
         private float _pixelScale = 1f;
 
@@ -58,6 +60,9 @@ namespace LostHope.Engine.Camera
             _pixelScale = Math.Max(_graphicsDevice.Viewport.Height / _startingScreenHeight * _zoom, _zoom);
             _zoom = _pixelScale;
 
+            // Set the initial camera size, with a zoom that should be 1.
+            _size = new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / _zoom;
+
             // Subscribe to the window resize event
             Game.Window.ClientSizeChanged += WindowSizeChanged;
         }
@@ -83,6 +88,7 @@ namespace LostHope.Engine.Camera
         {
             if (!Enabled) return;
 
+            // Set the size
             _size = new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / _zoom;
 
             // Each update tick, we update the transformation matrix.
