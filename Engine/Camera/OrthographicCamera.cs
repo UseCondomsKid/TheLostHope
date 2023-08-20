@@ -18,7 +18,6 @@ namespace LostHope.Engine.Camera
 
         // Camera's position
         private Vector2 _position;
-        private Vector2 _size;
         // Camera's zoom
         private float _zoom;
         private int _startingScreenHeight;
@@ -28,7 +27,7 @@ namespace LostHope.Engine.Camera
         // This lets other scripts access the camera's position considering the position variable above is private
         public Vector2 Position { get { return _position; }  set { _position = value; } }
         // This is the camera width and height
-        public Vector2 Size { get { return _size; }}
+        public Vector2 Size { get { return new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / _zoom; }}
         // This lets other scripts access the camera's zoom considering the zoom variable above is private
         public float Zoom { get { return _zoom; } set { _zoom = value; } }
         #endregion
@@ -60,9 +59,6 @@ namespace LostHope.Engine.Camera
             _pixelScale = Math.Max(_graphicsDevice.Viewport.Height / _startingScreenHeight * _zoom, _zoom);
             _zoom = _pixelScale;
 
-            // Set the initial camera size, with a zoom that should be 1.
-            _size = new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / _zoom;
-
             // Subscribe to the window resize event
             Game.Window.ClientSizeChanged += WindowSizeChanged;
         }
@@ -87,9 +83,6 @@ namespace LostHope.Engine.Camera
         public override void Update(GameTime gameTime)
         {
             if (!Enabled) return;
-
-            // Set the size
-            _size = new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / _zoom;
 
             // Each update tick, we update the transformation matrix.
             Transform = Matrix.CreateTranslation(new Vector3(-_position.X, -_position.Y, 0)) * Matrix.CreateScale(_zoom) * Matrix.CreateTranslation(_graphicsDevice.Viewport.Width / 2f, _graphicsDevice.Viewport.Height / 2f, 0);

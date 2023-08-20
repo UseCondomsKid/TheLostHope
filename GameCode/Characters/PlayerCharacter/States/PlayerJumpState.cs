@@ -19,6 +19,11 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
 
             _player.Move(delta);
 
+            if (_player.IsTouchingCeiling())
+            {
+                _player.SetVelocityY(0f);
+            }
+
             if (_player.IsGrounded())
             {
                 if (_player.IsMoving())

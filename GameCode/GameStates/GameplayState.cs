@@ -4,6 +4,7 @@ using LostHope.Engine.StateManagement;
 using LostHope.Engine.UI;
 using LostHope.GameCode.Characters.PlayerCharacter;
 using LostHope.GameCode.Rooms;
+using Microsoft.Win32.SafeHandles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite;
@@ -30,16 +31,16 @@ namespace LostHope.GameCode.GameStates
         {
             base.Enter();
 
-
             Room room = new Room();
             _roomData = room.Initialize("Level_0");
 
             // Camera setup zoom
-            float widthRatio = _gameRef.GameCamera.Size.X / _roomData.LevelData.Size.X;
-            float heightRatio = _gameRef.GameCamera.Size.Y / _roomData.LevelData.Size.Y;
-            float zoom = Math.Min(widthRatio, heightRatio) * 1.6f;
-            _gameRef.GameCamera.Zoom = zoom;
+            float widthRatio = _roomData.LevelData.Size.X / _gameRef.GameCamera.Size.X;
+            float heightRatio = _roomData.LevelData.Size.Y / _gameRef.GameCamera.Size.Y;
+            float minRatio = Math.Min(widthRatio, heightRatio);
+            _gameRef.GameCamera.Zoom = minRatio > 0.8f ? 1.8f : 1f / minRatio;
 
+            // Load and Setup Player
             ContentLoader.LoadAsepriteFile("Player", "Player");
             _player = new Player(_gameRef, _roomData.PhysicsWorld, ContentLoader.GetAsepriteFile("Player"),
                 _roomData.PlayerData);

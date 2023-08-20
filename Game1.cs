@@ -119,7 +119,7 @@ namespace LostHope
         protected override void Draw(GameTime gameTime)
         {
             // Choose any other color you want to clear the screen to
-            GraphicsDevice.Clear(Color.DeepSkyBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             base.Draw(gameTime);
         }

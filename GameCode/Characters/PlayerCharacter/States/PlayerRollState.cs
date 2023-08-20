@@ -19,13 +19,16 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
         {
             base.Exit();
 
-            _player.Velocity = Vector2.Zero;
+            _player.SetVelocityX(0);
             _player.IFrame = false;
         }
 
         public override void Update(float delta)
         {
             base.Update(delta);
+
+            _player.MoveX(delta, _player.FacingDirection, _player.PlayerData.RollVelocity,
+               _player.PlayerData.Acceleration, _player.PlayerData.Deacceleration, 1.2f);
 
             if (_isAnimationFinished)
             {
@@ -37,12 +40,6 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
                 {
                     _stateMachine.ChangeState(_player.PlayerJumpState);
                 }
-
-            }
-            else
-            {
-                _player.MoveX(delta, _player.FacingDirection, _player.PlayerData.RollVelocity,
-                    _player.PlayerData.Acceleration, _player.PlayerData.Deacceleration, 1.2f);
             }
         }
     }
