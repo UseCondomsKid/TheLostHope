@@ -21,12 +21,12 @@ public class LDtkGun : ILDtkEntity
     public string Name { get; set; }
     public string AsepriteFileName { get; set; }
     public int ClipSize { get; set; }
-    public bool Auto { get; set; }
+    public GunFireType FireType { get; set; }
+    public float KnockbackForce { get; set; }
     public float TimeBetweenShots { get; set; }
+    public GunBulletType BulletType { get; set; }
     public float Range { get; set; }
     public int Damage { get; set; }
-    public float KnockbackForce { get; set; }
-    public int BulletWidth { get; set; }
     public bool CanPenetrate { get; set; }
 }
 #pragma warning restore

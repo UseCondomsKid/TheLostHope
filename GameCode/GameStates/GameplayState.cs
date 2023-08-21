@@ -1,9 +1,12 @@
-﻿using LostHope.Engine.ContentLoading;
+﻿using Humper;
+using LostHope.Engine.ContentLoading;
 using LostHope.Engine.Rendering;
 using LostHope.Engine.StateManagement;
 using LostHope.Engine.UI;
 using LostHope.GameCode.Characters.PlayerCharacter;
 using LostHope.GameCode.Rooms;
+using LostHope.GameCode.Weapons;
+using LostHope.GameCode.Weapons.Bullets;
 using Microsoft.Win32.SafeHandles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,8 +23,9 @@ namespace LostHope.GameCode.GameStates
     public class GameplayState : GameState
     {
         private RoomData _roomData;
-
         private Player _player;
+
+        private List<IBox> _enemyBoxes;
 
         public GameplayState(Game1 gameRef, GameStateManager stateManager, UIManager uiManager) : base(gameRef, stateManager, uiManager)
         {
@@ -31,8 +35,9 @@ namespace LostHope.GameCode.GameStates
         {
             base.Enter();
 
+
             Room room = new Room();
-            _roomData = room.Initialize("Level_0");
+            _roomData = room.Initialize("Level_1");
 
             // Camera setup zoom
             float widthRatio = _roomData.LevelData.Size.X / _gameRef.GameCamera.Size.X;
@@ -45,7 +50,19 @@ namespace LostHope.GameCode.GameStates
             _player = new Player(_gameRef, _roomData.PhysicsWorld, ContentLoader.GetAsepriteFile("Player"),
                 _roomData.PlayerData);
             _player.SpawnCharacter(_roomData.PlayerData.Position - _roomData.LevelData.Position.ToVector2());
+            Globals.Player = _player;
             AddComponent(_player);
+
+            // Load and Setup Enemies
+            _enemyBoxes = new List<IBox>();
+
+            // Load and setup guns in level
+            foreach (var g in _roomData.GunDataList)
+            {
+                ContentLoader.LoadAsepriteFile(g.Name, g.AsepriteFileName);
+                Gun gun = new Gun(_gameRef, g, _roomData.PhysicsWorld, ContentLoader.GetAsepriteFile(g.Name), false);
+                AddComponent(gun);
+            }
         }
 
         public override void Update(GameTime gameTime)
