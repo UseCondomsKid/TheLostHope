@@ -18,8 +18,8 @@ public class LDtkLevelTransition : ILDtkEntity
 
     public Color SmartColor { get; set; }
 
-    public string LevelToTransitionTo { get; set; }
     public string Id { get; set; }
-    public Point SpawnPos { get; set; }
+    public string LevelToTransitionTo { get; set; }
+    public Point SpawnPosition { get; set; }
 }
 #pragma warning restore

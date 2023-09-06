@@ -5,14 +5,16 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using LostHope.Engine.Camera;
 using LostHope.GameCode.Characters.PlayerCharacter;
+using LostHope.GameCode.GameStates;
 
 namespace LostHope.GameCode
 {
     public static class Globals
     {
-        public static OrthographicCamera GameCamera { get; set; }
+        // Screen width and height
+        public const int ScreenWidth = 1280;
+        public const int ScreenHeight = 720;
 
-        public static Player Player { get; set; }
         public static SpriteBatch SpriteBatch { get; set; }
         public static GraphicsDeviceManager GraphicsDeviceManager { get; set; }
         public static GameTime GameTime { get; set; }

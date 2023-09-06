@@ -3,7 +3,8 @@
 	using System;
 	using System.Linq;
 	using Base;
-	using Responses;
+    using Microsoft.Xna.Framework;
+    using Responses;
 
 	public class Box : IBox
 	{
@@ -13,6 +14,7 @@
 		{
 			this.world = world;
 			this.bounds = new RectangleF(x, y, width, height);
+			this.boundsRect = new Rectangle((int)x, (int)y, (int)width, (int)height);
 		}
 
 		#endregion
@@ -22,6 +24,8 @@
 		private World world;
 
 		private RectangleF bounds;
+
+		private Rectangle boundsRect;
 
 		#endregion
 
@@ -42,11 +46,16 @@
 
 		public float Y => Bounds.Y;
 
-		#endregion
+        public Rectangle BoundsRect
+		{
+			get { return boundsRect; }
+		}
 
-		#region Movements
+        #endregion
 
-		public IMovement Simulate(float x, float y, Func<ICollision, ICollisionResponse> filter)
+        #region Movements
+
+        public IMovement Simulate(float x, float y, Func<ICollision, ICollisionResponse> filter)
 		{
 			return world.Simulate(this, x, y, filter);
 		}
@@ -67,6 +76,8 @@
 			var movement = this.Simulate(x, y, filter);
 			this.bounds.X = movement.Destination.X;
 			this.bounds.Y = movement.Destination.Y;
+			this.boundsRect.X = (int)movement.Destination.X;
+			this.boundsRect.Y = (int)movement.Destination.Y;
 			this.world.Update(this, movement.Origin);
 			return movement;
 		}
@@ -76,6 +87,8 @@
 			var movement = this.Simulate(x, y, filter);
 			this.bounds.X = movement.Destination.X;
 			this.bounds.Y = movement.Destination.Y;
+			this.boundsRect.X = (int)movement.Destination.X;
+			this.boundsRect.Y = (int)movement.Destination.Y;
 			this.world.Update(this, movement.Origin);
 			return movement;
 		}

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using LDtk;
 using LDtk.Renderer;
+using LostHope.Engine.ContentLoading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,11 +20,9 @@ namespace LostHope.Engine.Rendering
     //     this one is mostly here to get you up and running quickly.
     public class ModifiedLDtkRenderer
     {
-        private static Texture2D pixel;
+        private static RenderTarget2D RenderTarget;
 
         private GraphicsDevice graphicsDevice;
-
-        private ContentManager content;
 
         //
         // Summary:
@@ -32,21 +32,19 @@ namespace LostHope.Engine.Rendering
         //
         // Summary:
         //     The levels identifier to layers Dictionary
-        protected Dictionary<string, RenderedLevel> PrerenderedLevels { get; set; } = new Dictionary<string, RenderedLevel>();
+        // protected Dictionary<string, RenderedLevel> PrerenderedLevels { get; set; } = new Dictionary<string, RenderedLevel>();
 
 
         //
         // Summary:
         //     This is used to intizialize the renderer for use with direct file loading
-        public ModifiedLDtkRenderer(SpriteBatch spriteBatch, ContentManager content)
+        public ModifiedLDtkRenderer(SpriteBatch spriteBatch)
         {
             SpriteBatch = spriteBatch;
-            this.content = content;
             graphicsDevice = spriteBatch.GraphicsDevice;
-            if (pixel == null)
+            if (RenderTarget != null)
             {
-                pixel = new Texture2D(graphicsDevice, 1, 1);
-                pixel.SetData(new byte[4] { 255, 255, 255, 255 });
+                RenderTarget.Dispose();
             }
         }
 
@@ -63,23 +61,20 @@ namespace LostHope.Engine.Rendering
         //     The level already has been prerendered
         public void PrerenderLevel(LDtkLevel level)
         {
-            if (!PrerenderedLevels.ContainsKey(level.Identifier))
-            {
-                RenderedLevel value = default(RenderedLevel);
-                SpriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
-                value.Layers = RenderLayers(level);
-                SpriteBatch.End();
-                PrerenderedLevels.Add(level.Identifier, value);
-                graphicsDevice.SetRenderTarget(null);
-            }
+            SpriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
+            RenderLayers(level);
+            SpriteBatch.End();
+            graphicsDevice.SetRenderTarget(null);
         }
 
-        private Texture2D[] RenderLayers(LDtkLevel level)
+        private void RenderLayers(LDtkLevel level)
         {
-            List<Texture2D> list = new List<Texture2D>();
+            RenderTarget = new RenderTarget2D(graphicsDevice, level.PxWid, level.PxHei, mipMap: false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            graphicsDevice.SetRenderTarget(RenderTarget);
+
             if (level.BgRelPath != null)
             {
-                list.Add(RenderBackgroundToLayer(level));
+                RenderBackgroundToLayer(level);
             }
 
             for (int num = level.LayerInstances.Length - 1; num >= 0; num--)
@@ -90,9 +85,7 @@ namespace LostHope.Engine.Rendering
                     Texture2D texture = GetTexture(level, layer._TilesetRelPath);
                     int width = layer._CWid * layer._GridSize;
                     int height = layer._CHei * layer._GridSize;
-                    RenderTarget2D renderTarget2D = new RenderTarget2D(graphicsDevice, width, height, mipMap: false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-                    graphicsDevice.SetRenderTarget(renderTarget2D);
-                    list.Add(renderTarget2D);
+
                     switch (layer._Type)
                     {
                         case LayerType.Tiles:
@@ -124,26 +117,21 @@ namespace LostHope.Engine.Rendering
                     }
                 }
             }
-
-            return list.ToArray();
         }
 
-        private Texture2D RenderBackgroundToLayer(LDtkLevel level)
+        private void RenderBackgroundToLayer(LDtkLevel level)
         {
             Texture2D texture = GetTexture(level, level.BgRelPath);
-            RenderTarget2D renderTarget2D = new RenderTarget2D(graphicsDevice, level.PxWid, level.PxHei, mipMap: false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-            graphicsDevice.SetRenderTarget(renderTarget2D);
             LevelBackgroundPosition bgPos = level._BgPos;
             Vector2 position = bgPos.TopLeftPx.ToVector2();
             SpriteBatch.Draw(texture, position, new Rectangle((int)bgPos.CropRect[0], (int)bgPos.CropRect[1], (int)bgPos.CropRect[2], (int)bgPos.CropRect[3]), Color.White, 0f, Vector2.Zero, bgPos.Scale, SpriteEffects.None, 0f);
-            graphicsDevice.SetRenderTarget(null);
-            return renderTarget2D;
         }
 
         private Texture2D GetTexture(LDtkLevel level, string path)
         {
             string assetName = Path.ChangeExtension(path, null);
-            return content.Load<Texture2D>(assetName);
+            ContentLoader.LoadTexture(assetName, assetName);
+            return ContentLoader.GetTexture(assetName);
         }
 
         //
@@ -151,49 +139,39 @@ namespace LostHope.Engine.Rendering
         //     Render the prerendered level you created from PrerenderLevel()
         public void RenderPrerenderedLevel(LDtkLevel level)
         {
-            if (PrerenderedLevels.TryGetValue(level.Identifier, out var value))
-            {
-                for (int i = 0; i < value.Layers.Length; i++)
-                {
-                    SpriteBatch.Draw(value.Layers[i], Vector2.Zero, Color.White);
-                }
-
-                return;
-            }
-
-            throw new LDtkException("No prerendered level with Identifier " + level.Identifier + " found.");
+            SpriteBatch.Draw(RenderTarget, Vector2.Zero, Color.White);
         }
 
         //
         // Summary:
         //     Render the level directly without prerendering the layers alot slower than prerendering
-        public void RenderLevel(LDtkLevel level)
-        {
-            Texture2D[] array = RenderLayers(level);
-            for (int i = 0; i < array.Length; i++)
-            {
-                SpriteBatch.Draw(array[i], level.Position.ToVector2(), Color.White);
-            }
-        }
+        //public void RenderLevel(LDtkLevel level)
+        //{
+        //    Texture2D[] array = RenderLayers(level);
+        //    for (int i = 0; i < array.Length; i++)
+        //    {
+        //        SpriteBatch.Draw(array[i], Vector2.Zero, Color.White);
+        //    }
+        //}
 
         //
         // Summary:
         //     Render intgrids by displaying the intgrid as solidcolor squares
-        public void RenderIntGrid(LDtkIntGrid intGrid)
-        {
-            for (int i = 0; i < intGrid.GridSize.X; i++)
-            {
-                for (int j = 0; j < intGrid.GridSize.Y; j++)
-                {
-                    if (intGrid.Values[j * intGrid.GridSize.X + i] != 0)
-                    {
-                        int num = intGrid.WorldPosition.X + i * intGrid.TileSize;
-                        int num2 = intGrid.WorldPosition.Y + j * intGrid.TileSize;
-                        SpriteBatch.Draw(pixel, new Vector2(num, num2), null, Color.Pink, 0f, Vector2.Zero, new Vector2(intGrid.TileSize), SpriteEffects.None, 0f);
-                    }
-                }
-            }
-        }
+        //public void RenderIntGrid(LDtkIntGrid intGrid)
+        //{
+        //    for (int i = 0; i < intGrid.GridSize.X; i++)
+        //    {
+        //        for (int j = 0; j < intGrid.GridSize.Y; j++)
+        //        {
+        //            if (intGrid.Values[j * intGrid.GridSize.X + i] != 0)
+        //            {
+        //                int num = intGrid.WorldPosition.X + i * intGrid.TileSize;
+        //                int num2 = intGrid.WorldPosition.Y + j * intGrid.TileSize;
+        //                SpriteBatch.Draw(pixel, new Vector2(num, num2), null, Color.Pink, 0f, Vector2.Zero, new Vector2(intGrid.TileSize), SpriteEffects.None, 0f);
+        //            }
+        //        }
+        //    }
+        //}
 
         //
         // Summary:

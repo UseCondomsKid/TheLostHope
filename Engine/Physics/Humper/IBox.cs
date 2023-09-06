@@ -2,7 +2,8 @@
 {
 	using System;
 	using Base;
-	using Responses;
+    using Microsoft.Xna.Framework;
+    using Responses;
 
 	/// <summary>
 	/// Represents a physical body in the world.
@@ -40,6 +41,12 @@
 		/// </summary>
 		/// <value>The bounds.</value>
 		RectangleF Bounds { get; }
+
+		/// <summary>
+		/// Gets the bounds of the box as a monogame rectangle
+		/// </summary>
+		/// <value>The bounds.</value>
+		Rectangle BoundsRect { get; }
 
 		/// <summary>
 		/// Gets or sets custom user data attached to this box.

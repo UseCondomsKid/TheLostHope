@@ -1,13 +1,8 @@
 ﻿using LostHope.Engine.UI;
-using LostHope.GameCode;
+using LostHope.GameCode.GameStates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LostHope.Engine.StateManagement
 {
@@ -26,6 +21,7 @@ namespace LostHope.Engine.StateManagement
         protected readonly Game1 _gameRef;
 
         protected UIAnchor _currentUIAnchor;
+        private bool _uiSpriteBatchEnded;
 
         // Public proptery to access the child components
         public List<GameComponent> Components { get { return _childComponents; } }
@@ -85,6 +81,7 @@ namespace LostHope.Engine.StateManagement
         }
 
 
+        protected abstract Matrix? GetGameplayTransformMatrix();
         protected virtual void DrawGameplay(GameTime gameTime)
         {
             // Draw all child components if they are Drawable and visible
@@ -99,22 +96,32 @@ namespace LostHope.Engine.StateManagement
 
         public virtual void Draw(GameTime gameTime)
         {
-            BeginSpriteBatch(Globals.GameCamera.Transform);
+            BeginSpriteBatch(GetGameplayTransformMatrix());
             DrawGameplay(gameTime);
             EndSpriteBatch();
 
+            _uiSpriteBatchEnded = true;
             for (int i = 0; i < _uiManager.UIElements.Count; i++)
             {
                 BeginSpriteBatch(_uiManager.GetMatrixFromAnchor(_currentUIAnchor));
+                _uiSpriteBatchEnded = false;
                 // Draw the element
                 _uiManager.UIElements[i].Draw(gameTime);
-                EndSpriteBatch();
 
                 // Change the anchor based on the next element's anchor
                 if (i != _uiManager.UIElements.Count - 1)
                 {
-                    _currentUIAnchor = _uiManager.UIElements[i + 1].Anchor;
+                    if (_currentUIAnchor != _uiManager.UIElements[i + 1].Anchor)
+                    {
+                        _currentUIAnchor = _uiManager.UIElements[i + 1].Anchor;
+                        EndSpriteBatch();
+                        _uiSpriteBatchEnded = true;
+                    }
                 }
+            }
+            if (!_uiSpriteBatchEnded)
+            {
+                EndSpriteBatch();
             }
         }
 

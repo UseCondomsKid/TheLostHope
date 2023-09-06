@@ -39,14 +39,14 @@ namespace LostHope.GameCode.Weapons
         private List<Bullet> _bulletsActive;
 
         // TODO: Figure out offset for position
-        private Vector2 _position => Globals.Player.Position + new Vector2(
-            Globals.Player.FacingDirection == -1 ? -_animator.AnimationCanvasSize.X : Globals.Player.Body.Width,
-            Globals.Player.Body.Height / 2f - _animator.AnimationCanvasSize.Y / 2f);
+        //private Vector2 _position => Globals.Player.Position + new Vector2(
+        //    Globals.Player.FacingDirection == -1 ? -_animator.AnimationCanvasSize.X : Globals.Player.Body.Width,
+        //    Globals.Player.Body.Height / 2f - _animator.AnimationCanvasSize.Y / 2f);
 
-        private Vector2 _shootPosition => Globals.Player.Position + new Vector2(
-            Globals.Player.FacingDirection == -1 ? -_animator.AnimationCanvasSize.X :
-            Globals.Player.Body.Width + _animator.AnimationCanvasSize.X,
-            Globals.Player.Body.Height / 2f + _animator.AnimationCanvasSize.Y / 3f);
+        //private Vector2 _shootPosition => Globals.Player.Position + new Vector2(
+        //    Globals.Player.FacingDirection == -1 ? -_animator.AnimationCanvasSize.X :
+        //    Globals.Player.Body.Width + _animator.AnimationCanvasSize.X,
+        //    Globals.Player.Body.Height / 2f + _animator.AnimationCanvasSize.Y / 3f);
 
         public Gun(Game game, LDtkGun data, World physicsWorld, AsepriteFile asepriteFile, bool equipped = false) : base(game)
         {
@@ -143,14 +143,14 @@ namespace LostHope.GameCode.Weapons
                 OnShoot?.Invoke(_data.KnockbackForce);
 
                 // Spawn Bullet
-                switch(_data.BulletType)
-                {
-                    case GunBulletType.Hitscan:
-                        _bulletsActive.Add(new HitscanBullet(Game, _shootPosition, 
-                            new Vector2(_shootPosition.X + (_data.Range * Globals.Player.FacingDirection), _shootPosition.Y), _data.Range,
-                            _data.Damage, _data.CanPenetrate));
-                        break;
-                }
+                //switch(_data.BulletType)
+                //{
+                //    case GunBulletType.Hitscan:
+                //        _bulletsActive.Add(new HitscanBullet(Game, _shootPosition, 
+                //            new Vector2(_shootPosition.X + (_data.Range * Globals.Player.FacingDirection), _shootPosition.Y), _data.Range,
+                //            _data.Damage, _data.CanPenetrate));
+                //        break;
+                //}
 
                 //Rectangle shootRect = new Rectangle(Globals.Player.FacingDirection == 1 ?
                 //    _shootPosition.ToPoint() : new Point((int)(_shootPosition.X - _data.Range),
@@ -191,10 +191,10 @@ namespace LostHope.GameCode.Weapons
 
         public override void Draw(GameTime gameTime)
         {
-            Globals.SpriteBatch.Draw(_animator.SpriteSheetTexture, _position,
-                _animator.GetSourceRectangle(), Color.White, 0f, Vector2.Zero, 1f,
-                Globals.Player.FacingDirection == 1 ? SpriteEffects.None :
-                SpriteEffects.FlipHorizontally, 0f);
+            //Globals.SpriteBatch.Draw(_animator.SpriteSheetTexture, _position,
+            //    _animator.GetSourceRectangle(), Color.White, 0f, Vector2.Zero, 1f,
+            //    Globals.Player.FacingDirection == 1 ? SpriteEffects.None :
+            //    SpriteEffects.FlipHorizontally, 0f);
         }
     }
 }
