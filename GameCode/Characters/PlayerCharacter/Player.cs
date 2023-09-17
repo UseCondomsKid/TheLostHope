@@ -29,6 +29,10 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
         public PlayerParryState PlayerParryState { get; private set; }
         // --------------------------
 
+
+        // ---- Player Variables ----
+        // --------------------------
+
         public Player(Game game, World physicsWorld, AsepriteFile asepriteFile, LDtkPlayer playerData) : base(game, physicsWorld, asepriteFile)
         {
             // Set the player data

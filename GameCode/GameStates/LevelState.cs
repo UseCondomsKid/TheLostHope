@@ -140,13 +140,16 @@ namespace LostHope.GameCode.GameStates
             // Load and Setup Guns
             foreach (var gun in gunDataList)
             {
-                var g = new GunInteractable(_gameRef, new Rectangle(
-                    gun.Position.ToPoint() - _levelData.Position, gun.Size.ToPoint()),
-                    gun);
+                if (!_gameplayManager.HasGun(gun))
+                {
+                    var g = new GunInteractable(_gameRef, new Rectangle(
+                        gun.Position.ToPoint() - _levelData.Position, gun.Size.ToPoint()),
+                        gun);
 
-                g.Initialize();
+                    g.Initialize();
 
-                AddComponent(g);
+                    AddComponent(g);
+                }
             }
         }
 

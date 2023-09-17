@@ -55,7 +55,7 @@
 /build:Static.aseprite
 
 #begin World.ldtk
-/importer:
-/processor:
+/importer:LDtkFileImporter
+/processor:LDtkFileProcessor
 /build:World.ldtk
 

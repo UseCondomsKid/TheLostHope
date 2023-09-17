@@ -101,17 +101,21 @@ namespace LostHope.GameCode.GameStates
             CurrentLevelState.StartLevel(CurrentWorld, levelId, levelTransitionId);
         }
 
-        public bool AddGun(string name, LDtkGun gunData)
+        public bool AddGun(LDtkGun gunData)
         {
             if (!Started) return false;
 
-            if (!UnlockedGuns.ContainsKey(name))
+            if (!HasGun(gunData))
             {
-                UnlockedGuns.Add(name, gunData);
+                UnlockedGuns.Add(gunData.Name, gunData);
                 return true;
             }
 
             return false;
+        }
+        public bool HasGun(LDtkGun gunData)
+        {
+            return UnlockedGuns.ContainsKey(gunData.Name);
         }
 
     }

@@ -39,7 +39,7 @@ namespace LostHope.GameCode.Interactables
         {
             if (tag == CollisionTags.Player)
             {
-                if (GameplayManager.Instance.AddGun(_gunData.Name, _gunData))
+                if (GameplayManager.Instance.AddGun(_gunData))
                 {
                     Debug.WriteLine("Gun Added to inventory");
                 }
