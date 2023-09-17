@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using LostHope.Engine.Camera;
 using LostHope.GameCode.Characters.PlayerCharacter;
 using LostHope.GameCode.GameStates;
+using LostHope.GameCode.GameSettings;
 
 namespace LostHope.GameCode
 {
@@ -15,6 +16,7 @@ namespace LostHope.GameCode
         public const int ScreenWidth = 1280;
         public const int ScreenHeight = 720;
 
+        public static Settings Settings { get; set; }
         public static SpriteBatch SpriteBatch { get; set; }
         public static GraphicsDeviceManager GraphicsDeviceManager { get; set; }
         public static GameTime GameTime { get; set; }

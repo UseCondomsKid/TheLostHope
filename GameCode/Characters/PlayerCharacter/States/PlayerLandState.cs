@@ -1,5 +1,4 @@
-﻿using LostHope.Engine.Input;
-using LostHope.GameCode.Characters.FSM;
+﻿using LostHope.GameCode.Characters.FSM;
 using Microsoft.Xna.Framework.Input;
 
 namespace LostHope.GameCode.Characters.PlayerCharacter.States
@@ -25,7 +24,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
                     _stateMachine.ChangeState(_player.PlayerIdleState);
                 }
             }
-            else if (InputManager.KeyPressed(Keys.W))
+            else if (_player.JumpInput.Pressed())
             {
                 _player.SetVelocityY(-_player.PlayerData.JumpForce);
             }

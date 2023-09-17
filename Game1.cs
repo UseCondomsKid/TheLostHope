@@ -1,5 +1,4 @@
-﻿using LostHope.Engine.Input;
-using LostHope.Engine.StateManagement;
+﻿using LostHope.Engine.StateManagement;
 using LostHope.Engine.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,6 +6,10 @@ using Microsoft.Xna.Framework.Input;
 using LostHope.GameCode.GameStates;
 using LostHope.GameCode;
 using LostHope.Engine.ContentLoading;
+using Apos.Input;
+using Track = Apos.Input.Track;
+using LostHope.GameCode.GameSettings;
+using FontStashSharp;
 
 namespace LostHope
 {
@@ -16,8 +19,8 @@ namespace LostHope
         private SpriteBatch _spriteBatch;
         private GameStateManager _stateManager;
         private UIManager _uiManager;
-        private InputManager _inputManager;
 
+        FontSystem _fontSystem;
 
         #region Properties
         public bool IsPaused;
@@ -34,34 +37,57 @@ namespace LostHope
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            Globals.Settings = Settings.EnsureJson<Settings>("Settings.json", SettingsContext.Default.Settings);
         }
 
-        protected override void Initialize()
+        protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             Globals.SpriteBatch = SpriteBatch;
 
+            InputHelper.Setup(this);
+
+            _fontSystem = new FontSystem();
+            _fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/PeaberryMono.ttf"));
+        }
+        protected override void UnloadContent()
+        {
+            if (!Globals.Settings.IsFullscreen)
+            {
+                SaveWindow();
+            }
+
+            Settings.SaveJson<Settings>("Settings.json", Globals.Settings, SettingsContext.Default.Settings);
+
+            base.UnloadContent();
+        }
+
+        protected override void Initialize()
+        {
             // Load all global things here.
             ContentLoader.Initialize(Content);
-            // Font
-            ContentLoader.LoadSpriteFont("Font");
             // LDtk File
             ContentLoader.LoadLDtkFile("World");
 
             IsPaused = false;
 
             // Window properties
-            Window.AllowUserResizing = false;
+            Window.AllowUserResizing = true;
             IsMouseVisible = true;
 
-            // Set the screen width and height, and apply
-            _graphics.PreferredBackBufferWidth = Globals.ScreenWidth;
-            _graphics.PreferredBackBufferHeight = Globals.ScreenHeight;
-            _graphics.ApplyChanges();
+            // Time step
+            IsFixedTimeStep = Globals.Settings.IsFixedTimeStep;
+
+            Globals.Settings.IsFullscreen = Globals.Settings.IsFullscreen || Globals.Settings.IsBorderless;
+            _graphics.SynchronizeWithVerticalRetrace = Globals.Settings.IsVSync;
+
+            RestoreWindow();
+            if (Globals.Settings.IsFullscreen)
+            {
+                ApplyFullscreenChange(false);
+            }
             Globals.GraphicsDeviceManager = _graphics;
 
-            // Initialize the input manager
-            _inputManager = new InputManager(this);
             // Initialize Game State Manager
             _stateManager = new GameStateManager(this);
             // Initialize UI Manager
@@ -80,22 +106,99 @@ namespace LostHope
             base.Initialize();
         }
 
+
+        public void ToggleFullscreen()
+        {
+            bool oldIsFullscreen = Globals.Settings.IsFullscreen;
+
+            if (Globals.Settings.IsBorderless)
+            {
+                Globals.Settings.IsBorderless = false;
+            }
+            else
+            {
+                Globals.Settings.IsFullscreen = !Globals.Settings.IsFullscreen;
+            }
+
+            ApplyFullscreenChange(oldIsFullscreen);
+        }
+        public void ToggleBorderless()
+        {
+            bool oldIsFullscreen = Globals.Settings.IsFullscreen;
+
+            Globals.Settings.IsBorderless = !Globals.Settings.IsBorderless;
+            Globals.Settings.IsFullscreen = Globals.Settings.IsBorderless;
+
+            ApplyFullscreenChange(oldIsFullscreen);
+        }
+        private void ApplyFullscreenChange(bool oldIsFullscreen)
+        {
+            if (Globals.Settings.IsFullscreen)
+            {
+                if (oldIsFullscreen)
+                {
+                    ApplyHardwareMode();
+                }
+                else
+                {
+                    SetFullscreen();
+                }
+            }
+            else
+            {
+                UnsetFullscreen();
+            }
+        }
+        private void ApplyHardwareMode()
+        {
+            _graphics.HardwareModeSwitch = !Globals.Settings.IsBorderless;
+            _graphics.ApplyChanges();
+        }
+        private void SetFullscreen()
+        {
+            SaveWindow();
+
+            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            _graphics.HardwareModeSwitch = !Globals.Settings.IsBorderless;
+
+            _graphics.IsFullScreen = true;
+            _graphics.ApplyChanges();
+        }
+        private void UnsetFullscreen()
+        {
+            _graphics.IsFullScreen = false;
+            RestoreWindow();
+        }
+        private void SaveWindow()
+        {
+            Globals.Settings.X = Window.ClientBounds.X;
+            Globals.Settings.Y = Window.ClientBounds.Y;
+            Globals.Settings.Width = Window.ClientBounds.Width;
+            Globals.Settings.Height = Window.ClientBounds.Height;
+        }
+        private void RestoreWindow()
+        {
+            Window.Position = new Point(Globals.Settings.X, Globals.Settings.Y);
+            _graphics.PreferredBackBufferWidth = Globals.Settings.Width;
+            _graphics.PreferredBackBufferHeight = Globals.Settings.Height;
+            _graphics.ApplyChanges();
+        }
+
         protected override void Update(GameTime gameTime)
         {
-            _inputManager.Update(gameTime);
-            GameplayManager.Instance.Update(gameTime);
+            //Call UpdateSetup at the start.
+            InputHelper.UpdateSetup();
 
-            if (InputManager.KeyPressed(Keys.Escape))
-                //&& _stateManager.CurrentGameState.GetType() == typeof(ForestMap))
-                // If we are in a gameplay state
-            {
-                IsPaused = !IsPaused;
-            }
+            GameplayManager.Instance.Update(gameTime);
 
             if (IsPaused) return;
 
             Globals.GameTime = gameTime;
             base.Update(gameTime);
+
+            //Call UpdateCleanup at the end.
+            InputHelper.UpdateCleanup();
         }
 
         protected override void Draw(GameTime gameTime)

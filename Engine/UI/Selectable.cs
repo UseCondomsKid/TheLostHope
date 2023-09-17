@@ -1,5 +1,4 @@
-﻿using LostHope.Engine.Input;
-using LostHope.GameCode;
+﻿using LostHope.GameCode;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -78,27 +77,27 @@ namespace LostHope.Engine.UI
             _wasSelected = _isSelected;
 
             // Get mouse position
-            _mousePosition = _manager.UIScreenToCanvas(InputManager.MouseState.Position.ToVector2(), _anchor);
+            // _mousePosition = _manager.UIScreenToCanvas(InputManager.MouseState.Position.ToVector2(), _anchor);
 
             // Set isFocused based on IsMouseOnSelectable
             if (IsMouseOnSelectable())
             {
                 _isFocused = true;
 
-                if (InputManager.MousePressed(MouseButton.Left))
-                {
-                    InvokeOnClick();
-                    _isSelected = true;
-                }
+                //if (InputManager.MousePressed(MouseButton.Left))
+                //{
+                //    InvokeOnClick();
+                //    _isSelected = true;
+                //}
             }
             else
             {
                 _isFocused = false;
 
-                if (InputManager.MousePressed(MouseButton.Left))
-                {
-                    _isSelected = false;
-                }
+                //if (InputManager.MousePressed(MouseButton.Left))
+                //{
+                //    _isSelected = false;
+                //}
             }
 
             // If the selectable wasn't focused in the previous frame and is focused during this frame,

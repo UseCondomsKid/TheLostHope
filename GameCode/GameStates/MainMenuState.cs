@@ -1,5 +1,5 @@
-﻿using LDtkTypes;
-using LostHope.Engine.Input;
+﻿using Apos.Input;
+using LDtkTypes;
 using LostHope.Engine.StateManagement;
 using LostHope.Engine.UI;
 using Microsoft.Xna.Framework;
@@ -9,6 +9,8 @@ namespace LostHope.GameCode.GameStates
 {
     public class MainMenuState : GameState
     {
+        private ICondition playButton;
+
         public MainMenuState(Game1 gameRef, GameStateManager stateManager, UIManager uiManager) : base(gameRef, stateManager, uiManager)
         {
         }
@@ -16,6 +18,8 @@ namespace LostHope.GameCode.GameStates
         public override void Enter()
         {
             base.Enter();
+
+            playButton = new KeyboardCondition(Keys.P);
 
             // Start the gameplay manager
             GameplayManager.Instance.Start(_gameRef, _stateManager, _uiManager, Worlds.World.Iid);
@@ -25,7 +29,7 @@ namespace LostHope.GameCode.GameStates
         {
             base.Update(gameTime);
 
-            if (InputManager.KeyPressed(Keys.P))
+            if (playButton.Pressed())
             {
                 // Load the first level
                 GameplayManager.Instance.LoadLevel("Level_0");

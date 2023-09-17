@@ -1,7 +1,6 @@
 ﻿using Humper;
 using LDtkTypes;
 using LostHope.Engine.Animations;
-using LostHope.Engine.Input;
 using LostHope.GameCode.Characters.Enemies;
 using LostHope.GameCode.Weapons.Bullets;
 using Microsoft.Xna.Framework;
@@ -96,30 +95,30 @@ namespace LostHope.GameCode.Weapons
 
         public void HandleGunShoot()
         {
-            switch(_data.FireType)
-            {
-                case GunFireType.Auto:
-                    if (InputManager.IsMouseDown(MouseButton.Left) && _shootTimer <= 0)
-                    {
-                        Shoot();
-                    }
-                    break;
-                case GunFireType.Single:
-                    if (InputManager.MousePressed(MouseButton.Left) && _shootTimer <= 0)
-                    {
-                        Shoot();
-                    }
-                    break;
-                default:
-                    break;
-            }
+            //switch(_data.FireType)
+            //{
+            //    case GunFireType.Auto:
+            //        if (InputManager.IsMouseDown(MouseButton.Left) && _shootTimer <= 0)
+            //        {
+            //            Shoot();
+            //        }
+            //        break;
+            //    case GunFireType.Single:
+            //        if (InputManager.MousePressed(MouseButton.Left) && _shootTimer <= 0)
+            //        {
+            //            Shoot();
+            //        }
+            //        break;
+            //    default:
+            //        break;
+            //}
         }
         public void HandleGunReload()
         {
-            if (InputManager.KeyPressed(Keys.R))
-            {
-                Reload();
-            }
+            //if (InputManager.KeyPressed(Keys.R))
+            //{
+            //    Reload();
+            //}
         }
 
         private void Reload()

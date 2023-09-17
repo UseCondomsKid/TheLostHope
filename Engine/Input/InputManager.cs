@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+/*
 namespace LostHope.Engine.Input
 {
     // Monogame handles mouse input in a bit of a weird way, so this enum will help with that
@@ -155,3 +156,4 @@ namespace LostHope.Engine.Input
         #endregion
     }
 }
+*/

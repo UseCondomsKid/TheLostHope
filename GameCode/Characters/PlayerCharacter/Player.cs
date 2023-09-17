@@ -6,9 +6,11 @@ using LostHope.GameCode.Weapons;
 using LostHope.GameCode.Characters.PlayerCharacter.States;
 using Humper.Responses;
 using System;
-using LostHope.Engine.Input;
 using Microsoft.Xna.Framework.Input;
 using LDtkTypes;
+using Apos.Input;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LostHope.GameCode.Characters.PlayerCharacter
 {
@@ -30,13 +32,89 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
         // --------------------------
 
 
-        // ---- Player Variables ----
+        // ------ Player Inputs -----
+        public ICondition MoveRightInput { get; private set; }
+        public ICondition MoveLeftInput { get; private set; }
+        public ICondition JumpInput { get; private set; }
+        public ICondition RollInput { get; private set; }
+        public ICondition ParryInput { get; private set; }
+        public ICondition ShootInput { get; private set; }
+        public ICondition InteractInput { get; private set; }
         // --------------------------
 
         public Player(Game game, World physicsWorld, AsepriteFile asepriteFile, LDtkPlayer playerData) : base(game, physicsWorld, asepriteFile)
         {
             // Set the player data
             PlayerData = playerData;
+
+            // Create the input conditions
+            List<ICondition> conditions;
+            int k, m, g;
+
+            // Move Right
+            conditions = new List<ICondition>();
+            k = Globals.Settings.KPlayerMoveRightBinding;
+            m = Globals.Settings.MPlayerMoveRightBinding;
+            g = Globals.Settings.GPlayerMoveRightBinding;
+            if (k != -1) conditions.Add(new KeyboardCondition((Keys)k));
+            if (m != -1) conditions.Add(new MouseCondition((MouseButton)m));
+            if (g != -1) conditions.Add(new GamePadCondition((GamePadButton)g, 0));
+            MoveRightInput = new AnyCondition(conditions.ToArray());
+            // Move Left
+            conditions = new List<ICondition>();
+            k = Globals.Settings.KPlayerMoveLeftBinding;
+            m = Globals.Settings.MPlayerMoveLeftBinding;
+            g = Globals.Settings.GPlayerMoveLeftBinding;
+            if (k != -1) conditions.Add(new KeyboardCondition((Keys)k));
+            if (m != -1) conditions.Add(new MouseCondition((MouseButton)m));
+            if (g != -1) conditions.Add(new GamePadCondition((GamePadButton)g, 0));
+            MoveLeftInput = new AnyCondition(conditions.ToArray());
+            // Jump
+            conditions = new List<ICondition>();
+            k = Globals.Settings.KPlayerJumpBinding;
+            m = Globals.Settings.MPlayerJumpBinding;
+            g = Globals.Settings.GPlayerJumpBinding;
+            if (k != -1) conditions.Add(new KeyboardCondition((Keys)k));
+            if (m != -1) conditions.Add(new MouseCondition((MouseButton)m));
+            if (g != -1) conditions.Add(new GamePadCondition((GamePadButton)g, 0));
+            JumpInput = new AnyCondition(conditions.ToArray());
+            // Roll
+            conditions = new List<ICondition>();
+            k = Globals.Settings.KPlayerRollBinding;
+            m = Globals.Settings.MPlayerRollBinding;
+            g = Globals.Settings.GPlayerRollBinding;
+            if (k != -1) conditions.Add(new KeyboardCondition((Keys)k));
+            if (m != -1) conditions.Add(new MouseCondition((MouseButton)m));
+            if (g != -1) conditions.Add(new GamePadCondition((GamePadButton)g, 0));
+            RollInput = new AnyCondition(conditions.ToArray());
+            // Parry
+            conditions = new List<ICondition>();
+            k = Globals.Settings.KPlayerParryBinding;
+            m = Globals.Settings.MPlayerParryBinding;
+            g = Globals.Settings.GPlayerParryBinding;
+            if (k != -1) conditions.Add(new KeyboardCondition((Keys)k));
+            if (m != -1) conditions.Add(new MouseCondition((MouseButton)m));
+            if (g != -1) conditions.Add(new GamePadCondition((GamePadButton)g, 0));
+            ParryInput = new AnyCondition(conditions.ToArray());
+            // Shoot
+            conditions = new List<ICondition>();
+            k = Globals.Settings.KPlayerShootBinding;
+            m = Globals.Settings.MPlayerShootBinding;
+            g = Globals.Settings.GPlayerShootBinding;
+            if (k != -1) conditions.Add(new KeyboardCondition((Keys)k));
+            if (m != -1) conditions.Add(new MouseCondition((MouseButton)m));
+            if (g != -1) conditions.Add(new GamePadCondition((GamePadButton)g, 0));
+            ShootInput = new AnyCondition(conditions.ToArray());
+            // Interact
+            conditions = new List<ICondition>();
+            k = Globals.Settings.KPlayerInteractBinding;
+            m = Globals.Settings.MPlayerInteractBinding;
+            g = Globals.Settings.GPlayerInteractBinding;
+            if (k != -1) conditions.Add(new KeyboardCondition((Keys)k));
+            if (m != -1) conditions.Add(new MouseCondition((MouseButton)m));
+            if (g != -1) conditions.Add(new GamePadCondition((GamePadButton)g, 0));
+            InteractInput = new AnyCondition(conditions.ToArray());
+
 
             // Initilize the states
             PlayerIdleState = new PlayerIdleState(this, "Idle");
@@ -100,9 +178,10 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
 
         public void Move(float delta)
         {
-            MoveX(delta, InputManager.IsKeyDown(Keys.D) ? 1 : InputManager.IsKeyDown(Keys.A) ? -1 : 0,
-                PlayerData.Speed, PlayerData.Acceleration, PlayerData.Deacceleration,
-                1.2f);
+            int movement = (MoveRightInput.Held() ? 1 : 0) - (MoveLeftInput.Held() ? 1 : 0);
+
+            MoveX(delta, movement, PlayerData.Speed, PlayerData.Acceleration,
+                PlayerData.Deacceleration, 1.2f);
         }
         public void ApplyGravity()
         {

@@ -20,12 +20,11 @@
 /processor:AsepriteFileContentProcessor
 /build:Crawler.aseprite
 
-#begin Font.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Font.spritefont
+#begin Localization.csv
+/copy:Localization.csv
+
+#begin PeaberryMono.ttf
+/copy:PeaberryMono.ttf
 
 #begin Pistol.aseprite
 /importer:AsepriteFileContentImporter

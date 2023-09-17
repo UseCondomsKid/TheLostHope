@@ -1,5 +1,4 @@
 ﻿using Humper.Responses;
-using LostHope.Engine.Input;
 using LostHope.GameCode.Characters.FSM;
 using Microsoft.Xna.Framework.Input;
 using System;

@@ -2,7 +2,6 @@
 using LDtkTypes;
 using LostHope.Engine.Camera;
 using LostHope.Engine.ContentLoading;
-using LostHope.Engine.Input;
 using LostHope.Engine.StateManagement;
 using LostHope.Engine.UI;
 using LostHope.GameCode.Weapons;

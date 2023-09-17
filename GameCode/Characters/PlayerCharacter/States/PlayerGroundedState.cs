@@ -1,5 +1,4 @@
-﻿using LostHope.Engine.Input;
-using LostHope.GameCode.Characters.FSM;
+﻿using LostHope.GameCode.Characters.FSM;
 using Humper.Responses;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -24,17 +23,17 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
 
             _player.Move(delta);
 
-            if (InputManager.KeyPressed(Keys.W))
+            if (_player.JumpInput.Pressed())
             {
                 _player.SetVelocityY(-_player.PlayerData.JumpForce);
             }
 
-            if (InputManager.MousePressed(MouseButton.Right))
+            if (_player.ParryInput.Pressed())
             {
                 _stateMachine.ChangeState(_player.PlayerParryState);
                 return;
             }
-            if (InputManager.KeyPressed(Keys.LeftShift) && _player.IsMoving())
+            if (_player.RollInput.Pressed() && _player.IsMoving())
             {
                 _stateMachine.ChangeState(_player.PlayerRollState);
                 return;
