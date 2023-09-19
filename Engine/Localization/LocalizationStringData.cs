@@ -13,6 +13,7 @@ namespace LostHope.Engine.Localization
         {
             public string id;
             public string en;
+            public string fr;
             // TODO: Add other language ids here
             // Example:
             // public string fr; => For french
@@ -20,6 +21,7 @@ namespace LostHope.Engine.Localization
         public enum Language
         {
             English,
+            French,
             // TODO: Add other languages here
             // Example:
             // French => For french

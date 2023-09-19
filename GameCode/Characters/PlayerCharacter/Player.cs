@@ -16,8 +16,6 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
 {
     public class Player : Character
     {
-        // public Gun HeldGun { get; set; }
-
         // -----  Player Data  ------
         public LDtkPlayer PlayerData { get; private set; }
         // --------------------------

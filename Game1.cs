@@ -10,6 +10,8 @@ using Apos.Input;
 using Track = Apos.Input.Track;
 using LostHope.GameCode.GameSettings;
 using FontStashSharp;
+using LostHope.Engine.Localization;
+using System.Diagnostics;
 
 namespace LostHope
 {
@@ -46,9 +48,6 @@ namespace LostHope
             Globals.SpriteBatch = SpriteBatch;
 
             InputHelper.Setup(this);
-
-            _fontSystem = new FontSystem();
-            _fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/PeaberryMono.ttf"));
         }
         protected override void UnloadContent()
         {
@@ -66,8 +65,12 @@ namespace LostHope
         {
             // Load all global things here.
             ContentLoader.Initialize(Content);
+            // Add a font
+            ContentLoader.AddFont("PeaberryMono.ttf");
             // LDtk File
             ContentLoader.LoadLDtkFile("World");
+            // Init the localization system
+            LocalizationSystem.Init();
 
             IsPaused = false;
 
@@ -105,7 +108,6 @@ namespace LostHope
 
             base.Initialize();
         }
-
 
         public void ToggleFullscreen()
         {

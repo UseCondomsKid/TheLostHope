@@ -49,6 +49,7 @@ namespace LostHope.GameCode.GameSettings
         public int KPlayerShootBinding { get; set; } = -1;
         public int MPlayerShootBinding { get; set; } = (int)MouseButton.LeftButton;
         public int GPlayerShootBinding { get; set; } = (int)GamePadButton.LeftShoulder;
+
         // Interact
         public int KPlayerInteractBinding { get; set; } = (int)Keys.E;
         public int MPlayerInteractBinding { get; set; } = -1;

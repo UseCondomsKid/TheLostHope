@@ -1,10 +1,13 @@
-﻿using LDtk;
+﻿using FontStashSharp;
+using LDtk;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +16,7 @@ namespace LostHope.Engine.ContentLoading
 {
     public static class ContentLoader
     {
-        public static SpriteFont Font { get; private set; }
+        public static FontSystem FontSystem { get; private set; }
         public static LDtkFile LDtkFile { get; private set; }
 
 
@@ -59,11 +62,12 @@ namespace LostHope.Engine.ContentLoading
             _asepriteFiles = new Dictionary<string, AsepriteFile>();
             _sfx = new Dictionary<string, SoundEffect>();
 
+            FontSystem = new FontSystem();
             _content = content;
         }
         public static void Unload()
         {
-            Font = null;
+            FontSystem = null;
             LDtkFile = null;
 
             UnloadTextures();
@@ -71,13 +75,19 @@ namespace LostHope.Engine.ContentLoading
             UnloadSfx();
         }
 
-        public static void LoadSpriteFont(string contentName)
+        public static void AddFont(string fullName)
         {
-            Font =_content.Load<SpriteFont>(contentName);
+            FontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/{fullName}"));
         }
         public static void LoadLDtkFile(string contentName)
         {
             LDtkFile = LDtkFile.FromFile(contentName, _content);
+        }
+        public static List<Localization.LocalizationStringData.Entry> LoadLocalizationFileAsEntries()
+        {
+            var csvTest = File.ReadAllText($"{ContentLoader.Content.RootDirectory}/Localization.csv");
+            var rows = CSVSerializer.ParseCSV(csvTest);
+            return CSVSerializer.Deserialize<Localization.LocalizationStringData.Entry>(rows).ToList();
         }
 
         public static void LoadTexture(string name, string contentName)

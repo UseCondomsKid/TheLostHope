@@ -1,11 +1,7 @@
 ﻿using LostHope.Engine.ContentLoading;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace LostHope.Engine.Localization
 {
@@ -21,6 +17,7 @@ namespace LostHope.Engine.Localization
         // ----------------------------------------------------
         // Create language dictionaries
         private static Dictionary<string, string> localizedEN;
+        private static Dictionary<string, string> localizedFR;
         // TODO: Add new language dicts here
         // Example:
         // private static Dictionary<string, string> localizedFR; => For French
@@ -34,6 +31,8 @@ namespace LostHope.Engine.Localization
         {
             // Initializing dictionaries
             localizedEN = new Dictionary<string, string>();
+            localizedFR = new Dictionary<string, string>();
+            // TODO: Initialize other dictionaries
 
             UpdateDictionaries();
 
@@ -56,8 +55,12 @@ namespace LostHope.Engine.Localization
             // Getting the localized string
             switch (currentLanguage)
             {
+                // TODO: Add other cases for other languages
                 case LocalizationStringData.Language.English:
-                    if (!localizedEN.TryGetValue(key, out value)) return "Word not localized";
+                    if (!localizedEN.TryGetValue(key, out value)) return "English Word not localized";
+                    break;
+                case LocalizationStringData.Language.French:
+                    if (!localizedFR.TryGetValue(key, out value)) return "French Word not localized";
                     break;
                 default:
                     return "Language doesn't exist";
@@ -84,20 +87,21 @@ namespace LostHope.Engine.Localization
             if (!isInitialized) Init();
 
             currentLanguage = new_language;
-            // UpdateDictionaries();
 
             onChangedLanguage?.Invoke();
         }
 
         private static void UpdateDictionaries()
         {
-            // TODO: Load entries
-
-            //foreach (var entry in entries)
-            //{
-            //    // Adding localized values to dictionaries
-            //    localizedEN.Add(entry.id, entry.en);
-            //}
+            foreach (var entry in ContentLoader.LoadLocalizationFileAsEntries())
+            {
+                // Adding localized values to dictionaries
+                localizedEN.Add(entry.id, entry.en);
+                localizedFR.Add(entry.id, entry.fr);
+                // TODO: Add other values to other languages' dictionaries
+                // Example:
+                // localizedFR.Add(entry.id, entry.fr); => For french
+            }
         }
     }
 }

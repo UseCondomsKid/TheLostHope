@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 
-namespace LostHope.Engine.Localization
+namespace LostHope.Engine.ContentLoading
 {
     public class CSVSerializer
     {
@@ -39,8 +39,8 @@ namespace LostHope.Engine.Localization
                 string id2 = "";
                 for (int j = 0; j < id.Length; j++)
                 {
-                    if ((id[j] >= 'a' && id[j] <= 'z') || (id[j] >= '0' && id[j] <= '9'))
-                        id2 += ((char)id[j]).ToString();
+                    if (id[j] >= 'a' && id[j] <= 'z' || id[j] >= '0' && id[j] <= '9')
+                        id2 += id[j].ToString();
                     else if (id[j] >= 'A' && id[j] <= 'Z')
                         id2 += ((char)(id[j] - 'A' + 'a')).ToString();
                 }
@@ -97,20 +97,20 @@ namespace LostHope.Engine.Localization
             else if (fieldinfo.FieldType.IsEnum)
                 fieldinfo.SetValue(v, Enum.Parse(fieldinfo.FieldType, value.ToString()));
             else if (value.IndexOf('.') != -1 &&
-                (fieldinfo.FieldType == typeof(Int32) || fieldinfo.FieldType == typeof(Int64) || fieldinfo.FieldType == typeof(Int16)))
+                (fieldinfo.FieldType == typeof(int) || fieldinfo.FieldType == typeof(long) || fieldinfo.FieldType == typeof(short)))
             {
                 float f = (float)Convert.ChangeType(value, typeof(float));
                 fieldinfo.SetValue(v, Convert.ChangeType(f, fieldinfo.FieldType));
             }
 
-// NOTE: I can change this to be able to localize images
-//#if UNITY_EDITOR
-//        else if (fieldinfo.FieldType == typeof(UnityEngine.Sprite))
-//        {
-//            Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(value.ToString());
-//            fieldinfo.SetValue(v, sprite);
-//        }
-//#endif
+            // NOTE: I can change this to be able to localize images
+            //#if UNITY_EDITOR
+            //        else if (fieldinfo.FieldType == typeof(UnityEngine.Sprite))
+            //        {
+            //            Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(value.ToString());
+            //            fieldinfo.SetValue(v, sprite);
+            //        }
+            //#endif
             else if (fieldinfo.FieldType == typeof(string))
                 fieldinfo.SetValue(v, value);
             else
@@ -157,7 +157,7 @@ namespace LostHope.Engine.Localization
             {
                 if (quotes == true)
                 {
-                    if ((text[i] == '\\' && i + 1 < text.Length && text[i + 1] == '\"') || (text[i] == '\"' && i + 1 < text.Length && text[i + 1] == '\"'))
+                    if (text[i] == '\\' && i + 1 < text.Length && text[i + 1] == '\"' || text[i] == '\"' && i + 1 < text.Length && text[i + 1] == '\"')
                     {
                         token.Append('\"');
                         i++;

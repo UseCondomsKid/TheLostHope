@@ -4,6 +4,7 @@ using LostHope.Engine.StateManagement;
 using LostHope.Engine.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace LostHope.GameCode.GameStates
 {
@@ -19,7 +20,7 @@ namespace LostHope.GameCode.GameStates
         {
             base.Enter();
 
-            playButton = new KeyboardCondition(Keys.P);
+            playButton = new AnyCondition(new KeyboardCondition(Keys.P), new GamePadCondition(GamePadButton.A, 0));
 
             // Start the gameplay manager
             GameplayManager.Instance.Start(_gameRef, _stateManager, _uiManager, Worlds.World.Iid);
