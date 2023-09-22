@@ -40,7 +40,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
         public ICondition InteractInput { get; private set; }
         // --------------------------
 
-        public Player(Game game, World physicsWorld, AsepriteFile asepriteFile, LDtkPlayer playerData) : base(game, physicsWorld, asepriteFile)
+        public Player(Game game, AsepriteFile asepriteFile, LDtkPlayer playerData) : base(game, asepriteFile)
         {
             // Set the player data
             PlayerData = playerData;

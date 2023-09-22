@@ -1850,48 +1850,6 @@
 					"gridTiles": [],
 					"entityInstances": [
 						{
-							"__identifier": "LDtkGun",
-							"__grid": [27,13],
-							"__pivot": [0,0],
-							"__tags": ["Gun"],
-							"__tile": { "tilesetUid": 103, "x": 16, "y": 560, "w": 16, "h": 16 },
-							"__smartColor": "#B55088",
-							"__worldX": 864,
-							"__worldY": 416,
-							"iid": "5af85e80-1460-11ee-95ef-9dd29ba88d9c",
-							"width": 32,
-							"height": 32,
-							"defUid": 65,
-							"px": [864,416],
-							"fieldInstances": [
-								{ "__identifier": "Name", "__type": "String", "__value": "Pistol", "__tile": null, "defUid": 77, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Pistol"]
-								}] },
-								{ "__identifier": "AsepriteFileName", "__type": "String", "__value": "Pistol", "__tile": null, "defUid": 66, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Pistol"]
-								}] },
-								{ "__identifier": "ClipSize", "__type": "Int", "__value": 9, "__tile": null, "defUid": 67, "realEditorValues": [{ "id": "V_Int", "params": [9] }] },
-								{ "__identifier": "FireType", "__type": "LocalEnum.GunFireType", "__value": "Single", "__tile": null, "defUid": 112, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Single"]
-								}] },
-								{ "__identifier": "KnockbackForce", "__type": "Float", "__value": 50, "__tile": null, "defUid": 73, "realEditorValues": [{ "id": "V_Float", "params": [50] }] },
-								{ "__identifier": "TimeBetweenShots", "__type": "Float", "__value": 0.5, "__tile": null, "defUid": 69, "realEditorValues": [{ "id": "V_Float", "params": [0.5] }] },
-								{ "__identifier": "BulletType", "__type": "LocalEnum.GunBulletType", "__value": "Hitscan", "__tile": null, "defUid": 114, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Hitscan"]
-								}] },
-								{ "__identifier": "Range", "__type": "Float", "__value": 500, "__tile": null, "defUid": 70, "realEditorValues": [{ "id": "V_Float", "params": [500] }] },
-								{ "__identifier": "Damage", "__type": "Int", "__value": 2, "__tile": null, "defUid": 71, "realEditorValues": [{ "id": "V_Int", "params": [2] }] },
-								{ "__identifier": "CanPenetrate", "__type": "Bool", "__value": true, "__tile": null, "defUid": 93, "realEditorValues": [{
-									"id": "V_Bool",
-									"params": [ true ]
-								}] }
-							]
-						},
-						{
 							"__identifier": "LDtkLevelTransition",
 							"__grid": [38,10],
 							"__pivot": [0,0],
@@ -1941,18 +1899,18 @@
 						},
 						{
 							"__identifier": "LDtkPlayer",
-							"__grid": [3,10],
+							"__grid": [36,13],
 							"__pivot": [0,0],
 							"__tags": ["Player"],
 							"__tile": null,
 							"__smartColor": "#FF0044",
-							"__worldX": 96,
-							"__worldY": 320,
+							"__worldX": 1152,
+							"__worldY": 416,
 							"iid": "1f6d7300-1460-11ee-95ef-85f0c2119212",
 							"width": 32,
 							"height": 32,
 							"defUid": 9,
-							"px": [96,320],
+							"px": [1152,416],
 							"fieldInstances": [
 								{ "__identifier": "GravityScale", "__type": "Float", "__value": 30, "__tile": null, "defUid": 23, "realEditorValues": [{ "id": "V_Float", "params": [30] }] },
 								{ "__identifier": "Speed", "__type": "Float", "__value": 140, "__tile": null, "defUid": 19, "realEditorValues": [{ "id": "V_Float", "params": [140] }] },
@@ -2637,18 +2595,18 @@
 						},
 						{
 							"__identifier": "LDtkPlayer",
-							"__grid": [4,5],
+							"__grid": [1,5],
 							"__pivot": [0,0],
 							"__tags": ["Player"],
 							"__tile": null,
 							"__smartColor": "#FF0044",
-							"__worldX": 1344,
+							"__worldX": 1248,
 							"__worldY": 416,
 							"iid": "4890eed0-3b70-11ee-a922-b9b1106f10e1",
 							"width": 32,
 							"height": 32,
 							"defUid": 9,
-							"px": [128,160],
+							"px": [32,160],
 							"fieldInstances": [
 								{ "__identifier": "GravityScale", "__type": "Float", "__value": 30, "__tile": null, "defUid": 23, "realEditorValues": [] },
 								{ "__identifier": "Speed", "__type": "Float", "__value": 140, "__tile": null, "defUid": 19, "realEditorValues": [] },

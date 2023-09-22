@@ -84,6 +84,7 @@ namespace LostHope
             Globals.Settings.IsFullscreen = Globals.Settings.IsFullscreen || Globals.Settings.IsBorderless;
             _graphics.SynchronizeWithVerticalRetrace = Globals.Settings.IsVSync;
 
+            Window.Title = "The Lost Hope";
             RestoreWindow();
             if (Globals.Settings.IsFullscreen)
             {
@@ -207,7 +208,6 @@ namespace LostHope
         {
             // Choose any other color you want to clear the screen to
             GraphicsDevice.Clear(Color.Black);
-
             base.Draw(gameTime);
         }
     }

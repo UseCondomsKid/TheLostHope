@@ -10,6 +10,7 @@ using LostHope.GameCode.Interactables;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace LostHope.GameCode.GameStates
 {
@@ -80,43 +81,109 @@ namespace LostHope.GameCode.GameStates
 
             // Physics
             LDtkIntGrid collisions = _levelData.GetIntGrid("Collisions");
-            var tileSize = collisions.TileSize;
             _physicsWorld = new World(_levelData.Size.X, _levelData.Size.Y, collisions.TileSize);
 
-            // Spawn all tiles
-            for (int x = 0; x < (_levelData.Size.X / collisions.TileSize); x++)
-            {
-                for (int y = 0; y < (_levelData.Size.Y / collisions.TileSize); y++)
-                {
-                    long intGridValue = collisions.GetValueAt(x, y);
-                    if (intGridValue is 1)
-                    {
-                        IBox tile = _physicsWorld.Create(x * collisions.TileSize, y * collisions.TileSize,
-                            collisions.TileSize, collisions.TileSize);
+            // Initialize lists for rectangles
+            List<Rectangle> rectangles = new List<Rectangle>();
+            var tileSize = collisions.TileSize;
+            var roomWidth = _levelData.Size.X / tileSize;
+            var roomHeight = _levelData.Size.Y / tileSize;
 
-                        tile.AddTags(CollisionTags.Ground);
+            // Create a 2D boolean array to keep track of processed tiles
+            bool[,] processed = new bool[roomWidth, roomHeight];
+
+            for (int y = 0; y < roomHeight; y++)
+            {
+                for (int x = 0; x < roomWidth; x++)
+                {
+                    if (collisions.GetValueAt(x, y) == 1 && !processed[x, y])
+                    {
+                        // Determine the width and height of the rectangle
+                        int width = 1;
+                        int height = 1;
+
+                        // Expand horizontally
+                        while (x + width < roomWidth && collisions.GetValueAt(x + width, y) == 1)
+                        {
+                            for (int h = 0; h < height; h++)
+                            {
+                                if (y + h >= roomHeight || collisions.GetValueAt(x + width, y + h) != 1)
+                                {
+                                    // Stop expanding vertically if there's an empty space
+                                    break;
+                                }
+                            }
+
+                            if (y + height < roomHeight)
+                            {
+                                // Check if there's a tile in the row above that matches the current width
+                                bool canExtend = true;
+                                for (int w = 0; w < width; w++)
+                                {
+                                    if (collisions.GetValueAt(x + w, y + height) != 1)
+                                    {
+                                        canExtend = false;
+                                        break;
+                                    }
+                                }
+
+                                if (canExtend)
+                                {
+                                    height++;
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+
+                            width++;
+                        }
+
+                        // Mark processed tiles as true
+                        for (int i = x; i < x + width; i++)
+                        {
+                            for (int j = y; j < y + height; j++)
+                            {
+                                processed[i, j] = true;
+                            }
+                        }
+
+                        // Create a rectangle
+                        rectangles.Add(new Rectangle(x * tileSize, y * tileSize, width * tileSize, height * tileSize));
                     }
                 }
             }
 
-            // Camera setup zoom
-            float widthRatio = _levelData.Size.X /  _gameplayManager.GameCamera.Size.X;
-            float heightRatio = _levelData.Size.Y / _gameplayManager.GameCamera.Size.Y;
-            float minRatio = Math.Min(widthRatio, heightRatio);
-            _gameplayManager.GameCamera.Zoom = minRatio > 0.8f ? 1.8f : 1f / minRatio;
+            // Create the optimized rectangles and add them to the physics world
+            foreach (var rect in rectangles)
+            {
+                int x = rect.Left / tileSize;
+                int y = rect.Top / tileSize;
+                int width = rect.Width / tileSize;
+                int height = rect.Height / tileSize;
+
+                IBox tile = _physicsWorld.Create(x * tileSize, y * tileSize,
+                    width * tileSize, height * tileSize);
+
+                tile.AddTags(CollisionTags.Ground);
+            }
 
             // Setup box list
             _characterBoxes = new List<CharacterBox>();
 
             // Load and Setup Player
-            ContentLoader.LoadAsepriteFile("Player", "Player");
-            _player = new Player(_gameRef, _physicsWorld, ContentLoader.GetAsepriteFile("Player"),
-                playerData);
+            if (_player == null)
+            {
+                ContentLoader.LoadAsepriteFile("Player", "Player");
+                _player = new Player(_gameRef, ContentLoader.GetAsepriteFile("Player"),
+                    playerData);
+            }
 
             _player.SpawnCharacter((levelTransitionId == null ?
                 playerData.Position :
                 levelTransitionDataList.Find(lt => lt.Id == levelTransitionId).SpawnPosition.ToVector2())
-                - _levelData.Position.ToVector2()
+                - _levelData.Position.ToVector2(), _physicsWorld
                 );
 
             _characterBoxes.Add(new CharacterBox(CollisionTags.Player, _player.Body));
@@ -151,12 +218,37 @@ namespace LostHope.GameCode.GameStates
                     AddComponent(g);
                 }
             }
+
+            // Camera setup zoom
+            float widthRatio = _levelData.Size.X /  _gameplayManager.GameCamera.Size.X;
+            float heightRatio = _levelData.Size.Y / _gameplayManager.GameCamera.Size.Y;
+            float minRatio = Math.Min(widthRatio, heightRatio);
+            _gameplayManager.GameCamera.Zoom = minRatio > 0.8f ? 1.8f : 1f / minRatio;
+            // Set the camera's position
+            SetCameraPosition();
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
+            SetCameraPosition();
+        }
+
+        protected override Matrix? GetGameplayTransformMatrix()
+        {
+            return GameplayManager.Instance.GameCamera.Transform;
+        }
+        protected override void DrawGameplay(GameTime gameTime)
+        {
+            // Draw Room
+            _levelRenderer.RenderPrerenderedLevel(_levelData);
+
+            base.DrawGameplay(gameTime);
+        }
+
+        protected void SetCameraPosition()
+        {
             // Set the camera's position to be the player's position
             _gameplayManager.GameCamera.Position = _player.Position;
 
@@ -179,18 +271,7 @@ namespace LostHope.GameCode.GameStates
             {
                 _gameplayManager.GameCamera.Position = new Vector2(_gameplayManager.GameCamera.Position.X, _levelData.Size.Y - (_gameplayManager.GameCamera.Size.Y / 2f));
             }
-        }
 
-        protected override Matrix? GetGameplayTransformMatrix()
-        {
-            return GameplayManager.Instance.GameCamera.Transform;
-        }
-        protected override void DrawGameplay(GameTime gameTime)
-        {
-            // Draw Room
-            _levelRenderer.RenderPrerenderedLevel(_levelData);
-
-            base.DrawGameplay(gameTime);
         }
     }
 }

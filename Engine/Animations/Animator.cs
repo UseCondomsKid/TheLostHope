@@ -38,7 +38,8 @@ namespace LostHope.Engine.Animations
             Animations = new Dictionary<object, Animation>();
             if (asepriteFile == null) return;
 
-            var spriteSheet = SpriteSheetProcessor.Process(graphicsDevice, asepriteFile, mergeDuplicates: false);
+            var spriteSheet = SpriteSheetProcessor.Process(graphicsDevice, asepriteFile, mergeDuplicates: false, includeTilemapLayers: false,
+                innerPadding: 1, borderPadding: 1);
             SpriteSheetTexture = spriteSheet.TextureAtlas.Texture;
 
             List<AnimationFrame> frames = new List<AnimationFrame>();

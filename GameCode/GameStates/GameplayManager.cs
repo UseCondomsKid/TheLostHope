@@ -4,14 +4,9 @@ using LostHope.Engine.Camera;
 using LostHope.Engine.ContentLoading;
 using LostHope.Engine.StateManagement;
 using LostHope.Engine.UI;
-using LostHope.GameCode.Weapons;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LostHope.GameCode.GameStates
 {
@@ -62,9 +57,6 @@ namespace LostHope.GameCode.GameStates
             _stateManager = stateManager;
             _uiManager = uiManager;
 
-            // Create the level state
-            CurrentLevelState = new LevelState(_gameRef, _stateManager, _uiManager);
-
             // Initialize the camera
             _camera = new OrthographicCamera(_gameRef, Globals.ScreenHeight);
             _camera.Position = new Vector2(0, 0);
@@ -95,8 +87,12 @@ namespace LostHope.GameCode.GameStates
         {
             if (!Started) return;
 
-            _stateManager.SetState(CurrentLevelState);
+
+            // Create the level state
+            CurrentLevelState = new LevelState(_gameRef, _stateManager, _uiManager);
             _camera.Zoom = 1.0f;
+
+            _stateManager.SetState(CurrentLevelState);
             CurrentLevelState.StartLevel(CurrentWorld, levelId, levelTransitionId);
         }
 

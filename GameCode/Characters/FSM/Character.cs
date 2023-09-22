@@ -44,14 +44,12 @@ namespace LostHope.GameCode.Characters.FSM
         protected abstract void OnDeath();
 
         // Constructor
-        public Character(Game game, World physicsWorld, AsepriteFile asepriteFile) : base(game)
+        public Character(Game game, AsepriteFile asepriteFile) : base(game)
         {
             // Initializations
             StateMachine = new CharacterStateMachine();
             Animator = new Animator(asepriteFile, GraphicsDevice);
             IFrame = false;
-
-            _physicsWorld = physicsWorld;
 
             _facingDirection = 1; // Right
 
@@ -62,8 +60,10 @@ namespace LostHope.GameCode.Characters.FSM
 
         public abstract IBox CreateCharacterBox(float xPos, float yPos);
 
-        public virtual void SpawnCharacter(Vector2 position)
+        public virtual void SpawnCharacter(Vector2 position, World physicsWorld)
         {
+            _physicsWorld = physicsWorld;
+
             _body = CreateCharacterBox(position.X, position.Y);
             _body.Data = this;
             Position = position;

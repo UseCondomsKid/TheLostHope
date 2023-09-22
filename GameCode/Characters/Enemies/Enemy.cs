@@ -13,7 +13,7 @@ namespace LostHope.GameCode.Characters.Enemies
 {
     public abstract class Enemy : Character
     {
-        protected Enemy(Game game, World physicsWorld, AsepriteFile asepriteFile) : base(game, physicsWorld, asepriteFile)
+        protected Enemy(Game game, AsepriteFile asepriteFile) : base(game, asepriteFile)
         {
         }
     }

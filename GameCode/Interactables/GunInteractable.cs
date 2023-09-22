@@ -31,7 +31,6 @@ namespace LostHope.GameCode.Interactables
         protected override void UnloadContent()
         {
             base.UnloadContent();
-
             _animator = null;
         }
 

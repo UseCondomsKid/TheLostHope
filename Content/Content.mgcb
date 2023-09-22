@@ -15,21 +15,11 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Crawler.aseprite
-/importer:AsepriteFileContentImporter
-/processor:AsepriteFileContentProcessor
-/build:Crawler.aseprite
-
 #begin Localization.csv
 /copy:Localization.csv
 
 #begin PeaberryMono.ttf
 /copy:PeaberryMono.ttf
-
-#begin Pistol.aseprite
-/importer:AsepriteFileContentImporter
-/processor:AsepriteFileContentProcessor
-/build:Pistol.aseprite
 
 #begin Player.aseprite
 /importer:AsepriteFileContentImporter
@@ -47,11 +37,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:spritesheet.png
-
-#begin Static.aseprite
-/importer:AsepriteFileContentImporter
-/processor:AsepriteFileContentProcessor
-/build:Static.aseprite
 
 #begin World.ldtk
 /importer:LDtkFileImporter
