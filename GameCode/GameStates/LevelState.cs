@@ -41,7 +41,7 @@ namespace LostHope.GameCode.GameStates
         public Player Player { get { return _player; } }
         public List<CharacterBox> CharacterBoxes { get { return _characterBoxes; } }
 
-        public LevelState(Game1 gameRef, GameStateManager stateManager, UIManager uiManager) : base(gameRef, stateManager, uiManager)
+        public LevelState(Game1 gameRef, GameStateManager stateManager) : base(gameRef, stateManager)
         {
             _gameplayManager = GameplayManager.Instance;
         }

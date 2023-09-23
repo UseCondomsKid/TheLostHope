@@ -12,9 +12,8 @@ namespace LostHope.GameCode
 {
     public static class Globals
     {
-        // Screen width and height
-        public const int ScreenWidth = 1280;
-        public const int ScreenHeight = 720;
+        public static int CurrentScreenWidth { get; set; }
+        public static int CurrentScreenHeight { get; set; }
 
         public static Settings Settings { get; set; }
         public static SpriteBatch SpriteBatch { get; set; }

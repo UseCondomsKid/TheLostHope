@@ -2,16 +2,13 @@
 using LostHope.Engine.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using LostHope.GameCode.GameStates;
 using LostHope.GameCode;
 using LostHope.Engine.ContentLoading;
 using Apos.Input;
-using Track = Apos.Input.Track;
 using LostHope.GameCode.GameSettings;
 using FontStashSharp;
 using LostHope.Engine.Localization;
-using System.Diagnostics;
 
 namespace LostHope
 {
@@ -21,8 +18,6 @@ namespace LostHope
         private SpriteBatch _spriteBatch;
         private GameStateManager _stateManager;
         private UIManager _uiManager;
-
-        FontSystem _fontSystem;
 
         #region Properties
         public bool IsPaused;
@@ -99,10 +94,9 @@ namespace LostHope
 
             // Add Components
             Components.Add(_stateManager);
-            Components.Add(_uiManager);
 
             // Initilize game states here
-            MainMenuState = new MainMenuState(this, _stateManager, _uiManager);
+            MainMenuState = new MainMenuState(this, _stateManager);
 
             // Set start game state
             _stateManager.SetState(MainMenuState);
@@ -193,7 +187,11 @@ namespace LostHope
             //Call UpdateSetup at the start.
             InputHelper.UpdateSetup();
 
+            Globals.CurrentScreenWidth = GraphicsDevice.Viewport.Width;
+            Globals.CurrentScreenHeight = GraphicsDevice.Viewport.Height;
+
             GameplayManager.Instance.Update(gameTime);
+            _uiManager.Update(gameTime);
 
             if (IsPaused) return;
 
@@ -208,7 +206,12 @@ namespace LostHope
         {
             // Choose any other color you want to clear the screen to
             GraphicsDevice.Clear(Color.Black);
+
+            // Draw Game
             base.Draw(gameTime);
+
+            // Draw UI
+            _uiManager.Draw(_spriteBatch);
         }
     }
 }

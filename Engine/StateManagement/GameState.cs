@@ -15,8 +15,6 @@ namespace LostHope.Engine.StateManagement
 
         // A reference to the state machine
         protected readonly GameStateManager _stateManager;
-        // A reference to the UI manager
-        protected readonly UIManager _uiManager;
         // A reference to Game1
         protected readonly Game1 _gameRef;
 
@@ -27,11 +25,10 @@ namespace LostHope.Engine.StateManagement
         public List<GameComponent> Components { get { return _childComponents; } }
 
         // Constructor
-        public GameState(Game1 gameRef, GameStateManager stateManager, UIManager uiManager)
+        public GameState(Game1 gameRef, GameStateManager stateManager)
         {
             _gameRef = gameRef;
             _stateManager = stateManager;
-            _uiManager = uiManager;
 
             // Initialise list
             _childComponents = new List<GameComponent>();
@@ -45,10 +42,6 @@ namespace LostHope.Engine.StateManagement
         }
         public virtual void PostEnter()
         {
-            if (_uiManager.UIElements.Count > 0)
-            {
-                _currentUIAnchor = _uiManager.UIElements[0].Anchor;
-            }
         }
 
         protected virtual void LoadContent()
@@ -99,30 +92,6 @@ namespace LostHope.Engine.StateManagement
             BeginSpriteBatch(GetGameplayTransformMatrix());
             DrawGameplay(gameTime);
             EndSpriteBatch();
-
-            _uiSpriteBatchEnded = true;
-            for (int i = 0; i < _uiManager.UIElements.Count; i++)
-            {
-                BeginSpriteBatch(_uiManager.GetMatrixFromAnchor(_currentUIAnchor));
-                _uiSpriteBatchEnded = false;
-                // Draw the element
-                _uiManager.UIElements[i].Draw(gameTime);
-
-                // Change the anchor based on the next element's anchor
-                if (i != _uiManager.UIElements.Count - 1)
-                {
-                    if (_currentUIAnchor != _uiManager.UIElements[i + 1].Anchor)
-                    {
-                        _currentUIAnchor = _uiManager.UIElements[i + 1].Anchor;
-                        EndSpriteBatch();
-                        _uiSpriteBatchEnded = true;
-                    }
-                }
-            }
-            if (!_uiSpriteBatchEnded)
-            {
-                EndSpriteBatch();
-            }
         }
 
         // Called when the state is exited

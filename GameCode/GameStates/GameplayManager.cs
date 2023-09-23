@@ -43,22 +43,20 @@ namespace LostHope.GameCode.GameStates
 
         private Game1 _gameRef;
         private GameStateManager _stateManager;
-        private UIManager _uiManager;
 
         public GameplayManager()
         {
             Started = false;
         }
 
-        public void Start(Game1 gameRef, GameStateManager stateManager, UIManager uiManager, Guid startWorldId)
+        public void Start(Game1 gameRef, GameStateManager stateManager, Guid startWorldId)
         {
             // Set these up first
             _gameRef = gameRef;
             _stateManager = stateManager;
-            _uiManager = uiManager;
 
             // Initialize the camera
-            _camera = new OrthographicCamera(_gameRef, Globals.ScreenHeight);
+            _camera = new OrthographicCamera(_gameRef, Globals.CurrentScreenHeight);
             _camera.Position = new Vector2(0, 0);
 
             // Set starter world
@@ -89,7 +87,7 @@ namespace LostHope.GameCode.GameStates
 
 
             // Create the level state
-            CurrentLevelState = new LevelState(_gameRef, _stateManager, _uiManager);
+            CurrentLevelState = new LevelState(_gameRef, _stateManager);
             _camera.Zoom = 1.0f;
 
             _stateManager.SetState(CurrentLevelState);
