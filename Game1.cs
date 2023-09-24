@@ -193,10 +193,11 @@ namespace LostHope
             GameplayManager.Instance.Update(gameTime);
             _uiManager.Update(gameTime);
 
-            if (IsPaused) return;
-
-            Globals.GameTime = gameTime;
-            base.Update(gameTime);
+            if (!IsPaused)
+            {
+                Globals.GameTime = gameTime;
+                base.Update(gameTime);
+            }
 
             //Call UpdateCleanup at the end.
             InputHelper.UpdateCleanup();

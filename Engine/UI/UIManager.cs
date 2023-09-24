@@ -1,7 +1,6 @@
 ﻿using Apos.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace LostHope.Engine.UI
@@ -156,7 +155,7 @@ namespace LostHope.Engine.UI
                 // Handle Back (e.g., go back to the previous menu or perform menu-specific action)
                 _activeMenu.HandleBack();
             }
-            else if (_escape.Pressed())
+            if (_escape.Pressed())
             {
                 // Handle Escape (e.g., go back to the previous menu or perform menu-specific action)
                 _activeMenu.HandleEscape();

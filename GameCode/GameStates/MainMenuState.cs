@@ -31,7 +31,7 @@ namespace LostHope.GameCode.GameStates
         {
             base.Enter();
 
-            _mainMenu = new Menu(MainMenuBack, MainMenuEscape);
+            _mainMenu = new Menu();
 
             ContentLoader.LoadTexture("button", "button");
             var buttonTex = ContentLoader.GetTexture("button");
@@ -56,21 +56,10 @@ namespace LostHope.GameCode.GameStates
             GameplayManager.Instance.Start(_gameRef, _stateManager, Worlds.World.Iid);
         }
 
-        private void MainMenuBack()
-        {
-            Debug.WriteLine("Back");
-        }
-        private void MainMenuEscape()
-        {
-            Debug.WriteLine("Escape");
-        }
-
         private void PlayButtonEnter()
         {
             // Load the first level
             GameplayManager.Instance.LoadLevel("Level_0");
-
-            _gameRef.UIManager.SetActiveMenu(null);
         }
 
         private void ExitButtonEnter()
