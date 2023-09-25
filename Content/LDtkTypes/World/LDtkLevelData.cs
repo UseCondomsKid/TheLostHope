@@ -8,5 +8,7 @@ using Microsoft.Xna.Framework;
 
 public class LDtkLevelData
 {
+    public string[] Backgrounds { get; set; }
+    public string[] Foregrounds { get; set; }
 }
 #pragma warning restore

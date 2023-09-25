@@ -4,6 +4,7 @@ using System;
 using LostHope.GameCode.Characters.PlayerCharacter;
 using LostHope.GameCode;
 using System.Reflection.Emit;
+using System.Net.Http.Headers;
 
 namespace LostHope.Engine.Camera
 {
@@ -25,9 +26,9 @@ namespace LostHope.Engine.Camera
         private float _pixelScale = 1f;
 
         // This lets other scripts access the camera's position considering the position variable above is private
-        public Vector2 Position { get { return _position; }  set { _position = value; } }
+        public Vector2 Position { get { return _position; } }
         // This is the camera width and height
-        public Vector2 Size { get { return new Vector2(_graphicsDevice.Viewport.Width, _graphicsDevice.Viewport.Height) / _zoom; }}
+        public Vector2 Size { get { return new Vector2(Globals.CurrentScreenWidth, Globals.CurrentScreenHeight) / _zoom; }}
         // This lets other scripts access the camera's zoom considering the zoom variable above is private
         public float Zoom { get { return _zoom; } set { _zoom = value; } }
         #endregion
@@ -51,6 +52,14 @@ namespace LostHope.Engine.Camera
         #endregion
 
         #region Methods
+        public void SetPosition(Vector2 position)
+        {
+            _position = position;
+        }
+        public void SetPosition(float x, float y)
+        {
+            _position = new Vector2(x, y);
+        }
         public override void Initialize()
         {
             base.Initialize();

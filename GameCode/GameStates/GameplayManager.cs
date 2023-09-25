@@ -62,7 +62,6 @@ namespace LostHope.GameCode.GameStates
 
             // Initialize the camera
             _camera = new OrthographicCamera(_gameRef, Globals.CurrentScreenHeight);
-            _camera.Position = new Vector2(0, 0);
 
             // Set starter world
             SetWorld(startWorldId);
@@ -119,7 +118,6 @@ namespace LostHope.GameCode.GameStates
         public void Update(GameTime gameTime)
         {
             if (!Started) return;
-
             _camera.Update(gameTime);
         }
 

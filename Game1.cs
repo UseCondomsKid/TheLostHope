@@ -90,7 +90,7 @@ namespace LostHope
             // Initialize Game State Manager
             _stateManager = new GameStateManager(this);
             // Initialize UI Manager
-            _uiManager = new UIManager(this);
+            _uiManager = new UIManager();
 
             // Add Components
             Components.Add(_stateManager);

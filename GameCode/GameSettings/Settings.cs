@@ -40,11 +40,11 @@ namespace LostHope.GameCode.GameSettings
         // Roll
         public int KPlayerRollBinding { get; set; } = (int)Keys.LeftShift;
         public int MPlayerRollBinding { get; set; } = -1;
-        public int GPlayerRollBinding { get; set; } = (int)GamePadButton.RightShoulder;
+        public int GPlayerRollBinding { get; set; } = (int)GamePadButton.B;
         // Parry
         public int KPlayerParryBinding { get; set; } = -1;
         public int MPlayerParryBinding { get; set; } = (int)MouseButton.RightButton;
-        public int GPlayerParryBinding { get; set; } = (int)GamePadButton.B;
+        public int GPlayerParryBinding { get; set; } = (int)GamePadButton.X;
         // Shoot
         public int KPlayerShootBinding { get; set; } = -1;
         public int MPlayerShootBinding { get; set; } = (int)MouseButton.LeftButton;

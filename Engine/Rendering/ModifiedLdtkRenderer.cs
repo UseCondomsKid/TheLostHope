@@ -5,7 +5,10 @@ using System.IO;
 using System.Linq;
 using LDtk;
 using LDtk.Renderer;
+using LDtkTypes;
 using LostHope.Engine.ContentLoading;
+using LostHope.GameCode;
+using LostHope.GameCode.GameStates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,6 +16,20 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace LostHope.Engine.Rendering
 {
+    public class BackgroundData
+    {
+        public Vector2 Position;
+        public Texture2D Texture;
+        public float ParallaxMult;
+
+        public BackgroundData(Vector2 pos, Texture2D texture, float parallaxMult)
+        {
+            Position = pos;
+            Texture = texture;
+            ParallaxMult = parallaxMult;
+        }
+    }
+
     //
     // Summary:
     //     Renderer for the ldtkWorld, ldtkLevel, intgrids and entities. This can all be
@@ -21,6 +38,8 @@ namespace LostHope.Engine.Rendering
     public class ModifiedLDtkRenderer
     {
         private static RenderTarget2D RenderTarget;
+        private static List<BackgroundData> ParallaxBackgrounds;
+        private static List<BackgroundData> ParallaxForegrounds;
 
         private GraphicsDevice graphicsDevice;
 
@@ -72,10 +91,7 @@ namespace LostHope.Engine.Rendering
             RenderTarget = new RenderTarget2D(graphicsDevice, level.PxWid, level.PxHei, mipMap: false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
             graphicsDevice.SetRenderTarget(RenderTarget);
 
-            if (level.BgRelPath != null)
-            {
-                RenderBackgroundToLayer(level);
-            }
+            GetAndPrerenderBackgrounds(level);
 
             for (int num = level.LayerInstances.Length - 1; num >= 0; num--)
             {
@@ -119,12 +135,53 @@ namespace LostHope.Engine.Rendering
             }
         }
 
-        private void RenderBackgroundToLayer(LDtkLevel level)
+        private void GetAndPrerenderBackgrounds(LDtkLevel level)
         {
-            Texture2D texture = GetTexture(level, level.BgRelPath);
-            LevelBackgroundPosition bgPos = level._BgPos;
-            Vector2 position = bgPos.TopLeftPx.ToVector2();
-            SpriteBatch.Draw(texture, position, new Rectangle((int)bgPos.CropRect[0], (int)bgPos.CropRect[1], (int)bgPos.CropRect[2], (int)bgPos.CropRect[3]), Color.White, 0f, Vector2.Zero, bgPos.Scale, SpriteEffects.None, 0f);
+            //if (level.BgRelPath != null)
+            //{
+            //    Texture2D texture = GetTexture(level, level.BgRelPath);
+            //    LevelBackgroundPosition bgPos = level._BgPos;
+            //    Vector2 position = bgPos.TopLeftPx.ToVector2();
+            //    SpriteBatch.Draw(texture, position, new Rectangle((int)bgPos.CropRect[0], (int)bgPos.CropRect[1], (int)bgPos.CropRect[2], (int)bgPos.CropRect[3]), Color.White, 0f, Vector2.Zero, bgPos.Scale, SpriteEffects.None, 0f);
+            //}
+
+            var backgrounds = level.GetCustomFields<LDtkLevelData>();
+            if (backgrounds != null)
+            {
+                ParallaxBackgrounds = new List<BackgroundData>();
+                if (backgrounds.Backgrounds != null)
+                {
+                    foreach (var b in backgrounds.Backgrounds)
+                    {
+                        string[] parts = b.Split('|');
+                        string path = parts[0];
+                        float paralalx = float.Parse(parts[1]);
+
+                        ContentLoader.LoadTexture(path, path);
+
+                        BackgroundData d = new(Vector2.Zero, ContentLoader.GetTexture(path), paralalx);
+                        ParallaxBackgrounds.Add(d);
+                    }
+                }
+
+                ParallaxForegrounds = new List<BackgroundData>();
+                if (backgrounds.Foregrounds != null)
+                {
+                    foreach (var f in backgrounds.Foregrounds)
+                    {
+                        string[] parts = f.Split('|');
+                        string path = parts[0];
+                        float paralalx = float.Parse(parts[1]);
+
+                        ContentLoader.LoadTexture(path, path);
+
+                        BackgroundData d = new(Vector2.Zero, ContentLoader.GetTexture(path), paralalx);
+                        d.ParallaxMult = paralalx;
+
+                        ParallaxForegrounds.Add(d);
+                    }
+                }
+            }
         }
 
         private Texture2D GetTexture(LDtkLevel level, string path)
@@ -140,6 +197,42 @@ namespace LostHope.Engine.Rendering
         public void RenderPrerenderedLevel(LDtkLevel level)
         {
             SpriteBatch.Draw(RenderTarget, Vector2.Zero, Color.White);
+        }
+        public void RenderBackgrounds()
+        {
+            foreach (var bg in ParallaxBackgrounds)
+            {
+                float scale = (float)Math.Ceiling(MathHelper.Max(GameplayManager.Instance.GameCamera.Size.Y / bg.Texture.Height,
+                    GameplayManager.Instance.GameCamera.Size.X / bg.Texture.Width));
+
+                SpriteBatch.Draw(bg.Texture, bg.Position, null, Color.White,
+                    0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            }
+        }
+        public void RenderForegrounds()
+        {
+            foreach (var fr in ParallaxForegrounds)
+            {
+                float scale = (float)Math.Ceiling(MathHelper.Max(GameplayManager.Instance.GameCamera.Size.Y / fr.Texture.Height,
+                    GameplayManager.Instance.GameCamera.Size.X / fr.Texture.Width));
+
+                SpriteBatch.Draw(fr.Texture, fr.Position, null, Color.White,
+                    0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            }
+        }
+
+        public void UpdateParallaxBackgrounds(GameTime gameTime, Vector2 currentCameraPos, Vector2 previousCameraPos)
+        {
+            float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            foreach (var bg in ParallaxBackgrounds)
+            {
+                bg.Position += (currentCameraPos - previousCameraPos) * (1 - bg.ParallaxMult);
+            }
+            foreach (var fr in ParallaxForegrounds)
+            {
+                fr.Position -= (currentCameraPos - previousCameraPos) * (1 - fr.ParallaxMult);
+            }
         }
 
         //

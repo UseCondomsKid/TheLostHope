@@ -30,6 +30,10 @@ namespace LostHope.GameCode.GameStates
 
         private GameplayManager _gameplayManager;
 
+        // Camera
+        private Vector2 _cameraLastFramePosition;
+        private readonly Vector2 _cameraFollowPlayerSpeed = new Vector2(0.1f, 0.2f);
+
         // Room Data
         private LDtkLevel _levelData;
         private ModifiedLDtkRenderer _levelRenderer;
@@ -180,11 +184,10 @@ namespace LostHope.GameCode.GameStates
                     playerData);
             }
 
-            _player.SpawnCharacter((levelTransitionId == null ?
-                playerData.Position :
-                levelTransitionDataList.Find(lt => lt.Id == levelTransitionId).SpawnPosition.ToVector2())
-                - _levelData.Position.ToVector2(), _physicsWorld
-                );
+            Vector2 playerSpawnPos = (levelTransitionId == null ? playerData.Position :
+                levelTransitionDataList.Find(lt => lt.Id == levelTransitionId).SpawnPosition.ToVector2()) - _levelData.Position.ToVector2();
+
+            _player.SpawnCharacter(playerSpawnPos, _physicsWorld);
 
             _characterBoxes.Add(new CharacterBox(CollisionTags.Player, _player.Body));
             AddComponent(_player);
@@ -224,15 +227,17 @@ namespace LostHope.GameCode.GameStates
             float heightRatio = _levelData.Size.Y / _gameplayManager.GameCamera.Size.Y;
             float minRatio = Math.Min(widthRatio, heightRatio);
             _gameplayManager.GameCamera.Zoom = minRatio > 0.8f ? 1.8f : 1f / minRatio;
-            // Set the camera's position
-            SetCameraPosition();
+            // Set the starter camera's position
+            SetCameraPosition(instant: false);
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            SetCameraPosition();
+            SetCameraPosition(instant: false);
+
+            _levelRenderer.UpdateParallaxBackgrounds(gameTime, _gameplayManager.GameCamera.Position, _cameraLastFramePosition);
         }
 
         protected override Matrix? GetGameplayTransformMatrix()
@@ -241,35 +246,52 @@ namespace LostHope.GameCode.GameStates
         }
         protected override void DrawGameplay(GameTime gameTime)
         {
+            // Draw Backgrounds
+            _levelRenderer.RenderBackgrounds();
+
             // Draw Room
             _levelRenderer.RenderPrerenderedLevel(_levelData);
 
             base.DrawGameplay(gameTime);
+
+            // Draw Foregrounds
+            _levelRenderer.RenderForegrounds();
         }
 
-        protected void SetCameraPosition()
+        protected void SetCameraPosition(bool instant = false)
         {
             // Set the camera's position to be the player's position
-            _gameplayManager.GameCamera.Position = _player.Position;
+            if (instant)
+            {
+                _cameraLastFramePosition = _player.Position;
+                _gameplayManager.GameCamera.SetPosition(_player.Position);
+            }
+            else
+            {
+                _cameraLastFramePosition = _gameplayManager.GameCamera.Position;
+                _gameplayManager.GameCamera.SetPosition(MathHelper.Lerp(_gameplayManager.GameCamera.Position.X,
+                    _player.Position.X, _cameraFollowPlayerSpeed.X), MathHelper.Lerp(_gameplayManager.GameCamera.Position.Y,
+                    _player.Position.Y, _cameraFollowPlayerSpeed.Y));
+            }
 
             // Make sure that the camera is still in the bounderies of the level
             // X Bounds
             if (_gameplayManager.GameCamera.Position.X - (_gameplayManager.GameCamera.Size.X / 2f) < 0)
             {
-                _gameplayManager.GameCamera.Position = new Vector2(_gameplayManager.GameCamera.Size.X / 2f, _gameplayManager.GameCamera.Position.Y);
+                _gameplayManager.GameCamera.SetPosition(_gameplayManager.GameCamera.Size.X / 2f, _gameplayManager.GameCamera.Position.Y);
             }
             else if (_gameplayManager.GameCamera.Position.X + (_gameplayManager.GameCamera.Size.X / 2f) > _levelData.Size.X)
             {
-                _gameplayManager.GameCamera.Position = new Vector2(_levelData.Size.X - (_gameplayManager.GameCamera.Size.X / 2f), _gameplayManager.GameCamera.Position.Y);
+                _gameplayManager.GameCamera.SetPosition(_levelData.Size.X - (_gameplayManager.GameCamera.Size.X / 2f), _gameplayManager.GameCamera.Position.Y);
             }
             // Y Bounds
             if (_gameplayManager.GameCamera.Position.Y - (_gameplayManager.GameCamera.Size.Y / 2f) < 0)
             {
-                _gameplayManager.GameCamera.Position = new Vector2(_gameplayManager.GameCamera.Position.X, _gameplayManager.GameCamera.Size.Y / 2f);
+                _gameplayManager.GameCamera.SetPosition(_gameplayManager.GameCamera.Position.X, _gameplayManager.GameCamera.Size.Y / 2f);
             }
             else if (_gameplayManager.GameCamera.Position.Y + (_gameplayManager.GameCamera.Size.Y / 2f) > _levelData.Size.Y)
             {
-                _gameplayManager.GameCamera.Position = new Vector2(_gameplayManager.GameCamera.Position.X, _levelData.Size.Y - (_gameplayManager.GameCamera.Size.Y / 2f));
+                _gameplayManager.GameCamera.SetPosition(_gameplayManager.GameCamera.Position.X, _levelData.Size.Y - (_gameplayManager.GameCamera.Size.Y / 2f));
             }
 
         }

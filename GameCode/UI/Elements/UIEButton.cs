@@ -13,12 +13,25 @@ namespace LostHope.GameCode.UI.Elements
     {
         private Vector2 _size;
         private Texture2D _texture;
+        private Color _color;
 
         public UIEButton(UIAnchor anchor, float xPosPercent, float yPosPercent, UIElement parent, Vector2 size,
             Texture2D texture = null, Action onEnter = null, Action onSelect = null, Action onDeselct = null) : base(anchor, xPosPercent, yPosPercent, parent, onEnter, onSelect, onDeselct)
         {
             _size = size;
             SetTexture(texture);
+            _color = Color.White;
+        }
+
+        public override void Select()
+        {
+            _color = Color.Yellow;
+            base.Select();
+        }
+        public override void Deselect()
+        {
+            _color = Color.White;
+            base.Deselect();
         }
 
         public void SetTexture(Texture2D texture)
@@ -39,7 +52,7 @@ namespace LostHope.GameCode.UI.Elements
             if (_texture != null)
             {
                 var pos = GetCenteredDrawPosition();
-                spriteBatch.Draw(_texture, pos, new Rectangle(pos.ToPoint(), _size.ToPoint()), Color.White);
+                spriteBatch.Draw(_texture, pos, new Rectangle(pos.ToPoint(), _size.ToPoint()), _color);
             }
         }
     }

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using Track = Apos.Input.Track;
 
 namespace LostHope.Engine.UI
 {
@@ -28,7 +29,6 @@ namespace LostHope.Engine.UI
             Right
         }
 
-        private Game _game;
         private Menu _activeMenu;
 
         // Input
@@ -40,10 +40,8 @@ namespace LostHope.Engine.UI
         private ICondition _back;
         private ICondition _escape;
 
-        public UIManager(Game game)
+        public UIManager()
         {
-            _game = game;
-
             _up = new AnyCondition(
                 new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Up),
                 new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.W),
@@ -145,7 +143,7 @@ namespace LostHope.Engine.UI
                 }
             }
 
-            if (_enter.Pressed())
+            if (_enter.Pressed(canConsume: false))
             {
                 // Call Enter function on the selectedSelectable
                 _activeMenu.SelectedSelectable?.Enter();
