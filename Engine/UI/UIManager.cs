@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using Track = Apos.Input.Track;
 
 namespace LostHope.Engine.UI
 {
@@ -143,20 +142,21 @@ namespace LostHope.Engine.UI
                 }
             }
 
-            if (_enter.Pressed(canConsume: false))
+            if (_enter.Pressed())
             {
                 // Call Enter function on the selectedSelectable
                 _activeMenu.SelectedSelectable?.Enter();
+            }
+
+            if (_escape.Pressed())
+            {
+                // Handle Escape (e.g., go back to the previous menu or perform menu-specific action)
+                _activeMenu.HandleEscape();
             }
             else if (_back.Pressed())
             {
                 // Handle Back (e.g., go back to the previous menu or perform menu-specific action)
                 _activeMenu.HandleBack();
-            }
-            if (_escape.Pressed())
-            {
-                // Handle Escape (e.g., go back to the previous menu or perform menu-specific action)
-                _activeMenu.HandleEscape();
             }
 
             if (newIndex != selectedIndex)

@@ -11,7 +11,7 @@
 	"iid": "172c2930-c640-11ed-855c-c950c23d9a67",
 	"jsonVersion": "1.4.1",
 	"appBuildId": 471015,
-	"nextUid": 124,
+	"nextUid": 126,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": null,
@@ -1966,25 +1966,6 @@
 									"params": ["36,13"]
 								}] }
 							]
-						},
-						{
-							"__identifier": "LDtkEnemy",
-							"__grid": [27,15],
-							"__pivot": [0,0],
-							"__tags": ["Enemy"],
-							"__tile": { "tilesetUid": 103, "x": 96, "y": 0, "w": 16, "h": 16 },
-							"__smartColor": "#BE4A2F",
-							"__worldX": 864,
-							"__worldY": 480,
-							"iid": "d72e77c0-1460-11ee-ab0b-91a069391ea2",
-							"width": 32,
-							"height": 32,
-							"defUid": 80,
-							"px": [864,480],
-							"fieldInstances": [{ "__identifier": "Type", "__type": "LocalEnum.EnemyType", "__value": "Crawler", "__tile": null, "defUid": 106, "realEditorValues": [{
-								"id": "V_String",
-								"params": ["Crawler"]
-							}] }]
 						},
 						{
 							"__identifier": "LDtkPlayer",
