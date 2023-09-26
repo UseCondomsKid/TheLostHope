@@ -3,6 +3,7 @@ using LDtkTypes;
 using LostHope.Engine.Animations;
 using LostHope.GameCode.Weapons.Bullets;
 using Microsoft.Xna.Framework;
+using MonoGame.Aseprite;
 using System;
 using System.Collections.Generic;
 
@@ -42,7 +43,7 @@ namespace LostHope.GameCode.Weapons
         //    Globals.Player.Body.Width + _animator.AnimationCanvasSize.X,
         //    Globals.Player.Body.Height / 2f + _animator.AnimationCanvasSize.Y / 3f);
 
-        public Gun(Game game, LDtkGun data, World physicsWorld, AsepriteExportData asepriteExportData, bool equipped = false) : base(game)
+        public Gun(Game game, LDtkGun data, World physicsWorld, AsepriteFile asepriteFile, bool equipped = false) : base(game)
         {
             _data = data;
             _physicsWorld = physicsWorld;
@@ -52,7 +53,7 @@ namespace LostHope.GameCode.Weapons
             _currentClip = _data.ClipSize;
             _reloading = false;
 
-            _animator = new Animator(asepriteExportData);
+            _animator = new Animator(asepriteFile, game.GraphicsDevice);
             _shootAnimation = _animator.Animations["Shoot"];
             _reloadAnimation = _animator.Animations["Reload"];
             _animator.SetActiveAnimation("Idle");

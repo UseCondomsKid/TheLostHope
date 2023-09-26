@@ -174,7 +174,7 @@ namespace LostHope.GameCode.GameStates
             // Load and Setup Player
             if (_player == null)
             {
-                ContentLoader.LoadAsepriteFile(playerData.AsepriteFileName);
+                ContentLoader.LoadAsepriteFile(playerData.AsepriteFileName, playerData.AsepriteFileName);
                 _player = new Player(_gameRef, ContentLoader.GetAsepriteFile(playerData.AsepriteFileName),
                     playerData);
             }

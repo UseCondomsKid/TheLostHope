@@ -18,7 +18,6 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
 
         protected override void AnimationFrameEventTriggered()
         {
-            Debug.WriteLine("Parry Event");
         }
 
         public override void Update(float delta)

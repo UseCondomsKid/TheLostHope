@@ -61,10 +61,7 @@ namespace LostHope.Engine.Rendering
         {
             SpriteBatch = spriteBatch;
             graphicsDevice = spriteBatch.GraphicsDevice;
-            if (RenderTarget != null)
-            {
-                RenderTarget.Dispose();
-            }
+            RenderTarget?.Dispose();
         }
 
         //
@@ -80,8 +77,8 @@ namespace LostHope.Engine.Rendering
         //     The level already has been prerendered
         public void PrerenderLevel(LDtkLevel level)
         {
-            graphicsDevice.Clear(Color.Black);
-
+            RenderTarget = new RenderTarget2D(graphicsDevice, level.PxWid, level.PxHei, mipMap: false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            graphicsDevice.SetRenderTarget(RenderTarget);
             SpriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
             RenderLayers(level);
             SpriteBatch.End();
@@ -90,11 +87,6 @@ namespace LostHope.Engine.Rendering
 
         private void RenderLayers(LDtkLevel level)
         {
-            RenderTarget = new RenderTarget2D(graphicsDevice, level.PxWid, level.PxHei, mipMap: false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-            graphicsDevice.SetRenderTarget(RenderTarget);
-
-            GetAndPrerenderBackgrounds(level);
-
             for (int num = level.LayerInstances.Length - 1; num >= 0; num--)
             {
                 LayerInstance layer = level.LayerInstances[num];
@@ -103,6 +95,8 @@ namespace LostHope.Engine.Rendering
                     Texture2D texture = GetTexture(level, layer._TilesetRelPath);
                     int width = layer._CWid * layer._GridSize;
                     int height = layer._CHei * layer._GridSize;
+
+                    graphicsDevice.Clear(ClearOptions.Target, Color.Transparent, 0f, 0);
 
                     switch (layer._Type)
                     {
@@ -135,6 +129,9 @@ namespace LostHope.Engine.Rendering
                     }
                 }
             }
+
+
+            GetAndPrerenderBackgrounds(level);
         }
 
         private void GetAndPrerenderBackgrounds(LDtkLevel level)

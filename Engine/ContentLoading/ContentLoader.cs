@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Aseprite;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,14 +29,14 @@ namespace LostHope.Engine.ContentLoading
             }
         }
 
-        private static Dictionary<string, AsepriteExportData> _asepriteAnimations;
-        public static Dictionary<string, AsepriteExportData> AsepriteAnimations
+        private static Dictionary<string, AsepriteFile> _asepriteFiles;
+        public static Dictionary<string, AsepriteFile> AsepriteFiles
         {
             get
             {
-                if (_asepriteAnimations == null) _asepriteAnimations = new Dictionary<string, AsepriteExportData>();
+                if (_asepriteFiles == null) _asepriteFiles = new Dictionary<string, AsepriteFile>();
 
-                return _asepriteAnimations;
+                return _asepriteFiles;
             }
         }
 
@@ -56,7 +57,7 @@ namespace LostHope.Engine.ContentLoading
         public static void Initialize(ContentManager content)
         {
             _textures = new Dictionary<string, Texture2D>();
-            _asepriteAnimations = new Dictionary<string, AsepriteExportData>();
+            _asepriteFiles = new Dictionary<string, AsepriteFile>();
             _sfx = new Dictionary<string, SoundEffect>();
 
             FontSystem = new FontSystem();
@@ -102,19 +103,19 @@ namespace LostHope.Engine.ContentLoading
             return _textures[name];
         }
 
-        public static void LoadAsepriteFile(string name)
+        public static void LoadAsepriteFile(string name, string contentName)
         {
-            if (_asepriteAnimations.ContainsKey(name)) return;
-            _asepriteAnimations.Add(name, new AsepriteExportData(name));
+            if (_asepriteFiles.ContainsKey(name)) return;
+            _asepriteFiles.Add(name, _content.Load<AsepriteFile>(contentName));
         }
         public static void UnloadAsepriteFiles()
         {
-            _asepriteAnimations.Clear();
-            _asepriteAnimations = null;
+            _asepriteFiles.Clear();
+            _asepriteFiles = null;
         }
-        public static AsepriteExportData GetAsepriteFile(string name)
+        public static AsepriteFile GetAsepriteFile(string name)
         {
-            return _asepriteAnimations[name];
+            return _asepriteFiles[name];
         }
 
         public static void LoadSfx(string name, string path)

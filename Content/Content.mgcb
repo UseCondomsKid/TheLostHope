@@ -15,20 +15,25 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin AsepriteAnimations/Player/Player.json
-/copy:AsepriteAnimations/Player/Player.json
+#begin AsepriteFiles/Crawler.aseprite
+/importer:AsepriteFileContentImporter
+/processor:AsepriteFileContentProcessor
+/build:AsepriteFiles/Crawler.aseprite
 
-#begin AsepriteAnimations/Player/Player.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:AsepriteAnimations/Player/Player.png
+#begin AsepriteFiles/Pistol.aseprite
+/importer:AsepriteFileContentImporter
+/processor:AsepriteFileContentProcessor
+/build:AsepriteFiles/Pistol.aseprite
+
+#begin AsepriteFiles/Player.aseprite
+/importer:AsepriteFileContentImporter
+/processor:AsepriteFileContentProcessor
+/build:AsepriteFiles/Player.aseprite
+
+#begin AsepriteFiles/Static.aseprite
+/importer:AsepriteFileContentImporter
+/processor:AsepriteFileContentProcessor
+/build:AsepriteFiles/Static.aseprite
 
 #begin Backgrounds/bg0.png
 /importer:TextureImporter
@@ -95,11 +100,6 @@
 
 #begin PeaberryMono.ttf
 /copy:PeaberryMono.ttf
-
-#begin Player.aseprite
-/importer:AsepriteFileContentImporter
-/processor:AsepriteFileContentProcessor
-/build:Player.aseprite
 
 #begin spritesheet.png
 /importer:TextureImporter

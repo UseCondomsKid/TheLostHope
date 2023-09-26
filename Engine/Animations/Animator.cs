@@ -1,8 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Aseprite.Content.Processors;
+using MonoGame.Aseprite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MonoGame.Aseprite.Sprites;
 
 namespace LostHope.Engine.Animations
 {
@@ -28,46 +31,56 @@ namespace LostHope.Engine.Animations
         }
 
         // Constructor using the Monogame.Aseprite module
-        public Animator(AsepriteExportData asepriteExportData)
+        public Animator(AsepriteFile asepriteFile, GraphicsDevice graphicsDevice)
         {
             Animations = new Dictionary<object, Animation>();
-            if (asepriteExportData == null) return;
+            if (asepriteFile == null) return;
 
-            SpriteSheetTexture = asepriteExportData.Texture;
+            var spriteSheet = SpriteSheetProcessor.Process(graphicsDevice, asepriteFile, mergeDuplicates: false, includeTilemapLayers: false,
+                innerPadding: 1, borderPadding: 1);
+            SpriteSheetTexture = spriteSheet.TextureAtlas.Texture;
 
-            // Seperate events and animations
-            List<FrameTag> frameTags = asepriteExportData.AsepriteData.Meta.FrameTags.ToList<FrameTag>();
-            List<FrameTag> events = frameTags
-                .Where(tag => tag.From == tag.To)
-                .ToList();
-            List<FrameTag> animations = frameTags
-                .Where(tag => tag.From != tag.To)
-                .ToList();
+            List<AnimationTag> events = new List<AnimationTag>();
+            Dictionary<string, AnimationTag> animations = new Dictionary<string, AnimationTag>();
 
-            foreach (var animation in animations)
+            foreach (var tagName in spriteSheet.GetAnimationTagNames())
             {
-                List<AnimationFrame> frames = new List<AnimationFrame>();
-                for (int i = (int)animation.From; i <= (int)animation.To; i++)
-                {
-                    var frameElement = asepriteExportData.AsepriteData.Frames[i];
+                var animationTag = spriteSheet.GetAnimationTag(tagName);
 
+                if (animationTag.Frames.Length == 1)
+                {
+                    events.Add(animationTag);
+                }
+                else if (animationTag.Frames.Length > 1)
+                {
+                    animations.Add(tagName, animationTag);
+                }
+            }
+
+
+            List<AnimationFrame> frames = new List<AnimationFrame>();
+            foreach (var anim in animations)
+            {
+                frames = new List<AnimationFrame>();
+                foreach (var frame in anim.Value.Frames)
+                {
                     bool triggerEvent = false;
                     foreach (var evt in events)
                     {
-                        if ((int)evt.From == i)
+                        if (evt.Frames[0].FrameIndex == frame.FrameIndex)
                         {
                             triggerEvent = true;
                             break;
                         }
                     }
 
-                    frames.Add(new AnimationFrame((int)frameElement.Frame.X, (int)frameElement.Frame.Y,
-                        (int)frameElement.Frame.W, (int)frameElement.Frame.H, frameElement.Duration / 1000f,
+                    frames.Add(new AnimationFrame(frame.TextureRegion.Bounds.X,
+                        frame.TextureRegion.Bounds.Y, frame.TextureRegion.Bounds.Width,
+                        frame.TextureRegion.Bounds.Height, (float)frame.Duration.TotalSeconds,
                         triggerEvent));
                 }
-
-                Animation anim = new Animation(frames, animation.Repeat == null);
-                AddAnimation(animation.Name, anim);
+                Animation animation = new Animation(frames, anim.Value.IsLooping);
+                AddAnimation(anim.Key, animation);
             }
 
             AnimationSpeedMultiplier = 1.0f;

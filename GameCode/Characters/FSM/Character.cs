@@ -5,6 +5,7 @@ using Humper;
 using Humper.Responses;
 using System;
 using System.Linq;
+using MonoGame.Aseprite;
 
 namespace LostHope.GameCode.Characters.FSM
 {
@@ -41,11 +42,11 @@ namespace LostHope.GameCode.Characters.FSM
         protected abstract void OnDeath();
 
         // Constructor
-        public Character(Game game, AsepriteExportData asepriteExportData) : base(game)
+        public Character(Game game, AsepriteFile asepriteFile) : base(game)
         {
             // Initializations
             StateMachine = new CharacterStateMachine();
-            Animator = new Animator(asepriteExportData);
+            Animator = new Animator(asepriteFile, game.GraphicsDevice);
             IFrame = false;
 
             _facingDirection = 1; // Right

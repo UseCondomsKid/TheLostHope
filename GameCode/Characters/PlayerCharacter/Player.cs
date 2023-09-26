@@ -10,6 +10,7 @@ using Apos.Input;
 using Track = Apos.Input.Track;
 using System.Collections.Generic;
 using LostHope.Engine.Animations;
+using MonoGame.Aseprite;
 
 namespace LostHope.GameCode.Characters.PlayerCharacter
 {
@@ -39,7 +40,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
         public ICondition InteractInput { get; private set; }
         // --------------------------
 
-        public Player(Game game, AsepriteExportData asepriteExportData, LDtkPlayer playerData) : base(game, asepriteExportData)
+        public Player(Game game, AsepriteFile asepriteFile, LDtkPlayer playerData) : base(game, asepriteFile)
         {
             // Set the player data
             PlayerData = playerData;

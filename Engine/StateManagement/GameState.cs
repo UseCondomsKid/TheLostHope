@@ -19,7 +19,6 @@ namespace LostHope.Engine.StateManagement
         protected readonly Game1 _gameRef;
 
         protected UIAnchor _currentUIAnchor;
-        private bool _uiSpriteBatchEnded;
 
         // Public proptery to access the child components
         public List<GameComponent> Components { get { return _childComponents; } }
