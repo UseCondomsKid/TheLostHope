@@ -39,7 +39,6 @@ namespace LostHope
 
         protected override void LoadContent()
         {
-
             InputHelper.Setup(this);
         }
         protected override void UnloadContent()

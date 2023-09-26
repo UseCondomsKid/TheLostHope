@@ -33,7 +33,7 @@ namespace LostHope.GameCode.GameStates
 
             _mainMenu = new Menu();
 
-            ContentLoader.LoadTexture("button", "button");
+            ContentLoader.LoadTexture("button", "Graphics/button");
             var buttonTex = ContentLoader.GetTexture("button");
 
             _titleText = new UIEText(UIAnchor.Top, 0f, .1f, _mainMenu, "The Lost Hope", 35f, Color.White);

@@ -1,0 +1,51 @@
+{
+	"root": "../Content/",
+	"references": [
+		"C:/Users/amenb/.nuget/packages/ldtkmonogame.contentpipeline/1.1.0/lib/net6.0/LDtk.ContentPipeline.dll",
+		"C:/Users/amenb/.nuget/packages/monogame.aseprite/5.1.0/content/MonoGame.Aseprite.Content.Pipeline.dll"
+	],
+	"content":
+	{
+		"textures": {
+			"path": "*.png",
+			"recursive": "True",
+			"action": "build",
+			"importer": "TextureImporter",
+			"processor": "TextureProcessor",
+			"processorParam": {
+				"ColorKeyColor": "255,0,255,255",
+				"ColorKeyEnabled": "True",
+				"GenerateMipmaps": "False",
+				"PremultiplyAlpha": "True",
+				"ResizeToPowerOfTwo": "False",
+				"MakeSquare": "False",
+				"TextureFormat": "Color"
+			}
+		},
+
+		"asepriteFiles": {
+			"path": "AsepriteFiles/*.aseprite",
+			"recursive": "True",
+			"action": "build",
+			"importer": "AsepriteFileContentImporter",
+			"processor": "AsepriteFileContentProcessor"
+		},
+
+		"localizationFile": {
+			"path": "Localization.csv",
+			"action": "copy"
+		},
+
+		"ttfFiles": {
+			"path": "Fonts/*.ttf",
+			"action": "copy"
+		},
+
+		"ldtkWorld": {
+			"path": "World.ldtk",
+			"action": "build",
+			"importer": "LDtkFileImporter",
+			"processor": "LDtkFileProcessor"
+		}
+	}
+}

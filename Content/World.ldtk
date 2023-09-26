@@ -1967,19 +1967,23 @@
 			"__bgPos": null,
 			"externalRelPath": null,
 			"fieldInstances": [
-				{ "__identifier": "Backgrounds", "__type": "Array<String>", "__value": [ "Backgrounds/bg0|0", "Backgrounds/bg1|0.5", "Backgrounds/bg2|0.7" ], "__tile": null, "defUid": 121, "realEditorValues": [ {
+				{ "__identifier": "Backgrounds", "__type": "Array<String>", "__value": [
+					"Graphics/Backgrounds/bg0|0",
+					"Graphics/Backgrounds/bg1|0.5",
+					"Graphics/Backgrounds/bg2|0.7"
+				], "__tile": null, "defUid": 121, "realEditorValues": [ {
 					"id": "V_String",
-					"params": ["Backgrounds/bg0|0"]
+					"params": ["Graphics/Backgrounds/bg0|0"]
 				}, {
 					"id": "V_String",
-					"params": ["Backgrounds/bg1|0.5"]
+					"params": ["Graphics/Backgrounds/bg1|0.5"]
 				}, {
 					"id": "V_String",
-					"params": ["Backgrounds/bg2|0.7"]
+					"params": ["Graphics/Backgrounds/bg2|0.7"]
 				} ] },
-				{ "__identifier": "Foregrounds", "__type": "Array<String>", "__value": ["Backgrounds/fr0|0.3"], "__tile": null, "defUid": 123, "realEditorValues": [{
+				{ "__identifier": "Foregrounds", "__type": "Array<String>", "__value": ["Graphics/Backgrounds/fr0|0.3"], "__tile": null, "defUid": 123, "realEditorValues": [{
 					"id": "V_String",
-					"params": ["Backgrounds/fr0|0.3"]
+					"params": ["Graphics/Backgrounds/fr0|0.3"]
 				}] }
 			],
 			"layerInstances": [
@@ -2411,13 +2415,13 @@
 			"__bgPos": null,
 			"externalRelPath": null,
 			"fieldInstances": [
-				{ "__identifier": "Backgrounds", "__type": "Array<String>", "__value": ["Backgrounds/bg0|0"], "__tile": null, "defUid": 121, "realEditorValues": [{
+				{ "__identifier": "Backgrounds", "__type": "Array<String>", "__value": ["Graphics/Backgrounds/bg0|0"], "__tile": null, "defUid": 121, "realEditorValues": [{
 					"id": "V_String",
-					"params": ["Backgrounds/bg0|0"]
+					"params": ["Graphics/Backgrounds/bg0|0"]
 				}] },
-				{ "__identifier": "Foregrounds", "__type": "Array<String>", "__value": ["Backgrounds/fr0|0.5"], "__tile": null, "defUid": 123, "realEditorValues": [{
+				{ "__identifier": "Foregrounds", "__type": "Array<String>", "__value": ["Graphics/Backgrounds/fr0|0.5"], "__tile": null, "defUid": 123, "realEditorValues": [{
 					"id": "V_String",
-					"params": ["Backgrounds/fr0|0.5"]
+					"params": ["Graphics/Backgrounds/fr0|0.5"]
 				}] }
 			],
 			"layerInstances": [
