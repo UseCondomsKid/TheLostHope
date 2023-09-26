@@ -14,6 +14,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ../Content/spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Content/spritesheet.png;spritesheet.png
+
 #begin ../Content/Graphics/button.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -104,54 +116,3 @@
 /importer:LDtkFileImporter
 /processor:LDtkFileProcessor
 /build:../Content/World.ldtk;World.ldtk
-
-#begin ../Content/World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_18-26-52/World.ldtk
-/importer:LDtkFileImporter
-/processor:LDtkFileProcessor
-/build:../Content/World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_18-26-52/World.ldtk;World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_18-26-52/World.ldtk
-
-#begin ../Content/World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_18-27-15/World.ldtk
-/importer:LDtkFileImporter
-/processor:LDtkFileProcessor
-/build:../Content/World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_18-27-15/World.ldtk;World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_18-27-15/World.ldtk
-
-#begin ../Content/World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_18-33-43/World.ldtk
-/importer:LDtkFileImporter
-/processor:LDtkFileProcessor
-/build:../Content/World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_18-33-43/World.ldtk;World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_18-33-43/World.ldtk
-
-#begin ../Content/World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_18-37-27/World.ldtk
-/importer:LDtkFileImporter
-/processor:LDtkFileProcessor
-/build:../Content/World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_18-37-27/World.ldtk;World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_18-37-27/World.ldtk
-
-#begin ../Content/World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_19-37-02/World.ldtk
-/importer:LDtkFileImporter
-/processor:LDtkFileProcessor
-/build:../Content/World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_19-37-02/World.ldtk;World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_19-37-02/World.ldtk
-
-#begin ../Content/World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_19-37-18/World.ldtk
-/importer:LDtkFileImporter
-/processor:LDtkFileProcessor
-/build:../Content/World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_19-37-18/World.ldtk;World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_19-37-18/World.ldtk
-
-#begin ../Content/World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_19-38-45/World.ldtk
-/importer:LDtkFileImporter
-/processor:LDtkFileProcessor
-/build:../Content/World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_19-38-45/World.ldtk;World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_19-38-45/World.ldtk
-
-#begin ../Content/World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_19-38-50/World.ldtk
-/importer:LDtkFileImporter
-/processor:LDtkFileProcessor
-/build:../Content/World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_19-38-50/World.ldtk;World/backups/172c2930-c640-11ed-855c-c950c23d9a67_2023-09-26_19-38-50/World.ldtk
-#begin ../Content/spritesheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Content/spritesheet.png;spritesheet.png
