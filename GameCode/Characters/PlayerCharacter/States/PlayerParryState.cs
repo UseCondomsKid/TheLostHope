@@ -1,4 +1,5 @@
 ﻿using LostHope.GameCode.Characters.FSM;
+using System.Diagnostics;
 
 namespace LostHope.GameCode.Characters.PlayerCharacter.States
 {
@@ -13,6 +14,11 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
             base.Enter();
 
             _player.SetVelocityX(0);
+        }
+
+        protected override void AnimationFrameEventTriggered()
+        {
+            Debug.WriteLine("Parry Event");
         }
 
         public override void Update(float delta)

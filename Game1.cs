@@ -39,8 +39,6 @@ namespace LostHope
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-            Globals.SpriteBatch = SpriteBatch;
 
             InputHelper.Setup(this);
         }
@@ -58,6 +56,9 @@ namespace LostHope
 
         protected override void Initialize()
         {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            Globals.SpriteBatch = _spriteBatch;
+
             // Load all global things here.
             ContentLoader.Initialize(Content);
             // Add a font

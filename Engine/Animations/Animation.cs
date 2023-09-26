@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System;
+using System.Diagnostics;
 
 namespace LostHope.Engine.Animations
 {
@@ -15,15 +16,11 @@ namespace LostHope.Engine.Animations
         // The source rectangle of the frame,
         // this is used to render the frame from the spritesheet/texture
         public Rectangle Rectangle;
-
-        // Frame event delegate
-        public delegate void AnimationFrameEvent();
-        // Actual frame event
-        public AnimationFrameEvent OnAnimationFrame;
-        // NOTE: Animation frame events are triggered when the frame is displayed.
+        // The name of the frame event. If it's equal to "", then there is not event associated with this frame
+        public bool TriggerEvent { get; private set; }
 
         // Constructor
-        public AnimationFrame(int x, int y, int width, int height, float duration, AnimationFrameEvent frameCallback = null)
+        public AnimationFrame(int x, int y, int width, int height, float duration, bool triggerEvent = false)
         {
             // The the X and Y positions
             X = x;
@@ -38,18 +35,16 @@ namespace LostHope.Engine.Animations
 
             // Set the duration and the event
             Duration = duration;
-            OnAnimationFrame += frameCallback;
-        }
 
-        // Public function to be able to invoke the frame event from the animation class bellow
-        public void InvokeEvent()
-        {
-            OnAnimationFrame?.Invoke();
+            // Set the trigger event bool
+            TriggerEvent = triggerEvent;
         }
     }
 
     public class Animation
     {
+        // Triggered when the animation encounters an event in a frame
+        public event Action OnAnimationFrameEvent;
         // Triggered when the animation finishes
         public event Action OnAnimationFinished;
 
@@ -84,7 +79,7 @@ namespace LostHope.Engine.Animations
             for (int i = 0; i < frames.Count; i++)
             {
                 var frame = new AnimationFrame(frames[i].X, frames[i].Y,
-                    frames[i].W, frames[i].H, frames[i].Duration);
+                    frames[i].W, frames[i].H, frames[i].Duration, frames[i].TriggerEvent);
 
                 _animation.Add(i, frame);
             }
@@ -111,7 +106,10 @@ namespace LostHope.Engine.Animations
             }
 
             // If the frame isn't null, we invoke it's event because we just started the animation
-            frame.InvokeEvent();
+            if (frame.TriggerEvent)
+            {
+                OnAnimationFrameEvent?.Invoke();
+            }
         }
 
         // Resets the animation
@@ -159,10 +157,13 @@ namespace LostHope.Engine.Animations
                 {
                     // If not, we increment the current frame
                     _currentFrame = (_currentFrame + 1) % _animation.Count;
+                    
+                    // Invoke the frame's event if it has one
+                    if (GetCurrentAnimationFrame().TriggerEvent)
+                    {
+                        OnAnimationFrameEvent?.Invoke();
+                    }    
                 }
-
-                // We invoke the frame's event
-                GetCurrentAnimationFrame().InvokeEvent();
             }
         }
 

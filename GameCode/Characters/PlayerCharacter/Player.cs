@@ -1,8 +1,6 @@
 ﻿using LostHope.GameCode.Characters.FSM;
 using Humper;
 using Microsoft.Xna.Framework;
-using MonoGame.Aseprite;
-using LostHope.GameCode.Weapons;
 using LostHope.GameCode.Characters.PlayerCharacter.States;
 using Humper.Responses;
 using System;
@@ -11,7 +9,7 @@ using LDtkTypes;
 using Apos.Input;
 using Track = Apos.Input.Track;
 using System.Collections.Generic;
-using System.Linq;
+using LostHope.Engine.Animations;
 
 namespace LostHope.GameCode.Characters.PlayerCharacter
 {
@@ -41,7 +39,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
         public ICondition InteractInput { get; private set; }
         // --------------------------
 
-        public Player(Game game, AsepriteFile asepriteFile, LDtkPlayer playerData) : base(game, asepriteFile)
+        public Player(Game game, AsepriteExportData asepriteExportData, LDtkPlayer playerData) : base(game, asepriteExportData)
         {
             // Set the player data
             PlayerData = playerData;

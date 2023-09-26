@@ -133,6 +133,7 @@ namespace LostHope.GameCode.GameStates
 
             // Create the level state
             CurrentLevelState = new LevelState(_gameRef, _stateManager);
+
             _camera.Zoom = 1.0f;
 
             _stateManager.SetState(CurrentLevelState);

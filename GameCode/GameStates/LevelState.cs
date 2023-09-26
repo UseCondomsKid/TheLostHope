@@ -50,18 +50,13 @@ namespace LostHope.GameCode.GameStates
             _gameplayManager = GameplayManager.Instance;
         }
 
-        public override void Enter()
-        {
-            base.Enter();
-        }
-
         public void StartLevel(LDtkWorld world, string levelId, string levelTransitionId = null)
         {
             // Load the level
             _levelData = world.LoadLevel(levelId);
 
             // Create the renderer
-            _levelRenderer = new ModifiedLDtkRenderer(Globals.SpriteBatch);
+            _levelRenderer = new ModifiedLDtkRenderer(_gameRef.SpriteBatch);
             // Pre-render the level
             _levelRenderer.PrerenderLevel(_levelData);
 
@@ -179,8 +174,8 @@ namespace LostHope.GameCode.GameStates
             // Load and Setup Player
             if (_player == null)
             {
-                ContentLoader.LoadAsepriteFile("Player", "Player");
-                _player = new Player(_gameRef, ContentLoader.GetAsepriteFile("Player"),
+                ContentLoader.LoadAsepriteFile(playerData.AsepriteFileName);
+                _player = new Player(_gameRef, ContentLoader.GetAsepriteFile(playerData.AsepriteFileName),
                     playerData);
             }
 

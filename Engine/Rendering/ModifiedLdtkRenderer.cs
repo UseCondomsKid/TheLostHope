@@ -80,6 +80,8 @@ namespace LostHope.Engine.Rendering
         //     The level already has been prerendered
         public void PrerenderLevel(LDtkLevel level)
         {
+            graphicsDevice.Clear(Color.Black);
+
             SpriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp);
             RenderLayers(level);
             SpriteBatch.End();
@@ -202,8 +204,9 @@ namespace LostHope.Engine.Rendering
         {
             foreach (var bg in ParallaxBackgrounds)
             {
-                float scale = (float)Math.Ceiling(MathHelper.Max(GameplayManager.Instance.GameCamera.Size.Y / bg.Texture.Height,
-                    GameplayManager.Instance.GameCamera.Size.X / bg.Texture.Width));
+                Vector2 size = GameplayManager.Instance.GameCamera.Size;
+                float scale = (float)Math.Ceiling(MathHelper.Max(size.Y / bg.Texture.Height,
+                    size.X / bg.Texture.Width));
 
                 SpriteBatch.Draw(bg.Texture, bg.Position, null, Color.White,
                     0f, Vector2.Zero, scale, SpriteEffects.None, 0f);

@@ -3,11 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using LostHope.Engine.Animations;
 using Humper;
 using Humper.Responses;
-using MonoGame.Aseprite;
-using System.Diagnostics;
 using System;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace LostHope.GameCode.Characters.FSM
 {
@@ -44,11 +41,11 @@ namespace LostHope.GameCode.Characters.FSM
         protected abstract void OnDeath();
 
         // Constructor
-        public Character(Game game, AsepriteFile asepriteFile) : base(game)
+        public Character(Game game, AsepriteExportData asepriteExportData) : base(game)
         {
             // Initializations
             StateMachine = new CharacterStateMachine();
-            Animator = new Animator(asepriteFile, GraphicsDevice);
+            Animator = new Animator(asepriteExportData);
             IFrame = false;
 
             _facingDirection = 1; // Right

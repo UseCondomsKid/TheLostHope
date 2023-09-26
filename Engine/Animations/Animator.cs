@@ -1,10 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Aseprite;
-using MonoGame.Aseprite.Content.Processors;
-using MonoGame.Aseprite.Sprites;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace LostHope.Engine.Animations
 {
@@ -20,11 +18,8 @@ namespace LostHope.Engine.Animations
         public Animation CurrentAnimation { get { return _currentAnimation; } }
         // Public property to change the animation speed
         public float AnimationSpeedMultiplier { get; set; }
-
-        // In case of using Monogame.Aseprite
         public Texture2D SpriteSheetTexture { get; private set; }
 
-        public Point AnimationCanvasSize { get; private set; }
 
         // Constructor that initializes the animations dict
         public Animator()
@@ -33,31 +28,46 @@ namespace LostHope.Engine.Animations
         }
 
         // Constructor using the Monogame.Aseprite module
-        public Animator(AsepriteFile asepriteFile, GraphicsDevice graphicsDevice)
+        public Animator(AsepriteExportData asepriteExportData)
         {
             Animations = new Dictionary<object, Animation>();
-            if (asepriteFile == null) return;
+            if (asepriteExportData == null) return;
 
-            var spriteSheet = SpriteSheetProcessor.Process(graphicsDevice, asepriteFile, mergeDuplicates: false, includeTilemapLayers: false,
-                innerPadding: 1, borderPadding: 1);
-            SpriteSheetTexture = spriteSheet.TextureAtlas.Texture;
+            SpriteSheetTexture = asepriteExportData.Texture;
 
-            List<AnimationFrame> frames = new List<AnimationFrame>();
-            foreach (var tagName in spriteSheet.GetAnimationTagNames())
+            // Seperate events and animations
+            List<FrameTag> frameTags = asepriteExportData.AsepriteData.Meta.FrameTags.ToList<FrameTag>();
+            List<FrameTag> events = frameTags
+                .Where(tag => tag.From == tag.To)
+                .ToList();
+            List<FrameTag> animations = frameTags
+                .Where(tag => tag.From != tag.To)
+                .ToList();
+
+            foreach (var animation in animations)
             {
-                var animationTag = spriteSheet.GetAnimationTag(tagName);
-                AnimationCanvasSize = animationTag.Frames[0].TextureRegion.Bounds.Size;
-
-                frames = new List<AnimationFrame>();
-
-                foreach(var frame in animationTag.Frames)
+                List<AnimationFrame> frames = new List<AnimationFrame>();
+                for (int i = (int)animation.From; i <= (int)animation.To; i++)
                 {
-                    frames.Add(new AnimationFrame(frame.TextureRegion.Bounds.X,
-                        frame.TextureRegion.Bounds.Y, frame.TextureRegion.Bounds.Width,
-                        frame.TextureRegion.Bounds.Height, (float)frame.Duration.TotalSeconds));
+                    var frameElement = asepriteExportData.AsepriteData.Frames[i];
+
+                    bool triggerEvent = false;
+                    foreach (var evt in events)
+                    {
+                        if ((int)evt.From == i)
+                        {
+                            triggerEvent = true;
+                            break;
+                        }
+                    }
+
+                    frames.Add(new AnimationFrame((int)frameElement.Frame.X, (int)frameElement.Frame.Y,
+                        (int)frameElement.Frame.W, (int)frameElement.Frame.H, frameElement.Duration / 1000f,
+                        triggerEvent));
                 }
-                Animation animation = new Animation(frames, animationTag.IsLooping);
-                AddAnimation(tagName, animation);
+
+                Animation anim = new Animation(frames, animation.Repeat == null);
+                AddAnimation(animation.Name, anim);
             }
 
             AnimationSpeedMultiplier = 1.0f;

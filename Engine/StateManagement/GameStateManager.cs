@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using LostHope.GameCode;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,10 @@ namespace LostHope.Engine.StateManagement
     public class GameStateManager : DrawableGameComponent
     {
         // Is triggered beofre the state changes
-        public static event Action OnStatePreChanged;
+        public event Action OnStatePreChanged;
         // Is triggered when the state changes
-        public static event Action OnStateChanged;
+        public event Action OnStateChanged;
+        public bool IsStateChanging { get; private set; }
 
         // a reference to the currently activate game state
         private GameState _currentGameState;
@@ -22,24 +24,13 @@ namespace LostHope.Engine.StateManagement
 
         public GameStateManager(Game game) : base(game)
         {
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
-            base.LoadContent();
+            IsStateChanging = false;
         }
 
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
-
             // if enabled is false we return
-            if (!Enabled) return;
+            if (!Enabled || IsStateChanging) return;
 
             // We update the current state if it's not null
             if (_currentGameState != null)
@@ -49,7 +40,7 @@ namespace LostHope.Engine.StateManagement
         }
         public override void Draw(GameTime gameTime)
         {
-            base.Draw(gameTime);
+            if (IsStateChanging) return;
 
             // We draw the current state if it's not null
             if (_currentGameState != null)
@@ -67,6 +58,7 @@ namespace LostHope.Engine.StateManagement
                 _currentGameState.Exit();
             }
 
+            IsStateChanging = true;
             // Invoke the pre changed event
             OnStatePreChanged?.Invoke();
 
@@ -80,6 +72,7 @@ namespace LostHope.Engine.StateManagement
 
             // Call Post Enter of the new state
             _currentGameState.PostEnter();
+            IsStateChanging = false;
         }
     }
 }

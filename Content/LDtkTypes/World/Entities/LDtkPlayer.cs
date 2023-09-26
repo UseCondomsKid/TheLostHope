@@ -18,12 +18,13 @@ public class LDtkPlayer : ILDtkEntity
 
     public Color SmartColor { get; set; }
 
+    public string AsepriteFileName { get; set; }
     public float GravityScale { get; set; }
     public float Speed { get; set; }
     public float Acceleration { get; set; }
     public float Deacceleration { get; set; }
     public float JumpForce { get; set; }
-    public float RollVelocity { get; set; }
     public float MaxGravityVelocity { get; set; }
+    public float RollVelocity { get; set; }
 }
 #pragma warning restore

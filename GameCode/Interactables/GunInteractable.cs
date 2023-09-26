@@ -23,8 +23,8 @@ namespace LostHope.GameCode.Interactables
         {
             base.Initialize();
 
-            ContentLoader.LoadAsepriteFile(_gunData.Name, _gunData.AsepriteFileName);
-            _animator = new Animator(ContentLoader.GetAsepriteFile(_gunData.Name), Game.GraphicsDevice);
+            ContentLoader.LoadAsepriteFile(_gunData.AsepriteFileName);
+            _animator = new Animator(ContentLoader.GetAsepriteFile(_gunData.Name));
             _animator.SetActiveAnimation("Idle");
         }
 

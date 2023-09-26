@@ -11,9 +11,24 @@
 #-------------------------------- References --------------------------------#
 
 /reference:C:/Users/amenb/.nuget/packages/ldtkmonogame.contentpipeline/1.1.0/lib/net6.0/LDtk.ContentPipeline.dll
-/reference:C:/Users/amenb/.nuget/packages/monogame.aseprite/5.0.1/content/MonoGame.Aseprite.Content.Pipeline.dll
+/reference:C:/Users/amenb/.nuget/packages/monogame.aseprite/5.1.0/content/MonoGame.Aseprite.Content.Pipeline.dll
 
 #---------------------------------- Content ---------------------------------#
+
+#begin AsepriteAnimations/Player/Player.json
+/copy:AsepriteAnimations/Player/Player.json
+
+#begin AsepriteAnimations/Player/Player.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:AsepriteAnimations/Player/Player.png
 
 #begin Backgrounds/bg0.png
 /importer:TextureImporter
