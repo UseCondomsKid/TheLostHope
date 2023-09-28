@@ -24,12 +24,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
                     _stateMachine.ChangeState(_player.PlayerIdleState);
                 }
             }
-            else if (_player.JumpInput.Pressed())
-            {
-                _player.SetVelocityY(-_player.PlayerData.JumpForce);
-            }
-
-            if (!_player.IsGrounded())
+            if (_player.PlayerLastGroundedTime > 0f && _player.PlayerLastJumpTime > 0f && !_player.PlayerJumping)
             {
                 _stateMachine.ChangeState(_player.PlayerJumpState);
             }

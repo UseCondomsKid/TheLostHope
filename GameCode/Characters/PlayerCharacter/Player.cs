@@ -11,6 +11,8 @@ using Track = Apos.Input.Track;
 using System.Collections.Generic;
 using LostHope.Engine.Animations;
 using MonoGame.Aseprite;
+using TheLostHope.GameCode.Characters.PlayerCharacter.States;
+using System.Diagnostics;
 
 namespace LostHope.GameCode.Characters.PlayerCharacter
 {
@@ -24,6 +26,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
         public PlayerIdleState PlayerIdleState { get; private set; }
         public PlayerRunState PlayerRunState { get; private set; }
         public PlayerJumpState PlayerJumpState { get; private set; }
+        public PlayerInAirState PlayerInAirState { get; private set; }
         public PlayerLandState PlayerLandState { get; private set; }
         public PlayerRollState PlayerRollState { get; private set; }
         public PlayerParryState PlayerParryState { get; private set; }
@@ -39,6 +42,12 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
         public ICondition ShootInput { get; private set; }
         public ICondition InteractInput { get; private set; }
         // --------------------------
+
+        // ---- Player Movement Variables -----
+        public float PlayerLastGroundedTime { get; private set; }
+        public float PlayerLastJumpTime { get; private set; }
+        public bool PlayerJumping { get; private set; }
+        // ------------------------------------
 
         public Player(Game game, AsepriteFile asepriteFile, LDtkPlayer playerData) : base(game, asepriteFile)
         {
@@ -118,9 +127,15 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
             PlayerIdleState = new PlayerIdleState(this, "Idle");
             PlayerRunState = new PlayerRunState(this, "Run");
             PlayerJumpState = new PlayerJumpState(this, "Jump");
+            PlayerInAirState = new PlayerInAirState(this, "Jump");
             PlayerLandState = new PlayerLandState(this, "Land");
             PlayerRollState = new PlayerRollState(this, "Roll");
             PlayerParryState = new PlayerParryState(this, "Parry");
+
+            // Initialize movement variables
+            PlayerLastGroundedTime = -1f;
+            PlayerLastJumpTime = -1f;
+            PlayerJumping = false;
 
             // Initialize state machine and Set active state
             StateMachine.Initialize(PlayerIdleState);
@@ -139,8 +154,27 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
             return 10;
         }
 
+        public void SetPlayerJumping(bool jumping)
+        {
+            PlayerJumping = jumping;
+        }
+
         public override void Update(GameTime gameTime)
         {
+            float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            PlayerLastGroundedTime -= delta;
+            PlayerLastJumpTime -= delta;
+
+            if (JumpInput.Pressed())
+            {
+                PlayerLastJumpTime = PlayerData.JumpBufferTime;
+            }
+            if (IsGrounded())
+            {
+                PlayerJumping = false;
+                PlayerLastGroundedTime = PlayerData.JumpCayoteTime;
+            }
+
             base.Update(gameTime);
         }
         public override void Draw(GameTime gameTime)
@@ -174,11 +208,18 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
         }
 
 
-        public void Move(float delta)
+        public void MoveGround(float delta)
         {
             int movement = (MoveRightInput.Held() ? 1 : 0) - (MoveLeftInput.Held() ? 1 : 0);
 
-            MoveX(delta, movement, PlayerData.Speed, PlayerData.Acceleration,
+            MoveX(delta, movement, PlayerData.GroundSpeed, PlayerData.Acceleration,
+                PlayerData.Deacceleration, 1.2f);
+        }
+        public void MoveAir(float delta)
+        {
+            int movement = (MoveRightInput.Held() ? 1 : 0) - (MoveLeftInput.Held() ? 1 : 0);
+
+            MoveX(delta, movement, PlayerData.AirSpeed, PlayerData.Acceleration,
                 PlayerData.Deacceleration, 1.2f);
         }
         public void ApplyGravity()

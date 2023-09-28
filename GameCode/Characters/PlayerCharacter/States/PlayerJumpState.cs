@@ -12,28 +12,12 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
         {
         }
 
-        public override void Update(float delta)
+        public override void Enter()
         {
-            base.Update(delta);
-
-            _player.Move(delta);
-
-            if (_player.IsTouchingCeiling())
-            {
-                _player.SetVelocityY(0f);
-            }
-
-            if (_player.IsGrounded())
-            {
-                if (_player.IsMoving())
-                {
-                    _stateMachine.ChangeState(_player.PlayerRunState);
-                }
-                else
-                {
-                    _stateMachine.ChangeState(_player.PlayerLandState);
-                }
-            }
+            base.Enter();
+            _player.SetPlayerJumping(true);
+            _player.SetVelocityY(-_player.PlayerData.JumpForce);
+            _stateMachine.ChangeState(_player.PlayerInAirState);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace LostHope.GameCode.Characters.FSM
         // Called when we enter this state
         public virtual void Enter()
         {
-            Debug.WriteLine("Entering character state: " + _animKey.ToString());
+            // Debug.WriteLine("Entering character state: " + _animKey.ToString());
 
             _animation = _character.Animator.SetActiveAnimation(_animKey);
             _animation.OnAnimationFrameEvent += AnimationFrameEventTriggered;
@@ -39,7 +39,7 @@ namespace LostHope.GameCode.Characters.FSM
         // Called when we exit this state
         public virtual void Exit()
         {
-            Debug.WriteLine("Exiting character state: " + _animKey.ToString());
+            // Debug.WriteLine("Exiting character state: " + _animKey.ToString());
 
             _animation.OnAnimationFinished -= AnimationFinished;
             _animation.OnAnimationFrameEvent -= AnimationFrameEventTriggered;

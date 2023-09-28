@@ -38,7 +38,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
                 }
                 else
                 {
-                    _stateMachine.ChangeState(_player.PlayerJumpState);
+                    _stateMachine.ChangeState(_player.PlayerInAirState);
                 }
             }
         }

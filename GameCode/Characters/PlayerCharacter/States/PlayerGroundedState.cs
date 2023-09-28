@@ -21,11 +21,17 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
         {
             base.Update(delta);
 
-            _player.Move(delta);
+            _player.MoveGround(delta);
 
-            if (_player.JumpInput.Pressed())
+            //if (_player.JumpInput.Pressed() && _player.IsGrounded())
+            //{
+            //    _stateMachine.ChangeState(_player.PlayerJumpState);
+            //}
+
+            if (_player.PlayerLastGroundedTime > 0f && _player.PlayerLastJumpTime > 0f && !_player.PlayerJumping
+                && !_player.IsTouchingCeiling())
             {
-                _player.SetVelocityY(-_player.PlayerData.JumpForce);
+                _stateMachine.ChangeState(_player.PlayerJumpState);
             }
 
             if (_player.ParryInput.Pressed())
@@ -50,7 +56,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter.States
 
             if (!_player.IsGrounded())
             {
-                _stateMachine.ChangeState(_player.PlayerJumpState);
+                _stateMachine.ChangeState(_player.PlayerInAirState);
             }
         }
     }
