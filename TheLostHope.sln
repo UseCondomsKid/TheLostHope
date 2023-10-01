@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TheLostHope", "TheLostHope.csproj", "{79AE080D-18B6-4D13-B7F2-D77DDAEBA365}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "The Lost Hope Editor", "..\The Lost Hope Editor\The Lost Hope Editor.csproj", "{F399378E-877F-468C-9FF7-753232DE1823}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{79AE080D-18B6-4D13-B7F2-D77DDAEBA365}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79AE080D-18B6-4D13-B7F2-D77DDAEBA365}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79AE080D-18B6-4D13-B7F2-D77DDAEBA365}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F399378E-877F-468C-9FF7-753232DE1823}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F399378E-877F-468C-9FF7-753232DE1823}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F399378E-877F-468C-9FF7-753232DE1823}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F399378E-877F-468C-9FF7-753232DE1823}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
