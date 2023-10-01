@@ -11,8 +11,11 @@ namespace TheLostHope.GameCode.Weapons.States
 {
     public class GunState : ObjectState
     {
+        protected Gun _gun;
+
         public GunState(StatefullObject statefullObject, object animKey) : base(statefullObject, animKey)
         {
+            _gun = (Gun)statefullObject;
         }
     }
 }
