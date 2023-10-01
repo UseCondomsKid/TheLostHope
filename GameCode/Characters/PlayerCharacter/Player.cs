@@ -40,6 +40,7 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
         public ICondition RollInput { get; private set; }
         public ICondition ParryInput { get; private set; }
         public ICondition ShootInput { get; private set; }
+        public ICondition ReloadInput { get; private set; }
         public ICondition InteractInput { get; private set; }
         // --------------------------
 
@@ -56,69 +57,62 @@ namespace LostHope.GameCode.Characters.PlayerCharacter
 
             // Create the input conditions
             List<ICondition> conditions;
-            int k, m, g;
+            int k, g;
 
             // Move Right
             conditions = new List<ICondition>();
             k = Globals.Settings.KPlayerMoveRightBinding;
-            m = Globals.Settings.MPlayerMoveRightBinding;
             g = Globals.Settings.GPlayerMoveRightBinding;
             if (k != -1) conditions.Add(new Track.KeyboardCondition((Keys)k));
-            if (m != -1) conditions.Add(new Track.MouseCondition((MouseButton)m));
             if (g != -1) conditions.Add(new Track.GamePadCondition((GamePadButton)g, 0));
             MoveRightInput = new AnyCondition(conditions.ToArray());
             // Move Left
             conditions = new List<ICondition>();
             k = Globals.Settings.KPlayerMoveLeftBinding;
-            m = Globals.Settings.MPlayerMoveLeftBinding;
             g = Globals.Settings.GPlayerMoveLeftBinding;
             if (k != -1) conditions.Add(new Track.KeyboardCondition((Keys)k));
-            if (m != -1) conditions.Add(new Track.MouseCondition((MouseButton)m));
             if (g != -1) conditions.Add(new Track.GamePadCondition((GamePadButton)g, 0));
             MoveLeftInput = new AnyCondition(conditions.ToArray());
             // Jump
             conditions = new List<ICondition>();
             k = Globals.Settings.KPlayerJumpBinding;
-            m = Globals.Settings.MPlayerJumpBinding;
             g = Globals.Settings.GPlayerJumpBinding;
             if (k != -1) conditions.Add(new Track.KeyboardCondition((Keys)k));
-            if (m != -1) conditions.Add(new Track.MouseCondition((MouseButton)m));
             if (g != -1) conditions.Add(new Track.GamePadCondition((GamePadButton)g, 0));
             JumpInput = new AnyCondition(conditions.ToArray());
             // Roll
             conditions = new List<ICondition>();
             k = Globals.Settings.KPlayerRollBinding;
-            m = Globals.Settings.MPlayerRollBinding;
             g = Globals.Settings.GPlayerRollBinding;
             if (k != -1) conditions.Add(new Track.KeyboardCondition((Keys)k));
-            if (m != -1) conditions.Add(new Track.MouseCondition((MouseButton)m));
             if (g != -1) conditions.Add(new Track.GamePadCondition((GamePadButton)g, 0));
             RollInput = new AnyCondition(conditions.ToArray());
             // Parry
             conditions = new List<ICondition>();
             k = Globals.Settings.KPlayerParryBinding;
-            m = Globals.Settings.MPlayerParryBinding;
             g = Globals.Settings.GPlayerParryBinding;
             if (k != -1) conditions.Add(new Track.KeyboardCondition((Keys)k));
-            if (m != -1) conditions.Add(new Track.MouseCondition((MouseButton)m));
             if (g != -1) conditions.Add(new Track.GamePadCondition((GamePadButton)g, 0));
             ParryInput = new AnyCondition(conditions.ToArray());
             // Shoot
             conditions = new List<ICondition>();
             k = Globals.Settings.KPlayerShootBinding;
-            m = Globals.Settings.MPlayerShootBinding;
             g = Globals.Settings.GPlayerShootBinding;
             if (k != -1) conditions.Add(new Track.KeyboardCondition((Keys)k));
-            if (m != -1) conditions.Add(new Track.MouseCondition((MouseButton)m));
             if (g != -1) conditions.Add(new Track.GamePadCondition((GamePadButton)g, 0));
             ShootInput = new AnyCondition(conditions.ToArray());
+            // Reload
+            conditions = new List<ICondition>();
+            k = Globals.Settings.KPlayerReloadBinding;
+            g = Globals.Settings.GPlayerReloadBinding;
+            if (k != -1) conditions.Add(new Track.KeyboardCondition((Keys)k));
+            if (g != -1) conditions.Add(new Track.GamePadCondition((GamePadButton)g, 0));
+            ReloadInput = new AnyCondition(conditions.ToArray());
             // Interact
             conditions = new List<ICondition>();
             k = Globals.Settings.KPlayerInteractBinding;
-            m = Globals.Settings.MPlayerInteractBinding;
             g = Globals.Settings.GPlayerInteractBinding;
             if (k != -1) conditions.Add(new Track.KeyboardCondition((Keys)k));
-            if (m != -1) conditions.Add(new Track.MouseCondition((MouseButton)m));
             if (g != -1) conditions.Add(new Track.GamePadCondition((GamePadButton)g, 0));
             InteractInput = new AnyCondition(conditions.ToArray());
 

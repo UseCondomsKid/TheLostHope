@@ -4,7 +4,9 @@ using LostHope.Engine.Camera;
 using LostHope.Engine.ContentLoading;
 using LostHope.Engine.StateManagement;
 using LostHope.Engine.UI;
+using LostHope.GameCode.Characters.PlayerCharacter;
 using LostHope.GameCode.UI.Elements;
+using LostHope.GameCode.Weapons;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -43,7 +45,9 @@ namespace LostHope.GameCode.GameStates
         private Menu _pauseMenu;
 
         // Player specific
+        public Player Player { get; set; }
         public Dictionary<string, LDtkGun> UnlockedGuns { get; private set; }
+        public Gun EquippedGun { get; private set; }
 
 
         private Game1 _gameRef;
@@ -155,8 +159,26 @@ namespace LostHope.GameCode.GameStates
         }
         public bool HasGun(LDtkGun gunData)
         {
+            if (!Started) return false;
+
             return UnlockedGuns.ContainsKey(gunData.Name);
         }
+        public void EquipGun(LDtkGun gunData)
+        {
+            if (!Started) return;
 
+            if (gunData == null)
+            {
+                EquippedGun = null;
+            }
+            else if (HasGun(gunData))
+            {
+                // EquippedGun = gunData;
+            }
+            else
+            {
+                EquippedGun = null;
+            }
+        }
     }
 }

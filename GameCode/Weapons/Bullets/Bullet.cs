@@ -8,31 +8,28 @@ using System.Threading.Tasks;
 
 namespace LostHope.GameCode.Weapons.Bullets
 {
-    public abstract class Bullet : DrawableGameComponent
+    public abstract class Bullet
     {
         protected Vector2 _firePosition;
-        protected Vector2 _endPosition;
 
         protected float _range;
         protected int _damage;
         protected bool _canPenetrate;
 
-        protected Bullet(Game game, Vector2 startPos, Vector2 endPos, float range, int damage, bool canPenetrate) : base(game)
+        protected Bullet(Vector2 startPos, float range, int damage, bool canPenetrate)
         {
             _firePosition = startPos;
-            _endPosition = endPos;
 
             _range = range;
             _damage = damage;
             _canPenetrate = canPenetrate;
         }
-        public abstract void Fire();
 
-        public override void Update(GameTime gameTime)
-        {
-        }
-        public override void Draw(GameTime gameTime)
-        {
-        }
+        // Called to instantiate the bullet
+        public abstract void Fire();
+        // Used to release the bullet from the pool
+        public abstract void Release();
+        public abstract void Update(GameTime gameTime);
+        public abstract void Draw(GameTime gameTime);
     }
 }

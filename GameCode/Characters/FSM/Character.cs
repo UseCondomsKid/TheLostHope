@@ -6,16 +6,14 @@ using Humper.Responses;
 using System;
 using System.Linq;
 using MonoGame.Aseprite;
+using TheLostHope.GameCode.Objects;
+using TheLostHope.GameCode.ObjectStateMachine;
 
 namespace LostHope.GameCode.Characters.FSM
 {
     // Base character class for all the game character aka player, enemies, npcs
-    public abstract class Character : Object
+    public abstract class Character : StatefullObject
     {
-        // State machine
-        public CharacterStateMachine StateMachine { get; private set; }
-        // Animator
-        public Animator Animator { get; private set; }
         // public getter for the collider
         public IBox Body { get { return _body; }}
         public int FacingDirection { get { return _facingDirection; } }
@@ -42,11 +40,8 @@ namespace LostHope.GameCode.Characters.FSM
         protected abstract void OnDeath();
 
         // Constructor
-        public Character(Game game, AsepriteFile asepriteFile) : base(game)
+        public Character(Game game, AsepriteFile asepriteFile) : base(game, asepriteFile)
         {
-            // Initializations
-            StateMachine = new CharacterStateMachine();
-            Animator = new Animator(asepriteFile, game.GraphicsDevice);
             IFrame = false;
 
             _facingDirection = 1; // Right
@@ -64,8 +59,8 @@ namespace LostHope.GameCode.Characters.FSM
 
             _body = CreateCharacterBox(position.X, position.Y);
             _body.Data = this;
-            Position = position;
-            Velocity = Vector2.Zero;
+
+            SpawnObject(position, Vector2.Zero);
 
             _currentHealth = GetMaxHealth();
         }

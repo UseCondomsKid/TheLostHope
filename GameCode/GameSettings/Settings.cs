@@ -27,32 +27,27 @@ namespace LostHope.GameCode.GameSettings
         // Player Input Bindings
         // Move Left
         public int KPlayerMoveLeftBinding { get; set; } = (int)Keys.A;
-        public int MPlayerMoveLeftBinding { get; set; } = -1;
         public int GPlayerMoveLeftBinding { get; set; } = (int)GamePadButton.Left;
         // Move Right
         public int KPlayerMoveRightBinding { get; set; } = (int)Keys.D;
-        public int MPlayerMoveRightBinding { get; set; } = -1;
         public int GPlayerMoveRightBinding { get; set; } = (int)GamePadButton.Right;
         // Jump
         public int KPlayerJumpBinding { get; set; } = (int)Keys.W;
-        public int MPlayerJumpBinding { get; set; } = -1;
         public int GPlayerJumpBinding { get; set; } = (int)GamePadButton.A;
         // Roll
         public int KPlayerRollBinding { get; set; } = (int)Keys.LeftShift;
-        public int MPlayerRollBinding { get; set; } = -1;
         public int GPlayerRollBinding { get; set; } = (int)GamePadButton.B;
         // Parry
-        public int KPlayerParryBinding { get; set; } = -1;
-        public int MPlayerParryBinding { get; set; } = (int)MouseButton.RightButton;
+        public int KPlayerParryBinding { get; set; } = (int)Keys.J;
         public int GPlayerParryBinding { get; set; } = (int)GamePadButton.X;
         // Shoot
-        public int KPlayerShootBinding { get; set; } = -1;
-        public int MPlayerShootBinding { get; set; } = (int)MouseButton.LeftButton;
+        public int KPlayerShootBinding { get; set; } = (int)Keys.K;
         public int GPlayerShootBinding { get; set; } = (int)GamePadButton.LeftShoulder;
-
+        // Reload
+        public int KPlayerReloadBinding { get; set; } = (int)Keys.L;
+        public int GPlayerReloadBinding { get; set; } = (int)GamePadButton.RightShoulder;
         // Interact
         public int KPlayerInteractBinding { get; set; } = (int)Keys.E;
-        public int MPlayerInteractBinding { get; set; } = -1;
         public int GPlayerInteractBinding { get; set; } = (int)GamePadButton.Up;
 
 

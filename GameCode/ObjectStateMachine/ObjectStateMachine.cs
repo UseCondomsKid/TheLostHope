@@ -4,18 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LostHope.GameCode.Characters.FSM
+namespace TheLostHope.GameCode.ObjectStateMachine
 {
-    public class CharacterStateMachine
+    public class ObjectStateMachine
     {
-        public CharacterState CurrentState { get; private set; }
-        public void Initialize(CharacterState startingState)
+        public ObjectState CurrentState { get; private set; }
+        public void Initialize(ObjectState startingState)
         {
             CurrentState = startingState;
             CurrentState.Enter();
         }
 
-        public void ChangeState(CharacterState newState)
+        public void ChangeState(ObjectState newState)
         {
             if (newState == CurrentState) return;
 

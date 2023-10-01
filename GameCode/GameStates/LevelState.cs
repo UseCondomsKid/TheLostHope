@@ -4,13 +4,11 @@ using LDtkTypes;
 using LostHope.Engine.ContentLoading;
 using LostHope.Engine.Rendering;
 using LostHope.Engine.StateManagement;
-using LostHope.Engine.UI;
 using LostHope.GameCode.Characters.PlayerCharacter;
 using LostHope.GameCode.Interactables;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace LostHope.GameCode.GameStates
 {
@@ -39,10 +37,8 @@ namespace LostHope.GameCode.GameStates
         private ModifiedLDtkRenderer _levelRenderer;
         private World _physicsWorld;
 
-        private Player _player;
         private List<CharacterBox> _characterBoxes;
 
-        public Player Player { get { return _player; } }
         public List<CharacterBox> CharacterBoxes { get { return _characterBoxes; } }
 
         public LevelState(Game1 gameRef, GameStateManager stateManager) : base(gameRef, stateManager)
@@ -172,20 +168,20 @@ namespace LostHope.GameCode.GameStates
             _characterBoxes = new List<CharacterBox>();
 
             // Load and Setup Player
-            if (_player == null)
+            if (_gameplayManager.Player == null)
             {
                 ContentLoader.LoadAsepriteFile(playerData.AsepriteFileName, playerData.AsepriteFileName);
-                _player = new Player(_gameRef, ContentLoader.GetAsepriteFile(playerData.AsepriteFileName),
+                _gameplayManager.Player = new Player(_gameRef, ContentLoader.GetAsepriteFile(playerData.AsepriteFileName),
                     playerData);
             }
 
             Vector2 playerSpawnPos = (levelTransitionId == null ? playerData.Position :
                 levelTransitionDataList.Find(lt => lt.Id == levelTransitionId).SpawnPosition.ToVector2()) - _levelData.Position.ToVector2();
 
-            _player.SpawnCharacter(playerSpawnPos, _physicsWorld);
+            _gameplayManager.Player.SpawnCharacter(playerSpawnPos, _physicsWorld);
 
-            _characterBoxes.Add(new CharacterBox(CollisionTags.Player, _player.Body));
-            AddComponent(_player);
+            _characterBoxes.Add(new CharacterBox(CollisionTags.Player, _gameplayManager.Player.Body));
+            AddComponent(_gameplayManager.Player);
 
             // Load and Setup Enemies
             // TODO: Create enemies and other characters and add their boxes to the list
@@ -258,15 +254,15 @@ namespace LostHope.GameCode.GameStates
             // Set the camera's position to be the player's position
             if (instant)
             {
-                _cameraLastFramePosition = _player.Position;
-                _gameplayManager.GameCamera.SetPosition(_player.Position);
+                _cameraLastFramePosition = _gameplayManager.Player.Position;
+                _gameplayManager.GameCamera.SetPosition(_gameplayManager.Player.Position);
             }
             else
             {
                 _cameraLastFramePosition = _gameplayManager.GameCamera.Position;
                 _gameplayManager.GameCamera.SetPosition(MathHelper.Lerp(_gameplayManager.GameCamera.Position.X,
-                    _player.Position.X, _cameraFollowPlayerSpeed.X), MathHelper.Lerp(_gameplayManager.GameCamera.Position.Y,
-                    _player.Position.Y, _cameraFollowPlayerSpeed.Y));
+                    _gameplayManager.Player.Position.X, _cameraFollowPlayerSpeed.X), MathHelper.Lerp(_gameplayManager.GameCamera.Position.Y,
+                    _gameplayManager.Player.Position.Y, _cameraFollowPlayerSpeed.Y));
             }
 
             // Make sure that the camera is still in the bounderies of the level

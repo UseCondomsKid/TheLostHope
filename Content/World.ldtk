@@ -1042,7 +1042,7 @@
 					"max": null,
 					"regex": null,
 					"acceptFileTypes": null,
-					"defaultOverride": { "id": "V_Float", "params": [140] },
+					"defaultOverride": { "id": "V_Float", "params": [145] },
 					"textLanguageMode": null,
 					"symmetricalRef": false,
 					"autoChainRef": true,
@@ -1077,7 +1077,7 @@
 					"max": null,
 					"regex": null,
 					"acceptFileTypes": null,
-					"defaultOverride": { "id": "V_Float", "params": [144.5] },
+					"defaultOverride": { "id": "V_Float", "params": [146] },
 					"textLanguageMode": null,
 					"symmetricalRef": false,
 					"autoChainRef": true,
@@ -2197,8 +2197,8 @@
 							"fieldInstances": [
 								{ "__identifier": "AsepriteFileName", "__type": "String", "__value": "AsepriteFiles/Player", "__tile": null, "defUid": 126, "realEditorValues": [] },
 								{ "__identifier": "GravityScale", "__type": "Float", "__value": 30, "__tile": null, "defUid": 23, "realEditorValues": [] },
-								{ "__identifier": "GroundSpeed", "__type": "Float", "__value": 140, "__tile": null, "defUid": 19, "realEditorValues": [] },
-								{ "__identifier": "AirSpeed", "__type": "Float", "__value": 144.5, "__tile": null, "defUid": 133, "realEditorValues": [] },
+								{ "__identifier": "GroundSpeed", "__type": "Float", "__value": 145, "__tile": null, "defUid": 19, "realEditorValues": [] },
+								{ "__identifier": "AirSpeed", "__type": "Float", "__value": 146, "__tile": null, "defUid": 133, "realEditorValues": [] },
 								{ "__identifier": "Acceleration", "__type": "Float", "__value": 4.5, "__tile": null, "defUid": 20, "realEditorValues": [] },
 								{ "__identifier": "Deacceleration", "__type": "Float", "__value": 5, "__tile": null, "defUid": 21, "realEditorValues": [] },
 								{ "__identifier": "JumpForce", "__type": "Float", "__value": 477, "__tile": null, "defUid": 22, "realEditorValues": [] },
@@ -2207,6 +2207,48 @@
 								{ "__identifier": "JumpCayoteTime", "__type": "Float", "__value": 0.1, "__tile": null, "defUid": 135, "realEditorValues": [] },
 								{ "__identifier": "MaxGravityVelocity", "__type": "Float", "__value": 300, "__tile": null, "defUid": 109, "realEditorValues": [] },
 								{ "__identifier": "RollVelocity", "__type": "Float", "__value": 200, "__tile": null, "defUid": 128, "realEditorValues": [] }
+							]
+						},
+						{
+							"__identifier": "LDtkGun",
+							"__grid": [16,9],
+							"__pivot": [0,0],
+							"__tags": ["Gun"],
+							"__tile": { "tilesetUid": 103, "x": 16, "y": 560, "w": 16, "h": 16 },
+							"__smartColor": "#B55088",
+							"__worldX": 512,
+							"__worldY": 288,
+							"iid": "694fbcb0-3b70-11ee-9a7c-93adfa4f8d5f",
+							"width": 32,
+							"height": 32,
+							"defUid": 65,
+							"px": [512,288],
+							"fieldInstances": [
+								{ "__identifier": "Name", "__type": "String", "__value": "Pistol", "__tile": null, "defUid": 77, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Pistol"]
+								}] },
+								{ "__identifier": "AsepriteFileName", "__type": "String", "__value": "AsepriteFiles/Pistol", "__tile": null, "defUid": 66, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["AsepriteFiles/Pistol"]
+								}] },
+								{ "__identifier": "ClipSize", "__type": "Int", "__value": 10, "__tile": null, "defUid": 67, "realEditorValues": [{ "id": "V_Int", "params": [10] }] },
+								{ "__identifier": "FireType", "__type": "LocalEnum.GunFireType", "__value": "Single", "__tile": null, "defUid": 112, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Single"]
+								}] },
+								{ "__identifier": "KnockbackForce", "__type": "Float", "__value": 10, "__tile": null, "defUid": 73, "realEditorValues": [{ "id": "V_Float", "params": [10] }] },
+								{ "__identifier": "TimeBetweenShots", "__type": "Float", "__value": 0.5, "__tile": null, "defUid": 69, "realEditorValues": [{ "id": "V_Float", "params": [0.5] }] },
+								{ "__identifier": "BulletType", "__type": "LocalEnum.GunBulletType", "__value": "Hitscan", "__tile": null, "defUid": 114, "realEditorValues": [{
+									"id": "V_String",
+									"params": ["Hitscan"]
+								}] },
+								{ "__identifier": "Range", "__type": "Float", "__value": 10, "__tile": null, "defUid": 70, "realEditorValues": [{ "id": "V_Float", "params": [10] }] },
+								{ "__identifier": "Damage", "__type": "Int", "__value": 10, "__tile": null, "defUid": 71, "realEditorValues": [{ "id": "V_Int", "params": [10] }] },
+								{ "__identifier": "CanPenetrate", "__type": "Bool", "__value": false, "__tile": null, "defUid": 93, "realEditorValues": [{
+									"id": "V_Bool",
+									"params": [ false ]
+								}] }
 							]
 						}
 					]
@@ -2671,7 +2713,7 @@
 							"__smartColor": "#FF0044",
 							"__worldX": 1248,
 							"__worldY": 416,
-							"iid": "da78ac40-3b70-11ee-804d-a7363953ec14",
+							"iid": "2db02300-3b70-11ee-9a7c-8b975766a02f",
 							"width": 32,
 							"height": 32,
 							"defUid": 9,
@@ -2679,8 +2721,8 @@
 							"fieldInstances": [
 								{ "__identifier": "AsepriteFileName", "__type": "String", "__value": "AsepriteFiles/Player", "__tile": null, "defUid": 126, "realEditorValues": [] },
 								{ "__identifier": "GravityScale", "__type": "Float", "__value": 30, "__tile": null, "defUid": 23, "realEditorValues": [] },
-								{ "__identifier": "GroundSpeed", "__type": "Float", "__value": 140, "__tile": null, "defUid": 19, "realEditorValues": [] },
-								{ "__identifier": "AirSpeed", "__type": "Float", "__value": 144.5, "__tile": null, "defUid": 133, "realEditorValues": [] },
+								{ "__identifier": "GroundSpeed", "__type": "Float", "__value": 145, "__tile": null, "defUid": 19, "realEditorValues": [] },
+								{ "__identifier": "AirSpeed", "__type": "Float", "__value": 146, "__tile": null, "defUid": 133, "realEditorValues": [] },
 								{ "__identifier": "Acceleration", "__type": "Float", "__value": 4.5, "__tile": null, "defUid": 20, "realEditorValues": [] },
 								{ "__identifier": "Deacceleration", "__type": "Float", "__value": 5, "__tile": null, "defUid": 21, "realEditorValues": [] },
 								{ "__identifier": "JumpForce", "__type": "Float", "__value": 477, "__tile": null, "defUid": 22, "realEditorValues": [] },
