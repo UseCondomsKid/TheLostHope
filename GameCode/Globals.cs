@@ -3,12 +3,12 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using LostHope.Engine.Camera;
-using LostHope.GameCode.Characters.PlayerCharacter;
-using LostHope.GameCode.GameStates;
-using LostHope.GameCode.GameSettings;
+using TheLostHope.Engine.Camera;
+using TheLostHope.GameCode.Characters.PlayerCharacter;
+using TheLostHope.GameCode.GameStates;
+using TheLostHope.GameCode.GameSettings;
 
-namespace LostHope.GameCode
+namespace TheLostHope.GameCode
 {
     public static class Globals
     {

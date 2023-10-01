@@ -1,4 +1,4 @@
-﻿using LostHope.GameCode.Characters.FSM;
+﻿using TheLostHope.GameCode.Characters.FSM;
 using Humper.Responses;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LostHope.Engine.Animations;
+using TheLostHope.Engine.Animations;
 
-namespace LostHope.GameCode.Characters.PlayerCharacter.States
+namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
 {
     // Base player grounded state, aka when the player is on the ground
     public class PlayerGroundedState : PlayerState

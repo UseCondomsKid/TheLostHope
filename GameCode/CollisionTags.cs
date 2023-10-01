@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LostHope.GameCode
+namespace TheLostHope.GameCode
 {
     // This is used to give tags to colliders, so that we can diffirentiate between them.
     [Flags]

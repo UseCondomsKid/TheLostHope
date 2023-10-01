@@ -1,6 +1,6 @@
 ﻿using FontStashSharp;
-using LostHope.Engine.ContentLoading;
-using LostHope.Engine.UI;
+using TheLostHope.Engine.ContentLoading;
+using TheLostHope.Engine.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LostHope.GameCode.UI.Elements
+namespace TheLostHope.GameCode.UI.Elements
 {
     public class UIEText : UIElement
     {

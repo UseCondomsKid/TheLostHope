@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LostHope.Engine.Localization
+namespace TheLostHope.Engine.Localization
 {
     public class LocalizationStringData
     {

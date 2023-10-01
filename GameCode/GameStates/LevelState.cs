@@ -1,16 +1,16 @@
 ﻿using Humper;
 using LDtk;
 using LDtkTypes;
-using LostHope.Engine.ContentLoading;
-using LostHope.Engine.Rendering;
-using LostHope.Engine.StateManagement;
-using LostHope.GameCode.Characters.PlayerCharacter;
-using LostHope.GameCode.Interactables;
+using TheLostHope.Engine.ContentLoading;
+using TheLostHope.Engine.Rendering;
+using TheLostHope.Engine.StateManagement;
+using TheLostHope.GameCode.Characters.PlayerCharacter;
+using TheLostHope.GameCode.Interactables;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace LostHope.GameCode.GameStates
+namespace TheLostHope.GameCode.GameStates
 {
     public class LevelState : GameState
     {

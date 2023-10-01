@@ -1,7 +1,7 @@
-﻿using LostHope.GameCode.Characters.FSM;
+﻿using TheLostHope.GameCode.Characters.FSM;
 using System;
 
-namespace LostHope.GameCode.Characters.PlayerCharacter.States
+namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
 {
     public class PlayerRunState : PlayerGroundedState
     {

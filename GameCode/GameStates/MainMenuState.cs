@@ -1,16 +1,16 @@
 ﻿using Apos.Input;
 using LDtkTypes;
-using LostHope.Engine.ContentLoading;
-using LostHope.Engine.StateManagement;
-using LostHope.Engine.UI;
-using LostHope.GameCode.UI.Elements;
+using TheLostHope.Engine.ContentLoading;
+using TheLostHope.Engine.StateManagement;
+using TheLostHope.Engine.UI;
+using TheLostHope.GameCode.UI.Elements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace LostHope.GameCode.GameStates
+namespace TheLostHope.GameCode.GameStates
 {
     public class MainMenuState : GameState
     {

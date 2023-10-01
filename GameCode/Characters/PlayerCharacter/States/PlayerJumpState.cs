@@ -1,10 +1,10 @@
 ﻿using Humper.Responses;
-using LostHope.GameCode.Characters.FSM;
+using TheLostHope.GameCode.Characters.FSM;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Linq;
 
-namespace LostHope.GameCode.Characters.PlayerCharacter.States
+namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
 {
     public class PlayerJumpState : PlayerState
     {

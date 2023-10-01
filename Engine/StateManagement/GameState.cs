@@ -1,10 +1,10 @@
-﻿using LostHope.Engine.UI;
-using LostHope.GameCode.GameStates;
+﻿using TheLostHope.Engine.UI;
+using TheLostHope.GameCode.GameStates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace LostHope.Engine.StateManagement
+namespace TheLostHope.Engine.StateManagement
 {
     // This represents a scene
     public abstract class GameState 

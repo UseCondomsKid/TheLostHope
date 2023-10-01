@@ -1,6 +1,6 @@
 ﻿using LDtkTypes;
-using LostHope.GameCode.GameStates;
-using LostHope.GameCode.Interactables.Core;
+using TheLostHope.GameCode.GameStates;
+using TheLostHope.GameCode.Interactables.Core;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LostHope.GameCode.Interactables
+namespace TheLostHope.GameCode.Interactables
 {
     public class LevelTransition : TriggerInteractable
     {

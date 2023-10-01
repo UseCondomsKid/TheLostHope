@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 
-namespace LostHope.GameCode.GameSettings
+namespace TheLostHope.GameCode.GameSettings
 {
     public class Settings
     {

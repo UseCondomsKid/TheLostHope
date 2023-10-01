@@ -1,7 +1,7 @@
-﻿using LostHope.GameCode.Characters.FSM;
+﻿using TheLostHope.GameCode.Characters.FSM;
 using Microsoft.Xna.Framework.Input;
 
-namespace LostHope.GameCode.Characters.PlayerCharacter.States
+namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
 {
     public class PlayerLandState : PlayerState
     {

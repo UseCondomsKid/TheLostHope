@@ -1,6 +1,6 @@
 ﻿using FontStashSharp;
 using LDtk;
-using LostHope.Engine.Animations;
+using TheLostHope.Engine.Animations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace LostHope.Engine.ContentLoading
+namespace TheLostHope.Engine.ContentLoading
 {
     public static class ContentLoader
     {

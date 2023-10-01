@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Diagnostics;
 
-namespace LostHope.Engine.Animations
+namespace TheLostHope.Engine.Animations
 {
     public class AnimationFrame
     {

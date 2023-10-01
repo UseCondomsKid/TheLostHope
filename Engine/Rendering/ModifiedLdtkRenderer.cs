@@ -6,15 +6,15 @@ using System.Linq;
 using LDtk;
 using LDtk.Renderer;
 using LDtkTypes;
-using LostHope.Engine.ContentLoading;
-using LostHope.GameCode;
-using LostHope.GameCode.GameStates;
+using TheLostHope.Engine.ContentLoading;
+using TheLostHope.GameCode;
+using TheLostHope.GameCode.GameStates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 
-namespace LostHope.Engine.Rendering
+namespace TheLostHope.Engine.Rendering
 {
     public class BackgroundData
     {

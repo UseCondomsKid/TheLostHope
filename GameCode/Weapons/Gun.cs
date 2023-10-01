@@ -1,13 +1,13 @@
 ﻿using LDtkTypes;
-using LostHope.GameCode.Characters.PlayerCharacter;
-using LostHope.GameCode.GameStates;
+using TheLostHope.GameCode.Characters.PlayerCharacter;
+using TheLostHope.GameCode.GameStates;
 using Microsoft.Xna.Framework;
 using MonoGame.Aseprite;
 using System.Collections.Generic;
 using TheLostHope.GameCode.ObjectStateMachine;
 using TheLostHope.GameCode.Weapons.States;
 
-namespace LostHope.GameCode.Weapons
+namespace TheLostHope.GameCode.Weapons
 {
     public class Gun : StatefullObject
     {

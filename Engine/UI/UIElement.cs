@@ -1,4 +1,4 @@
-﻿using LostHope.GameCode;
+﻿using TheLostHope.GameCode;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LostHope.Engine.UI
+namespace TheLostHope.Engine.UI
 {
     public abstract class UIElement
     {

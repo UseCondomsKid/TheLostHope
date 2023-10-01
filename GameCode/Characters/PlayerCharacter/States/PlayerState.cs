@@ -1,4 +1,4 @@
-﻿using LostHope.GameCode.Characters.FSM;
+﻿using TheLostHope.GameCode.Characters.FSM;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LostHope.GameCode.Characters.PlayerCharacter.States
+namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
 {
     // Base player State
     public class PlayerState : CharacterState

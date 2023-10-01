@@ -1,4 +1,4 @@
-﻿using LostHope.GameCode.GameStates;
+﻿using TheLostHope.GameCode.GameStates;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LostHope.GameCode.Interactables.Core
+namespace TheLostHope.GameCode.Interactables.Core
 {
     public abstract class Interactable : DrawableGameComponent
     {

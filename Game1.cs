@@ -1,16 +1,16 @@
-﻿using LostHope.Engine.StateManagement;
-using LostHope.Engine.UI;
+﻿using TheLostHope.Engine.StateManagement;
+using TheLostHope.Engine.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using LostHope.GameCode.GameStates;
-using LostHope.GameCode;
-using LostHope.Engine.ContentLoading;
+using TheLostHope.GameCode.GameStates;
+using TheLostHope.GameCode;
+using TheLostHope.Engine.ContentLoading;
 using Apos.Input;
-using LostHope.GameCode.GameSettings;
+using TheLostHope.GameCode.GameSettings;
 using FontStashSharp;
-using LostHope.Engine.Localization;
+using TheLostHope.Engine.Localization;
 
-namespace LostHope
+namespace TheLostHope
 {
     public class Game1 : Game
     {

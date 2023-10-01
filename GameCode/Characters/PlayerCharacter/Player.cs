@@ -1,7 +1,7 @@
-﻿using LostHope.GameCode.Characters.FSM;
+﻿using TheLostHope.GameCode.Characters.FSM;
 using Humper;
 using Microsoft.Xna.Framework;
-using LostHope.GameCode.Characters.PlayerCharacter.States;
+using TheLostHope.GameCode.Characters.PlayerCharacter.States;
 using Humper.Responses;
 using System;
 using Microsoft.Xna.Framework.Input;
@@ -9,12 +9,12 @@ using LDtkTypes;
 using Apos.Input;
 using Track = Apos.Input.Track;
 using System.Collections.Generic;
-using LostHope.Engine.Animations;
+using TheLostHope.Engine.Animations;
 using MonoGame.Aseprite;
 using TheLostHope.GameCode.Characters.PlayerCharacter.States;
 using System.Diagnostics;
 
-namespace LostHope.GameCode.Characters.PlayerCharacter
+namespace TheLostHope.GameCode.Characters.PlayerCharacter
 {
     public class Player : Character
     {

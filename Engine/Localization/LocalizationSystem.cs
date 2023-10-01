@@ -1,9 +1,9 @@
-﻿using LostHope.Engine.ContentLoading;
+﻿using TheLostHope.Engine.ContentLoading;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace LostHope.Engine.Localization
+namespace TheLostHope.Engine.Localization
 {
     public class LocalizationSystem
     {

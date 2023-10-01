@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using LostHope.Engine.Animations;
+using TheLostHope.Engine.Animations;
 using Humper;
 using Humper.Responses;
 using System;
@@ -9,7 +9,7 @@ using MonoGame.Aseprite;
 using TheLostHope.GameCode.Objects;
 using TheLostHope.GameCode.ObjectStateMachine;
 
-namespace LostHope.GameCode.Characters.FSM
+namespace TheLostHope.GameCode.Characters.FSM
 {
     // Base character class for all the game character aka player, enemies, npcs
     public abstract class Character : StatefullObject

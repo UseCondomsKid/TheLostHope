@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LostHope.Engine.Rendering
+namespace TheLostHope.Engine.Rendering
 {
     // This class implement some static helper functions concerning rendering
     public static class SpriteBatchExtensions

@@ -1,18 +1,18 @@
 ﻿using LDtk;
 using LDtkTypes;
-using LostHope.Engine.Camera;
-using LostHope.Engine.ContentLoading;
-using LostHope.Engine.StateManagement;
-using LostHope.Engine.UI;
-using LostHope.GameCode.Characters.PlayerCharacter;
-using LostHope.GameCode.UI.Elements;
-using LostHope.GameCode.Weapons;
+using TheLostHope.Engine.Camera;
+using TheLostHope.Engine.ContentLoading;
+using TheLostHope.Engine.StateManagement;
+using TheLostHope.Engine.UI;
+using TheLostHope.GameCode.Characters.PlayerCharacter;
+using TheLostHope.GameCode.UI.Elements;
+using TheLostHope.GameCode.Weapons;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace LostHope.GameCode.GameStates
+namespace TheLostHope.GameCode.GameStates
 {
     public class GameplayManager
     {

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MonoGame.Aseprite.Sprites;
 
-namespace LostHope.Engine.Animations
+namespace TheLostHope.Engine.Animations
 {
     public class Animator
     {

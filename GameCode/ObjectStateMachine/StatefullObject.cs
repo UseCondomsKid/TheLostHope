@@ -1,4 +1,4 @@
-﻿using LostHope.Engine.Animations;
+﻿using TheLostHope.Engine.Animations;
 using Microsoft.Xna.Framework;
 using MonoGame.Aseprite;
 using System;

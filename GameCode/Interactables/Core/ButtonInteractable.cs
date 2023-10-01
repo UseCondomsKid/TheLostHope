@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LostHope.GameCode.Interactables.Core
+namespace TheLostHope.GameCode.Interactables.Core
 {
     public abstract class ButtonInteractable : Interactable
     {

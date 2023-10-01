@@ -1,13 +1,13 @@
 ﻿using LDtkTypes;
-using LostHope.Engine.Animations;
-using LostHope.Engine.ContentLoading;
-using LostHope.GameCode.GameStates;
-using LostHope.GameCode.Interactables.Core;
-using LostHope.GameCode.Weapons;
+using TheLostHope.Engine.Animations;
+using TheLostHope.Engine.ContentLoading;
+using TheLostHope.GameCode.GameStates;
+using TheLostHope.GameCode.Interactables.Core;
+using TheLostHope.GameCode.Weapons;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
 
-namespace LostHope.GameCode.Interactables
+namespace TheLostHope.GameCode.Interactables
 {
     public class GunInteractable : TriggerInteractable
     {

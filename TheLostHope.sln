@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TheLostHope", "TheLostHope.csproj", "{79AE080D-18B6-4D13-B7F2-D77DDAEBA365}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "The Lost Hope Editor", "..\The Lost Hope Editor\The Lost Hope Editor.csproj", "{F399378E-877F-468C-9FF7-753232DE1823}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TheLostHopeEditor", "..\The Lost Hope Editor\TheLostHopeEditor.csproj", "{F399378E-877F-468C-9FF7-753232DE1823}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

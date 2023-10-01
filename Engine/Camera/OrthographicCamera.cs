@@ -1,12 +1,12 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System;
-using LostHope.GameCode.Characters.PlayerCharacter;
-using LostHope.GameCode;
+using TheLostHope.GameCode.Characters.PlayerCharacter;
+using TheLostHope.GameCode;
 using System.Reflection.Emit;
 using System.Net.Http.Headers;
 
-namespace LostHope.Engine.Camera
+namespace TheLostHope.Engine.Camera
 {
     // This class implement a simple orthographic camera.
     public class OrthographicCamera : GameComponent

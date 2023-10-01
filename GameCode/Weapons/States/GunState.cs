@@ -1,5 +1,5 @@
-﻿using LostHope.GameCode.Characters.FSM;
-using LostHope.GameCode.Weapons;
+﻿using TheLostHope.GameCode.Characters.FSM;
+using TheLostHope.GameCode.Weapons;
 using System;
 using System.Collections.Generic;
 using System.Linq;

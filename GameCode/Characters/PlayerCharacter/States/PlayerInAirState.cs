@@ -1,5 +1,5 @@
-﻿using LostHope.GameCode.Characters.FSM;
-using LostHope.GameCode.Characters.PlayerCharacter.States;
+﻿using TheLostHope.GameCode.Characters.FSM;
+using TheLostHope.GameCode.Characters.PlayerCharacter.States;
 using System;
 using System.Collections.Generic;
 using System.Linq;
