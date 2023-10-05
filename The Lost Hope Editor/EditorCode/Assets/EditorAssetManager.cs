@@ -2,7 +2,11 @@
 using Microsoft.Xna.Framework;
 using MonoGame.ImGui.Extensions;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.DirectoryServices.ActiveDirectory;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using TheLostHope.Engine.ContentManagement;
 using TheLostHopeEditor.EditorCode.Utils;
@@ -15,6 +19,7 @@ namespace TheLostHopeEditor.EditorCode.Assets
     public class EditorAssetManager
     {
         public const string PathToAssetsFolder = "C:\\000\\Programming\\The Lost Hope\\The Lost Hope\\bin\\Debug\\net6.0\\Assets";
+        public ScriptableObject Asset { get { return _asset; } }
 
         private string _assetPath;
         private ScriptableObject _asset;
@@ -141,7 +146,7 @@ namespace TheLostHopeEditor.EditorCode.Assets
                 // Draw the base scriptable object properties separately
                 for (int i = _assetProperties.Length - _scriptableObjectMainPropCount; i < _assetProperties.Length; i++)
                 {
-                    DrawProperty(_assetProperties[i]);
+                    DrawProperty(_assetProperties[i], _asset);
                 }
                 ImGui.Spacing();
                 ImGui.Separator();
@@ -150,7 +155,7 @@ namespace TheLostHopeEditor.EditorCode.Assets
                 // Draw the rest of the properties
                 for (int i = 0; i < _assetProperties.Length - _scriptableObjectMainPropCount; i++)
                 {
-                    DrawProperty(_assetProperties[i]);
+                    DrawProperty(_assetProperties[i], _asset);
                     ImGui.Spacing();
                 }
             }
@@ -158,8 +163,10 @@ namespace TheLostHopeEditor.EditorCode.Assets
             ImGui.EndChild();
         }
 
-        private void DrawProperty(PropertyInfo property)
+        private void DrawProperty(PropertyInfo property, object obj)
         {
+            if (property == null) return;
+
             // Check for header attribute
             HeaderAttribute headerAttribute = property.GetCustomAttribute<HeaderAttribute>();
             if (headerAttribute != null)
@@ -169,17 +176,15 @@ namespace TheLostHopeEditor.EditorCode.Assets
 
             // Check range attribute
             RangeAttribute rangeAttribute = property.GetCustomAttribute<RangeAttribute>();
-
             // TODO: Check for other attributes
 
             if (property.CanRead && !property.CanWrite)
             {
-                var value = property.GetValue(_asset);
+                var value = property.GetValue(obj);
                 ImGui.Text($"{property.Name}: {value}");
             }
             else if (property.CanRead && property.CanWrite)
             {
-
                 if (rangeAttribute != null)
                 {
                     // This property has a RangeAttribute
@@ -187,49 +192,185 @@ namespace TheLostHopeEditor.EditorCode.Assets
                     float maxValue = rangeAttribute.MaxValue;
 
                     // Render an ImGui slider with the specified range
-                    float value = (float)property.GetValue(_asset);
+                    float value = (float)property.GetValue(obj);
                     ImGui.SliderFloat(property.Name, ref value, minValue, maxValue);
-                    property.SetValue(_asset, value);
+                    property.SetValue(obj, value);
                 }
                 // TODO: Check for other attributes
                 else
                 {
                     if (property.PropertyType == typeof(string))
                     {
-                        string value = (string)property.GetValue(_asset);
+                        string value = (string)property.GetValue(obj);
                         ImGui.InputText(property.Name, ref value, 255);
-                        property.SetValue(_asset, value);
+                        property.SetValue(obj, value);
                     }
                     else if (property.PropertyType == typeof(int))
                     {
-                        int value = (int)property.GetValue(_asset);
+                        int value = (int)property.GetValue(obj);
                         ImGui.InputInt(property.Name, ref value);
-                        property.SetValue(_asset, value);
+                        property.SetValue(obj, value);
                     }
                     else if (property.PropertyType == typeof(float))
                     {
-                        float value = (float)property.GetValue(_asset);
+                        float value = (float)property.GetValue(obj);
                         ImGui.InputFloat(property.Name, ref value);
-                        property.SetValue(_asset, value);
+                        property.SetValue(obj, value);
                     }
                     else if (property.PropertyType == typeof(float))
                     {
-                        float value = (float)property.GetValue(_asset);
+                        float value = (float)property.GetValue(obj);
                         ImGui.InputFloat(property.Name, ref value);
-                        property.SetValue(_asset, value);
+                        property.SetValue(obj, value);
+                    }
+                    else if (property.PropertyType == typeof(bool))
+                    {
+                        bool value = (bool)property.GetValue(obj);
+                        ImGui.Checkbox(property.Name, ref value);
+                        property.SetValue(obj, value);
+                    }
+                    else if (property.PropertyType.IsEnum)
+                    {
+                        Enum enumValue = (Enum)property.GetValue(obj);
+                        // Convert enum to int
+                        int selectedIndex = Convert.ToInt32(enumValue); 
+                        string[] names = Enum.GetNames(property.PropertyType);
+                        if (ImGui.Combo(property.Name, ref selectedIndex, names, names.Length))
+                        {
+                            // Convert int back to enum
+                            Enum newValue = (Enum)Enum.ToObject(property.PropertyType, selectedIndex);
+                            property.SetValue(obj, newValue);
+                        }
                     }
                     else if (property.PropertyType == typeof(Vector2))
                     {
-                        Vector2 value = (Vector2)property.GetValue(_asset);
+                        Vector2 value = (Vector2)property.GetValue(obj);
                         var numericVector2 = value.ToNumerics();
                         ImGui.InputFloat2(property.Name, ref numericVector2);
                         value = numericVector2.ToXnaVector2();
-                        property.SetValue(_asset, value);
+                        property.SetValue(obj, value);
                     }
-                    // TODO: Check other property types, render them and set their values
+                    // TODO: Add more types
+                    else if (typeof(IList).IsAssignableFrom(property.PropertyType))
+                    {
+                        var listItemValues = (IList)property.GetValue(obj);
+
+                        if (listItemValues != null)
+                        {
+                            ImGui.Text($"{property.Name}");// (List of: {property.DeclaringType.Name})");
+
+                            int indexToRemove = -1;
+                            int index = 0;
+
+                            // Iterate through the list
+                            foreach (var itemValue in listItemValues)
+                            {
+                                // Display a collapsible node for each list element
+                                if (ImGui.TreeNode(itemValue.GetType().GUID.ToString() + index, $"Element: {index}"))
+                                {
+                                    if (itemValue == null)
+                                    {
+                                        ImGui.Text("Element is null");
+                                    }
+                                    else
+                                    {
+                                        var itemProperty = property.PropertyType.GetProperty("Item");
+                                        DrawProperty(itemProperty, property.GetValue(obj));
+                                    }
+
+                                    // Add a button to remove the element
+                                    if (ImGui.Button($"Remove##{index}"))
+                                    {
+                                        indexToRemove = index;
+                                    }
+
+                                    ImGui.TreePop();
+                                }
+                                index++;
+                            }
+
+                            // Check if an element should be removed
+                            if (indexToRemove != -1)
+                            {
+                                // Determine the type of elements in the list
+                                Type elementType = property.PropertyType.GetGenericArguments()[0];
+
+                                // Create a list of the correct type
+                                var typedList = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
+
+                                // Add the existing list elements to the typed list
+                                foreach (var item in listItemValues)
+                                {
+                                    typedList.Add(item);
+                                }
+
+                                // Remove the element at the specified index
+                                typedList.RemoveAt(indexToRemove);
+
+                                // Set the list property with the updated list
+                                property.SetValue(obj, typedList);
+                            }
+                            // Add a button to add a new element to the list
+                            if (ImGui.Button("Add Element"))
+                            {
+                                // Determine the type of elements in the list
+                                Type elementType = property.PropertyType.GetGenericArguments()[0];
+
+                                // Create a new instance of the element type
+                                var newElement = Activator.CreateInstance(elementType);
+
+                                // Cast the new element to the correct type
+                                object typedElement = Convert.ChangeType(newElement, elementType);
+
+                                // Create a list of the correct type
+                                var typedList = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
+
+                                // Add the existing list elements to the typed list
+                                foreach (var item in listItemValues)
+                                {
+                                    typedList.Add(item);
+                                }
+
+                                // Add the typed element to the list
+                                typedList.Add(typedElement);
+
+                                // Set the list property with the updated list
+                                property.SetValue(obj, typedList);
+                            }
+                        }
+                    }
                 }
             }
+        }
 
+        private void DrawListProperties(object obj)
+        {
+            if (obj != null)
+            {
+                var objType = obj.GetType();
+                var properties = objType.GetProperties();
+
+                foreach (var prop in properties)
+                {
+                    if (prop.PropertyType.IsPrimitive || prop.PropertyType == typeof(string) || prop.PropertyType.IsEnum)
+                    {
+                        // Simple property (primitive, string, or enum)
+                        DrawProperty(prop, obj);
+                    }
+                    else
+                    {
+                        // Complex object - recursively draw its properties
+                        var complexObject = prop.GetValue(obj);
+                        if (complexObject != null)
+                        {
+                            ImGui.Text($"{prop.Name}:");
+                            ImGui.Indent();
+                            DrawListProperties(complexObject);
+                            ImGui.Unindent();
+                        }
+                    }
+                }
+            }
         }
     }
 }
