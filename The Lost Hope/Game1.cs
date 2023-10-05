@@ -9,6 +9,7 @@ using FontStashSharp;
 using TheLostHopeEngine.EngineCode.StateManagement;
 using TheLostHopeEngine.EngineCode.UI;
 using TheLostHopeEngine.EngineCode.Localization;
+using TheLostHopeEngine.EngineCode.Assets;
 
 namespace TheLostHope
 {

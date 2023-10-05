@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 
-namespace TheLostHope.Engine.ContentManagement
+namespace TheLostHopeEngine.EngineCode.ContentManagement.CSV
 {
     public class CSVSerializer
     {

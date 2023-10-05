@@ -2,11 +2,11 @@
 using Microsoft.Xna.Framework;
 using TheLostHopeEditor.EditorCode.StateManagement;
 
-namespace TheLostHopeEditor.EditorCode.States
+namespace TheLostHopeEditor.EditorCode.States.SuperStates
 {
-    public class EditorBaseState : EditorState
+    public class BaseEditorState : EditorState
     {
-        public EditorBaseState(Game1 gameRef, EditorStateManager stateManager, string name) : base(gameRef, stateManager, name)
+        public BaseEditorState(Game1 gameRef, EditorStateManager stateManager, string name) : base(gameRef, stateManager, name)
         {
         }
 

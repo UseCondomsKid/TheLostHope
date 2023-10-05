@@ -1,9 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.ImGui;
+using TheLostHope.Engine.ContentManagement;
 using TheLostHopeEditor.EditorCode;
 using TheLostHopeEditor.EditorCode.StateManagement;
-using TheLostHopeEditor.EditorCode.States;
+using TheLostHopeEditor.EditorCode.States.SubStates;
+using TheLostHopeEditor.EditorCode.States.SuperStates;
 using TheLostHopeEngine.EngineCode.Camera;
 
 namespace TheLostHopeEditor
@@ -19,7 +21,7 @@ namespace TheLostHopeEditor
 
 
         // States
-        public EditorBaseState EditorBaseState { get; private set; }
+        public BaseEditorState EditorBaseState { get; private set; }
         public GunsEditorState GunsEditorState { get; private set; }
 
         public SpriteBatch SpriteBatch { get { return _spriteBatch; } }
@@ -33,6 +35,9 @@ namespace TheLostHopeEditor
 
         protected override void Initialize()
         {
+            // Initialize the content loader
+            ContentLoader.Initialize(Content);
+
             // Window properties
             Window.AllowUserResizing = true;
             IsMouseVisible = true;
@@ -49,14 +54,13 @@ namespace TheLostHopeEditor
             _camera = new OrthographicCamera(this);
             _camera.Initialize();
             _camera.Zoom = 8f;
-            Globals.Camera = _camera;
 
             // Initialize systems
             _imguiRenderer = new ImGuiRenderer(this).Initialize().RebuildFontAtlas();
             _gameStateManager = new EditorStateManager();
 
             // ---- Initialize States ----
-            EditorBaseState = new EditorBaseState(this, _gameStateManager, "Base");
+            EditorBaseState = new BaseEditorState(this, _gameStateManager, "Base");
             GunsEditorState = new GunsEditorState(this, _gameStateManager, "Guns Editor");
             // ---------------------------
 
@@ -75,9 +79,6 @@ namespace TheLostHopeEditor
 
         protected override void Update(GameTime gameTime)
         {
-            Globals.CurrentScreenWidth = GraphicsDevice.Viewport.Width;
-            Globals.CurrentScreenHeight = GraphicsDevice.Viewport.Height;
-
             _camera.Update(gameTime);
 
             _gameStateManager.Update(gameTime);

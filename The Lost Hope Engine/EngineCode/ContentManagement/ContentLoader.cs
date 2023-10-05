@@ -8,15 +8,17 @@ using MonoGame.Aseprite;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TheLostHopeEngine.EngineCode.ContentManagement.CSV;
+using TheLostHopeEngine.EngineCode.ContentManagement.Json;
 using TheLostHopeEngine.EngineCode.Localization;
 
 namespace TheLostHope.Engine.ContentManagement
 {
     public static class ContentLoader
     {
+        public static JsonAssetManager AssetManager { get; private set; }
         public static FontSystem FontSystem { get; private set; }
         public static LDtkFile LDtkFile { get; private set; }
-
 
         private static Dictionary<string, Texture2D> _textures;
         public static Dictionary<string, Texture2D> Textures
@@ -40,16 +42,6 @@ namespace TheLostHope.Engine.ContentManagement
             }
         }
 
-        private static Dictionary<string, SoundEffect> _sfx;
-        public static Dictionary<string, SoundEffect> Sfx
-        {
-            get
-            {
-                if (_sfx == null) _sfx = new Dictionary<string, SoundEffect>();
-                return _sfx;
-            }
-        }
-
 
         private static ContentManager _content;
         public static ContentManager Content { get { return _content; } }
@@ -58,8 +50,8 @@ namespace TheLostHope.Engine.ContentManagement
         {
             _textures = new Dictionary<string, Texture2D>();
             _asepriteFiles = new Dictionary<string, AsepriteFile>();
-            _sfx = new Dictionary<string, SoundEffect>();
 
+            AssetManager = new JsonAssetManager();
             FontSystem = new FontSystem();
             _content = content;
         }
@@ -70,7 +62,6 @@ namespace TheLostHope.Engine.ContentManagement
 
             UnloadTextures();
             UnloadAsepriteFiles();
-            UnloadSfx();
         }
 
         public static void AddFont(string fullName)
@@ -116,21 +107,6 @@ namespace TheLostHope.Engine.ContentManagement
         public static AsepriteFile GetAsepriteFile(string name)
         {
             return _asepriteFiles[name];
-        }
-
-        public static void LoadSfx(string name, string path)
-        {
-            if (_sfx.ContainsKey(name)) return;
-            _sfx.Add(name, _content.Load<SoundEffect>(path));
-        }
-        public static void UnloadSfx()
-        {
-            _sfx.Clear();
-            _sfx = null;
-        }
-        public static SoundEffect GetSfx(string name)
-        {
-            return _sfx[name];
         }
     }
 }
