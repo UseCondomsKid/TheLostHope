@@ -7,6 +7,8 @@ namespace TheLostHopeEditor.EditorCode.StateManagement
     // This represents a scene
     public abstract class EditorState 
     {
+        protected const string PathToGameContent = "C:\\000\\Programming\\The Lost Hope\\The Lost Hope\\Content";
+
         // A reference to the state machine
         protected readonly EditorStateManager _stateManager;
         // A reference to Game1

@@ -3,15 +3,10 @@ using Microsoft.Xna.Framework;
 using MonoGame.ImGui.Extensions;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.DirectoryServices.ActiveDirectory;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using TheLostHope.Engine.ContentManagement;
 using TheLostHopeEditor.EditorCode.Utils;
-using TheLostHopeEngine.EngineCode.Assets;
 using TheLostHopeEngine.EngineCode.Assets.Core;
 using TheLostHopeEngine.EngineCode.CustomAttributes;
 
@@ -21,6 +16,7 @@ namespace TheLostHopeEditor.EditorCode.Assets
     {
         public const string PathToAssetsFolder = "C:\\000\\Programming\\The Lost Hope\\The Lost Hope\\bin\\Debug\\net6.0\\Assets";
         public ScriptableObject Asset { get { return _asset; } }
+        public Action<ScriptableObject> OnLoadedAsset;
 
         private string _assetPath;
         private ScriptableObject _asset;
@@ -67,6 +63,7 @@ namespace TheLostHopeEditor.EditorCode.Assets
             _assetPath = path;
             _asset = _loadAssetFunction?.Invoke(path);
             _assetProperties = _asset.GetType().GetProperties();
+            OnLoadedAsset?.Invoke(_asset);
             _loaded = true;
         }
 
@@ -85,10 +82,9 @@ namespace TheLostHopeEditor.EditorCode.Assets
             _assetSavedTimer -= delta;
         }
 
-        public void RenderAsset()
+        public void RenderEditorBase()
         {
-            ImGui.BeginChild("Scrolling");
-            ImGui.TextColored(new System.Numerics.Vector4(1f, 1f, 0f, 1f), "Base");
+            ImGui.TextColored(new System.Numerics.Vector4(1f, 1f, 0f, 1f), "Editor");
             string createNewAssetWindowStatus = _createNewAssetWindow ? "Opened" : "Closed";
             if (ImGui.Button($"Create And Load New Asset ({createNewAssetWindowStatus})"))
             {
@@ -126,6 +122,7 @@ namespace TheLostHopeEditor.EditorCode.Assets
             {
                 OpenLoadAssetFileDialog();
             }
+
             if (_loaded && _asset != null)
             {
                 ImGui.InputText("Current Asset Path", ref _assetPath, 400);
@@ -137,7 +134,17 @@ namespace TheLostHopeEditor.EditorCode.Assets
                 {
                     ImGui.TextColored(new System.Numerics.Vector4(0f, 1f, 0f, 1f), "Asset Saved!");
                 }
+            }
 
+            ImGui.Spacing();
+            ImGui.Separator();
+        }
+
+        public void RenderAsset()
+        {
+            ImGui.BeginChild("Scrolling");
+            if (_loaded && _asset != null)
+            {
                 ImGui.Spacing();
                 ImGui.Spacing();
                 ImGui.Separator();

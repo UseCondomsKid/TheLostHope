@@ -86,9 +86,9 @@ namespace TheLostHopeEngine.EngineCode.Animations
         }
 
         // Stops the animation
-        public void Stop(bool resetFrame = true)
+        public void Stop(bool resetFrame = true, int resetFrameIndex = 0)
         {
-            Reset(resetFrame);
+            Reset(resetFrame, resetFrameIndex);
             _active = false;
         }
 
@@ -113,9 +113,9 @@ namespace TheLostHopeEngine.EngineCode.Animations
         }
 
         // Resets the animation
-        public void Reset(bool resetFrame = true)
+        public void Reset(bool resetFrame = true, int resetFrameIndex = 0)
         {
-            if (resetFrame) _currentFrame = 0;
+            if (resetFrame) _currentFrame = resetFrameIndex;
 
             _timer = 0;
         }

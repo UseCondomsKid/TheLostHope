@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ImGuiNET;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,23 @@ namespace TheLostHopeEditor.EditorCode.States.SuperStates
 
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
             _editorAssetManager.Update(gameTime);
         }
+
+        public override void DrawImGui(GameTime gameTime)
+        {
+            base.DrawImGui(gameTime);
+
+            _editorAssetManager.RenderEditorBase();
+
+            ImGui.TextColored(new System.Numerics.Vector4(1f, 1f, 0f, 1f), _name);
+            DrawImGuiMessage();
+            DrawImGuiTool();
+
+            _editorAssetManager.RenderAsset();
+        }
+
+        protected abstract void DrawImGuiTool();
     }
 }

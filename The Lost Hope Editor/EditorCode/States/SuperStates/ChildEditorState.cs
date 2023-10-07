@@ -11,6 +11,10 @@ namespace TheLostHopeEditor.EditorCode.States.SuperStates
 {
     public abstract class ChildEditorState : EditorState
     {
+        protected string _message;
+        protected bool _isMessageError;
+        protected float _messageTimer;
+
         protected ChildEditorState(Game1 gameRef, EditorStateManager stateManager, string name) : base(gameRef, stateManager, name)
         {
         }
@@ -28,6 +32,29 @@ namespace TheLostHopeEditor.EditorCode.States.SuperStates
                     ImGui.EndMenu();
                 }
                 ImGui.EndMenuBar();
+            }
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _messageTimer -= delta;
+        }
+
+        protected virtual void ShowMessage(string message, bool isError, float timer)
+        {
+            _message = message;
+            _isMessageError = isError;
+            _messageTimer = timer;
+        }
+
+        protected void DrawImGuiMessage()
+        {
+            if (_messageTimer > 0f)
+            {
+                ImGui.TextColored(_isMessageError ? 
+                    new System.Numerics.Vector4(1f, 0f, 0f, 1f) : new System.Numerics.Vector4(0f, 1f, 0f, 1f),
+                    _message);
             }
         }
     }
