@@ -23,9 +23,7 @@ namespace TheLostHopeEngine.EngineCode.Assets
         public float TimeBetweenShots { get; set; }
         public bool HoldToShoot { get; set; }
         public float PlayerKnockbackForceOnFire { get; set; }
-        // public List<WeaponReloadPatternAction> ReloadPattern { get; set; } = new List<WeaponReloadPatternAction>();
-        public List<float> Test { get; set; } = new List<float>();
-        public List<string> Pluh { get; set; } = new List<string>();
+        public List<WeaponReloadPatternAction> ReloadPattern { get; set; } = new List<WeaponReloadPatternAction>();
         public int ReloadFailedMagazineSize { get; set; }
 
         [Header("Bullet Properties")]

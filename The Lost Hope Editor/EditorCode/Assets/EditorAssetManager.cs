@@ -4,6 +4,7 @@ using MonoGame.ImGui.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.DirectoryServices.ActiveDirectory;
 using System.IO;
 using System.Linq;
@@ -202,6 +203,7 @@ namespace TheLostHopeEditor.EditorCode.Assets
                     if (property.PropertyType == typeof(string))
                     {
                         string value = (string)property.GetValue(obj);
+                        if (value == null) value = "";
                         ImGui.InputText(property.Name, ref value, 255);
                         property.SetValue(obj, value);
                     }
@@ -251,125 +253,101 @@ namespace TheLostHopeEditor.EditorCode.Assets
                         property.SetValue(obj, value);
                     }
                     // TODO: Add more types
-                    else if (typeof(IList).IsAssignableFrom(property.PropertyType))
+                    else if (typeof(System.Collections.IList).IsAssignableFrom(property.PropertyType))
                     {
-                        var listItemValues = (IList)property.GetValue(obj);
+                        IList list = (IList)property.GetValue(obj);
 
-                        if (listItemValues != null)
+                        if (list != null)
                         {
-                            ImGui.Text($"{property.Name}");// (List of: {property.DeclaringType.Name})");
-
-                            int indexToRemove = -1;
-                            int index = 0;
-
-                            // Iterate through the list
-                            foreach (var itemValue in listItemValues)
+                            ImGui.BeginGroup();
+                            ImGui.Text($"{property.Name}:");
+                            for (int i = 0; i < list.Count; i++)
                             {
-                                // Display a collapsible node for each list element
-                                if (ImGui.TreeNode(itemValue.GetType().GUID.ToString() + index, $"Element: {index}"))
+                                // Create a unique name for each element
+                                string elementName = $"{property.Name}[{i}]";
+                                string elementId = $"{property.PropertyType.GUID}-{elementName}";
+                                if (ImGui.TreeNode(elementId, elementName))
                                 {
-                                    if (itemValue == null)
-                                    {
-                                        ImGui.Text("Element is null");
-                                    }
-                                    else
-                                    {
-                                        var itemProperty = property.PropertyType.GetProperty("Item");
-                                        DrawProperty(itemProperty, property.GetValue(obj));
-                                    }
+                                    DrawListElement(list, i);
 
-                                    // Add a button to remove the element
-                                    if (ImGui.Button($"Remove##{index}"))
+                                    // Display a button to remove the element
+                                    if (ImGui.Button($"Remove {elementName}"))
                                     {
-                                        indexToRemove = index;
+                                        list.RemoveAt(i);
+                                        i--; // Adjust the loop counter
                                     }
 
                                     ImGui.TreePop();
                                 }
-                                index++;
                             }
 
-                            // Check if an element should be removed
-                            if (indexToRemove != -1)
+                            // Display a button to add elements
+                            if (ImGui.Button($"Add {property.Name} Element"))
                             {
-                                // Determine the type of elements in the list
-                                Type elementType = property.PropertyType.GetGenericArguments()[0];
+                                Type elementType = property.PropertyType.IsArray ? property.PropertyType.GetElementType() : property.PropertyType.GetGenericArguments()[0];
 
-                                // Create a list of the correct type
-                                var typedList = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
-
-                                // Add the existing list elements to the typed list
-                                foreach (var item in listItemValues)
+                                object newElement = null;
+                                if (elementType == typeof(string))
                                 {
-                                    typedList.Add(item);
+                                    newElement = "";
+                                }
+                                else
+                                {
+                                    newElement = Activator.CreateInstance(elementType);
                                 }
 
-                                // Remove the element at the specified index
-                                typedList.RemoveAt(indexToRemove);
-
-                                // Set the list property with the updated list
-                                property.SetValue(obj, typedList);
+                                list.Add(newElement);
                             }
-                            // Add a button to add a new element to the list
-                            if (ImGui.Button("Add Element"))
-                            {
-                                // Determine the type of elements in the list
-                                Type elementType = property.PropertyType.GetGenericArguments()[0];
-
-                                // Create a new instance of the element type
-                                var newElement = Activator.CreateInstance(elementType);
-
-                                // Cast the new element to the correct type
-                                object typedElement = Convert.ChangeType(newElement, elementType);
-
-                                // Create a list of the correct type
-                                var typedList = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
-
-                                // Add the existing list elements to the typed list
-                                foreach (var item in listItemValues)
-                                {
-                                    typedList.Add(item);
-                                }
-
-                                // Add the typed element to the list
-                                typedList.Add(typedElement);
-
-                                // Set the list property with the updated list
-                                property.SetValue(obj, typedList);
-                            }
+                            ImGui.EndGroup();
                         }
                     }
                 }
             }
         }
 
-        private void DrawListProperties(object obj)
+        private void DrawListElement(IList list, int index)
         {
-            if (obj != null)
-            {
-                var objType = obj.GetType();
-                var properties = objType.GetProperties();
+            Type elementType = list[index].GetType();
 
-                foreach (var prop in properties)
+            if (elementType == typeof(int))
+            {
+                int value = (int)list[index];
+                ImGui.InputInt(elementType.Name, ref value);
+                list[index] = value;
+            }
+            else if (elementType == typeof(float))
+            {
+                float value = (float)list[index];
+                ImGui.InputFloat(elementType.Name, ref value);
+                list[index] = value;
+            }
+            else if (elementType == typeof(string))
+            {
+                string value = (string)list[index];
+                if (value == null) value = "";
+                ImGui.InputText(elementType.Name, ref value, 255);
+                list[index] = value;
+            }
+            else if (elementType.BaseType == typeof(Enum))
+            {
+                Enum enumValue = (Enum)list[index];
+                // Convert enum to int
+                int selectedIndex = Convert.ToInt32(enumValue);
+                string[] names = Enum.GetNames(elementType);
+                if (ImGui.Combo(elementType.Name, ref selectedIndex, names, names.Length))
                 {
-                    if (prop.PropertyType.IsPrimitive || prop.PropertyType == typeof(string) || prop.PropertyType.IsEnum)
-                    {
-                        // Simple property (primitive, string, or enum)
-                        DrawProperty(prop, obj);
-                    }
-                    else
-                    {
-                        // Complex object - recursively draw its properties
-                        var complexObject = prop.GetValue(obj);
-                        if (complexObject != null)
-                        {
-                            ImGui.Text($"{prop.Name}:");
-                            ImGui.Indent();
-                            DrawListProperties(complexObject);
-                            ImGui.Unindent();
-                        }
-                    }
+                    // Convert int back to enum
+                    Enum newValue = (Enum)Enum.ToObject(elementType, selectedIndex);
+                    list[index] = newValue;
                 }
+            }
+            else if (elementType == typeof(Vector2))
+            {
+                Vector2 value = (Vector2)list[index];
+                var numericVector2 = value.ToNumerics();
+                ImGui.InputFloat2(elementType.Name, ref numericVector2);
+                value = numericVector2.ToXnaVector2();
+                list[index] = value;
             }
         }
     }
