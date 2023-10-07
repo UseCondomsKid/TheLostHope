@@ -48,6 +48,8 @@ namespace TheLostHopeEngine.EngineCode.Animations
         // Triggered when the animation finishes
         public event Action OnAnimationFinished;
 
+        public Dictionary<int, AnimationFrame> AnimationFrames { get { return _animation; } }
+
         // Dictionary of frame indexes as keys and frames as values
         private Dictionary<int, AnimationFrame> _animation;
 

@@ -33,6 +33,7 @@ namespace TheLostHopeEditor.EditorCode.States.SuperStates
         {
             base.DrawImGui(gameTime);
 
+            ImGui.BeginChild("Scrolling");
             _editorAssetManager.RenderEditorBase();
 
             ImGui.TextColored(new System.Numerics.Vector4(1f, 1f, 0f, 1f), _name);
@@ -40,6 +41,7 @@ namespace TheLostHopeEditor.EditorCode.States.SuperStates
             DrawImGuiTool();
 
             _editorAssetManager.RenderAsset();
+            ImGui.EndChild();
         }
 
         protected abstract void DrawImGuiTool();

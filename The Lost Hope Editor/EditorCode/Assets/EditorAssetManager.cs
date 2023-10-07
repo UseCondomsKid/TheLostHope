@@ -142,7 +142,6 @@ namespace TheLostHopeEditor.EditorCode.Assets
 
         public void RenderAsset()
         {
-            ImGui.BeginChild("Scrolling");
             if (_loaded && _asset != null)
             {
                 ImGui.Spacing();
@@ -167,8 +166,6 @@ namespace TheLostHopeEditor.EditorCode.Assets
                     ImGui.Spacing();
                 }
             }
-
-            ImGui.EndChild();
         }
 
         private void DrawProperty(PropertyInfo property, object obj)
