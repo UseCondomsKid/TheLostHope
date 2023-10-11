@@ -61,7 +61,7 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             //k = Game1.Settings.KPlayerMoveRightBinding;
             //g = Game1.Settings.GPlayerMoveRightBinding;
             // if (k != -1)
-            conditions.Add(new Track.KeyboardCondition(Keys.D));
+            conditions.Add(new Track.KeyboardCondition(Keys.Right));
             // if (g != -1)
             conditions.Add(new Track.GamePadCondition(GamePadButton.Right, 0));
             MoveRightInput = new AnyCondition(conditions.ToArray());
@@ -69,14 +69,14 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             conditions = new List<ICondition>();
             //k = Game1.Settings.KPlayerMoveLeftBinding;
             //g = Game1.Settings.GPlayerMoveLeftBinding;
-            conditions.Add(new Track.KeyboardCondition(Keys.A));
+            conditions.Add(new Track.KeyboardCondition(Keys.Left));
             conditions.Add(new Track.GamePadCondition(GamePadButton.Left, 0));
             MoveLeftInput = new AnyCondition(conditions.ToArray());
             // Jump
             conditions = new List<ICondition>();
             //k = Game1.Settings.KPlayerJumpBinding;
             //g = Game1.Settings.GPlayerJumpBinding;
-            conditions.Add(new Track.KeyboardCondition(Keys.W));
+            conditions.Add(new Track.KeyboardCondition(Keys.Up));
             conditions.Add(new Track.GamePadCondition(GamePadButton.A, 0));
             JumpInput = new AnyCondition(conditions.ToArray());
             // Roll
@@ -90,21 +90,21 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             conditions = new List<ICondition>();
             //k = Game1.Settings.KPlayerParryBinding;
             //g = Game1.Settings.GPlayerParryBinding;
-            conditions.Add(new Track.KeyboardCondition(Keys.Q));
+            conditions.Add(new Track.KeyboardCondition(Keys.A));
             conditions.Add(new Track.GamePadCondition(GamePadButton.X, 0));
             ParryInput = new AnyCondition(conditions.ToArray());
             // Shoot
             conditions = new List<ICondition>();
             //k = Game1.Settings.KPlayerShootBinding;
             //g = Game1.Settings.GPlayerShootBinding;
-            conditions.Add(new Track.KeyboardCondition(Keys.Space));
+            conditions.Add(new Track.KeyboardCondition(Keys.S));
             conditions.Add(new Track.GamePadCondition(GamePadButton.RightShoulder, 0));
             ShootInput = new AnyCondition(conditions.ToArray());
             // Reload
             conditions = new List<ICondition>();
             //k = Game1.Settings.KPlayerReloadBinding;
             //g = Game1.Settings.GPlayerReloadBinding;
-            conditions.Add(new Track.KeyboardCondition(Keys.R));
+            conditions.Add(new Track.KeyboardCondition(Keys.D));
             conditions.Add(new Track.GamePadCondition(GamePadButton.B, 0));
             ReloadInput = new AnyCondition(conditions.ToArray());
             // Interact
