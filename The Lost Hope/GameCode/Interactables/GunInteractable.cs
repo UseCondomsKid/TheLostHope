@@ -2,7 +2,7 @@
 using TheLostHope.Engine.ContentManagement;
 using TheLostHope.GameCode.GameStates;
 using TheLostHope.GameCode.Interactables.Core;
-using TheLostHope.GameCode.Weapons;
+using TheLostHope.GameCode.Guns;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
 using TheLostHopeEngine.EngineCode.Animations;
@@ -41,6 +41,8 @@ namespace TheLostHope.GameCode.Interactables
                 if (GameplayManager.Instance.AddGun(_gunData))
                 {
                     Debug.WriteLine("Gun Added to inventory");
+
+                    GameplayManager.Instance.EquipGun(_gunData);
                 }
 
                 Enabled = false;

@@ -4,12 +4,13 @@ using TheLostHope.GameCode.GameStates;
 using TheLostHope.GameCode;
 using TheLostHope.Engine.ContentManagement;
 using Apos.Input;
-using TheLostHope.GameCode.GameSettings;
 using FontStashSharp;
 using TheLostHopeEngine.EngineCode.StateManagement;
 using TheLostHopeEngine.EngineCode.UI;
 using TheLostHopeEngine.EngineCode.Localization;
 using TheLostHopeEngine.EngineCode.Assets;
+using TheLostHope.GameCode.GameStates.SubStates;
+using TheLostHope.GameCode.ContentLoading;
 
 namespace TheLostHope
 {
@@ -19,13 +20,11 @@ namespace TheLostHope
         private static SpriteBatch _spriteBatch;
         private StateManager _stateManager;
         private UIManager _uiManager;
-        private static Settings _settings;
 
         #region Properties
         public bool IsPaused;
         public GraphicsDeviceManager GraphicsManager { get { return _graphics; } }
         public static SpriteBatch SpriteBatch { get { return _spriteBatch; } }
-        public static Settings Settings { get { return _settings; } }
         public UIManager UIManager { get { return _uiManager; } }
         #endregion
 
@@ -37,7 +36,6 @@ namespace TheLostHope
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            _settings = Settings.EnsureJson<Settings>("Settings.json", SettingsContext.Default.Settings);
         }
 
         protected override void LoadContent()
@@ -46,12 +44,12 @@ namespace TheLostHope
         }
         protected override void UnloadContent()
         {
-            if (_settings.IsFullscreen)
-            {
-                SaveWindow();
-            }
+            //if (_settings.IsFullscreen)
+            //{
+            //    SaveWindow();
+            //}
 
-            Settings.SaveJson<Settings>("Settings.json", _settings, SettingsContext.Default.Settings);
+            //Settings.SaveJson<Settings>("Settings.json", _settings, SettingsContext.Default.Settings);
 
             base.UnloadContent();
         }
@@ -60,12 +58,15 @@ namespace TheLostHope
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Load all global things here.
+            // --- Load all global things here ---
+            // Initialize content loader
             ContentLoader.Initialize(Content);
             // Add a font
             ContentLoader.AddFont("PeaberryMono.ttf");
             // LDtk File
             ContentLoader.LoadLDtkFile("World");
+            // Game Assets
+            GameAssetsLoader.Initialize();
             // Init the localization system
             LocalizationSystem.Init();
 
@@ -76,17 +77,23 @@ namespace TheLostHope
             IsMouseVisible = true;
 
             // Time step
-            IsFixedTimeStep = _settings.IsFixedTimeStep;
+            //IsFixedTimeStep = _settings.IsFixedTimeStep;
+            IsFixedTimeStep = false;
 
-            _settings.IsFullscreen = _settings.IsFullscreen || _settings    .IsBorderless;
-            _graphics.SynchronizeWithVerticalRetrace =  _settings.IsVSync;
+            //_settings.IsFullscreen = _settings.IsFullscreen || _settings    .IsBorderless;
+            _graphics.SynchronizeWithVerticalRetrace = false;
 
             Window.Title = "The Lost Hope";
-            RestoreWindow();
-            if (_settings.IsFullscreen)
-            {
-                ApplyFullscreenChange(false);
-            }
+
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.ApplyChanges();
+
+            // RestoreWindow();
+            //if (_settings.IsFullscreen)
+            //{
+            //    ApplyFullscreenChange(false);
+            //}
 
             // Initialize Game State Manager
             _stateManager = new StateManager(this);
@@ -105,83 +112,83 @@ namespace TheLostHope
             base.Initialize();
         }
 
-        public void ToggleFullscreen()
-        {
-            bool oldIsFullscreen = _settings.IsFullscreen;
+        //public void ToggleFullscreen()
+        //{
+        //    bool oldIsFullscreen = _settings.IsFullscreen;
 
-            if (_settings.IsBorderless)
-            {
-                _settings.IsBorderless = false;
-            }
-            else
-            {
-                _settings.IsFullscreen = !_settings.IsFullscreen;
-            }
+        //    if (_settings.IsBorderless)
+        //    {
+        //        _settings.IsBorderless = false;
+        //    }
+        //    else
+        //    {
+        //        _settings.IsFullscreen = !_settings.IsFullscreen;
+        //    }
 
-            ApplyFullscreenChange(oldIsFullscreen);
-        }
-        public void ToggleBorderless()
-        {
-            bool oldIsFullscreen =  _settings.IsFullscreen;
+        //    ApplyFullscreenChange(oldIsFullscreen);
+        //}
+        //public void ToggleBorderless()
+        //{
+        //    bool oldIsFullscreen =  _settings.IsFullscreen;
 
-            _settings.IsBorderless = !_settings.IsBorderless;
-            _settings.IsFullscreen = _settings.IsBorderless;
+        //    _settings.IsBorderless = !_settings.IsBorderless;
+        //    _settings.IsFullscreen = _settings.IsBorderless;
 
-            ApplyFullscreenChange(oldIsFullscreen);
-        }
-        private void ApplyFullscreenChange(bool oldIsFullscreen)
-        {
-            if (_settings.IsFullscreen)
-            {
-                if (oldIsFullscreen)
-                {
-                    ApplyHardwareMode();
-                }
-                else
-                {
-                    SetFullscreen();
-                }
-            }
-            else
-            {
-                UnsetFullscreen();
-            }
-        }
-        private void ApplyHardwareMode()
-        {
-            _graphics.HardwareModeSwitch = !_settings.IsBorderless;
-            _graphics.ApplyChanges();
-        }
-        private void SetFullscreen()
-        {
-            SaveWindow();
+        //    ApplyFullscreenChange(oldIsFullscreen);
+        //}
+        //private void ApplyFullscreenChange(bool oldIsFullscreen)
+        //{
+        //    if (_settings.IsFullscreen)
+        //    {
+        //        if (oldIsFullscreen)
+        //        {
+        //            ApplyHardwareMode();
+        //        }
+        //        else
+        //        {
+        //            SetFullscreen();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        UnsetFullscreen();
+        //    }
+        //}
+        //private void ApplyHardwareMode()
+        //{
+        //    _graphics.HardwareModeSwitch = !_settings.IsBorderless;
+        //    _graphics.ApplyChanges();
+        //}
+        //private void SetFullscreen()
+        //{
+        //    SaveWindow();
 
-            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            _graphics.HardwareModeSwitch = !_settings.IsBorderless;
+        //    _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+        //    _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+        //    _graphics.HardwareModeSwitch = !_settings.IsBorderless;
 
-            _graphics.IsFullScreen = true;
-            _graphics.ApplyChanges();
-        }
-        private void UnsetFullscreen()
-        {
-            _graphics.IsFullScreen = false;
-            RestoreWindow();
-        }
-        private void SaveWindow()
-        {
-            _settings.X = Window.ClientBounds.X;
-            _settings.Y = Window.ClientBounds.Y;
-            _settings.Width = Window.ClientBounds.Width;
-            _settings.Height = Window.ClientBounds.Height;
-        }
-        private void RestoreWindow()
-        {
-            Window.Position = new Point(_settings.X, _settings.Y);
-            _graphics.PreferredBackBufferWidth = _settings.Width;
-            _graphics.PreferredBackBufferHeight = _settings.Height;
-            _graphics.ApplyChanges();
-        }
+        //    _graphics.IsFullScreen = true;
+        //    _graphics.ApplyChanges();
+        //}
+        //private void UnsetFullscreen()
+        //{
+        //    _graphics.IsFullScreen = false;
+        //    RestoreWindow();
+        //}
+        //private void SaveWindow()
+        //{
+        //    _settings.X = Window.ClientBounds.X;
+        //    _settings.Y = Window.ClientBounds.Y;
+        //    _settings.Width = Window.ClientBounds.Width;
+        //    _settings.Height = Window.ClientBounds.Height;
+        //}
+        //private void RestoreWindow()
+        //{
+        //    Window.Position = new Point(_settings.X, _settings.Y);
+        //    _graphics.PreferredBackBufferWidth = _settings.Width;
+        //    _graphics.PreferredBackBufferHeight = _settings.Height;
+        //    _graphics.ApplyChanges();
+        //}
 
         protected override void Update(GameTime gameTime)
         {

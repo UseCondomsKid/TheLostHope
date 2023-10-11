@@ -20,6 +20,7 @@ public class LDtkPlayer : ILDtkEntity
 
     public string AsepriteFileName { get; set; }
     public float GravityScale { get; set; }
+    public float MaxGravityVelocity { get; set; }
     public float GroundSpeed { get; set; }
     public float AirSpeed { get; set; }
     public float Acceleration { get; set; }
@@ -27,8 +28,8 @@ public class LDtkPlayer : ILDtkEntity
     public float JumpForce { get; set; }
     public float JumpForceCutOnJumpRelease { get; set; }
     public float JumpBufferTime { get; set; }
+    public float RollBufferTime { get; set; }
     public float JumpCayoteTime { get; set; }
-    public float MaxGravityVelocity { get; set; }
     public float RollVelocity { get; set; }
 }
 #pragma warning restore

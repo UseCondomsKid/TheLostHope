@@ -3,13 +3,17 @@ using LDtkTypes;
 using TheLostHope.Engine.ContentManagement;
 using TheLostHope.GameCode.Characters.PlayerCharacter;
 using TheLostHope.GameCode.UI.Elements;
-using TheLostHope.GameCode.Weapons;
+using TheLostHope.GameCode.Guns;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using TheLostHopeEngine.EngineCode.Camera;
 using TheLostHopeEngine.EngineCode.UI;
 using TheLostHopeEngine.EngineCode.StateManagement;
+using TheLostHopeEngine.EngineCode.Assets;
+using MonoGame.Aseprite;
+using TheLostHope.GameCode.GameStates.SubStates;
+using TheLostHope.GameCode.ContentLoading;
 
 namespace TheLostHope.GameCode.GameStates
 {
@@ -172,7 +176,13 @@ namespace TheLostHope.GameCode.GameStates
             }
             else if (HasGun(gunData))
             {
-                // EquippedGun = gunData;
+                WeaponAsset weaponAsset = GameAssetsLoader.GetWeaponAsset(gunData.Name);
+
+                ContentLoader.LoadAsepriteFile(gunData.Name, weaponAsset.AsepriteFileName);
+                AsepriteFile asepriteFile = ContentLoader.GetAsepriteFile(gunData.Name);
+
+                EquippedGun = new Gun(_gameRef, asepriteFile, weaponAsset, this);
+                EquippedGun.SpawnGun();
             }
             else
             {

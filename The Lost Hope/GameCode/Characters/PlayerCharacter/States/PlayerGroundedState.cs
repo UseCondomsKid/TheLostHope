@@ -22,25 +22,20 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
 
             _player.MoveGround(delta);
 
-            //if (_player.JumpInput.Pressed() && _player.IsGrounded())
-            //{
-            //    _stateMachine.ChangeState(_player.PlayerJumpState);
-            //}
-
             if (_player.PlayerLastGroundedTime > 0f && _player.PlayerLastJumpTime > 0f && !_player.PlayerJumping
                 && !_player.IsTouchingCeiling())
             {
                 _stateMachine.ChangeState(_player.PlayerJumpState);
             }
+            if (_player.PlayerLastGroundedTime > 0f && _player.PlayerLastRollTime > 0f && _player.IsMoving())
+            {
+                _stateMachine.ChangeState(_player.PlayerRollState);
+                return;
+            }
 
             if (_player.ParryInput.Pressed())
             {
                 _stateMachine.ChangeState(_player.PlayerParryState);
-                return;
-            }
-            if (_player.RollInput.Pressed() && _player.IsMoving())
-            {
-                _stateMachine.ChangeState(_player.PlayerRollState);
                 return;
             }
 

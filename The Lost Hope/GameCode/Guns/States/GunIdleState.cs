@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TheLostHope.GameCode.ObjectStateMachine;
 
-namespace TheLostHope.GameCode.Weapons.States
+namespace TheLostHope.GameCode.Guns.States
 {
     public class GunIdleState : GunState
     {

@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.ImGui.Extensions;
 using System;
 using System.Collections;
@@ -14,7 +15,10 @@ namespace TheLostHopeEditor.EditorCode.Assets
 {
     public class EditorAssetManager
     {
-        public const string PathToAssetsFolder = "C:\\000\\Programming\\The Lost Hope\\The Lost Hope\\bin\\Debug\\net6.0\\Assets";
+        public string PathToAssetsFolder =>
+            "C:\\000\\Programming\\The Lost Hope\\The Lost Hope\\bin\\Debug\\net6.0\\Assets" +
+            (_assetCutsomFolder != "" ? $"\\{_assetCutsomFolder}" : "");
+
         public ScriptableObject Asset { get { return _asset; } }
         public Action<ScriptableObject> OnLoadedAsset;
 
@@ -25,6 +29,7 @@ namespace TheLostHopeEditor.EditorCode.Assets
         // Function that returns the name of the asset
         private Func<string, ScriptableObject> _createNewAssetFunction;
         private Func<string, ScriptableObject> _loadAssetFunction;
+        private string _assetCutsomFolder;
 
         private bool _loaded;
 
@@ -37,13 +42,14 @@ namespace TheLostHopeEditor.EditorCode.Assets
         private float _assetSavedMessageShowTime = 1.5f;
         private float _assetSavedTimer = -1.0f;
 
-        public EditorAssetManager(Func<string, ScriptableObject> createNewAssetFunction, Func<string, ScriptableObject> loadAssetFunction)
+        public EditorAssetManager(Func<string, ScriptableObject> createNewAssetFunction, Func<string, ScriptableObject> loadAssetFunction, string assetCutsomFolder = "")
         {
             _loaded = false;
             _assetPath = "";
 
             _createNewAssetFunction = createNewAssetFunction;
             _loadAssetFunction = loadAssetFunction;
+            _assetCutsomFolder = assetCutsomFolder;
 
             Type soType = typeof(ScriptableObject);
             _scriptableObjectMainPropCount = soType.GetProperties().Length;
@@ -78,6 +84,14 @@ namespace TheLostHopeEditor.EditorCode.Assets
 
         public void Update(GameTime gameTime)
         {
+            // Checking if ctrl + s is pressed to save
+            // Very crude implementation, but it works
+            KeyboardState state = Keyboard.GetState();
+            if (state.IsKeyDown(Keys.LeftControl) && state.IsKeyDown(Keys.S))
+            {
+                SaveAsset();
+            }
+
             float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _assetSavedTimer -= delta;
         }

@@ -12,7 +12,7 @@ using TheLostHopeEngine.EngineCode.StateManagement;
 using TheLostHopeEngine.EngineCode.UI;
 using TheLostHope.GameCode.GameStates.Core;
 
-namespace TheLostHope.GameCode.GameStates
+namespace TheLostHope.GameCode.GameStates.SubStates
 {
     public class MainMenuState : GameState
     {

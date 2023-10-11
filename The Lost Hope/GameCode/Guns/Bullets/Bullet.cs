@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TheLostHope.GameCode.Weapons.Bullets
+namespace TheLostHope.GameCode.Guns.Bullets
 {
     public abstract class Bullet
     {

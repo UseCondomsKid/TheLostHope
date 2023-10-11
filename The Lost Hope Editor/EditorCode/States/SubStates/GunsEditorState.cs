@@ -14,7 +14,7 @@ using TheLostHopeEngine.EngineCode.Assets.Core;
 
 namespace TheLostHopeEditor.EditorCode.States.SubStates
 {
-    public class GunsEditorState : AssetEditorState
+    public class GunsEditorState : AssetEditorState, IDisposable
     {
         private WeaponAsset _weaponAsset;
         private Animator _gunAnimator;
@@ -131,11 +131,21 @@ namespace TheLostHopeEditor.EditorCode.States.SubStates
                 if (_gunAnimator != null)
                 {
                     System.Numerics.Vector2 pos = _gunDrawPosition.ToNumerics();
-                    ImGui.SliderFloat2("Gun Draw Position (debug)", ref pos, -200f, 200f);
+                    ImGui.SliderFloat2("Gun Draw Position", ref pos, -200f, 200f);
                     _gunDrawPosition = pos.ToXnaVector2();
-                    ImGui.ColorEdit4("Shoot Pixel Color (debug)", ref _gunShootPositionPixelColor);
+                    ImGui.ColorEdit4("Shoot Pixel Color", ref _gunShootPositionPixelColor);
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string GetAssetCustomFolder()
+        {
+            return "Guns";
         }
     }
 }

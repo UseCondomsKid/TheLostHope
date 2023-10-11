@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -45,6 +46,11 @@ namespace TheLostHope.Engine.ContentManagement
 
         private static ContentManager _content;
         public static ContentManager Content { get { return _content; } }
+
+        public static string GetApplicationRelativePath(string name)
+        {
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, name);
+        }
 
         public static void Initialize(ContentManager content)
         {

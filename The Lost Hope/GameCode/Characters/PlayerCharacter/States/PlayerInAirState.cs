@@ -35,6 +35,10 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
             {
                 _stateMachine.ChangeState(_player.PlayerJumpState);
             }
+            else if (_player.PlayerLastGroundedTime > 0f && _player.PlayerLastRollTime > 0f && _player.IsMoving())
+            {
+                _stateMachine.ChangeState(_player.PlayerRollState);
+            }
             else
             {
                 if (_player.JumpInput.Released() && _player.PlayerJumping)

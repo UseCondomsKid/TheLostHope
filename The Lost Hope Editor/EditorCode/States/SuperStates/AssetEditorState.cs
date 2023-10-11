@@ -17,9 +17,10 @@ namespace TheLostHopeEditor.EditorCode.States.SuperStates
 
         public AssetEditorState(Game1 gameRef, EditorStateManager stateManager, string name) : base(gameRef, stateManager, name)
         {
-            _editorAssetManager = new EditorAssetManager(CreateAsset, LoadAsset);
+            _editorAssetManager = new EditorAssetManager(CreateAsset, LoadAsset, GetAssetCustomFolder());
         }
 
+        protected abstract string GetAssetCustomFolder();
         protected abstract ScriptableObject LoadAsset(string path);
         protected abstract ScriptableObject CreateAsset(string path);
 

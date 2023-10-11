@@ -12,7 +12,7 @@ using TheLostHopeEngine.EngineCode.StateManagement;
 using Microsoft.Xna.Framework.Graphics;
 using TheLostHope.GameCode.GameStates.Core;
 
-namespace TheLostHope.GameCode.GameStates
+namespace TheLostHope.GameCode.GameStates.SubStates
 {
     public class LevelState : GameState
     {
@@ -216,7 +216,7 @@ namespace TheLostHope.GameCode.GameStates
             }
 
             // Camera setup zoom
-            float widthRatio = _levelData.Size.X /  _gameplayManager.GameCamera.Size.X;
+            float widthRatio = _levelData.Size.X / _gameplayManager.GameCamera.Size.X;
             float heightRatio = _levelData.Size.Y / _gameplayManager.GameCamera.Size.Y;
             float minRatio = Math.Min(widthRatio, heightRatio);
             _gameplayManager.GameCamera.Zoom = minRatio > 0.8f ? 1.8f : 1f / minRatio;
@@ -269,22 +269,22 @@ namespace TheLostHope.GameCode.GameStates
 
             // Make sure that the camera is still in the bounderies of the level
             // X Bounds
-            if (_gameplayManager.GameCamera.Position.X - (_gameplayManager.GameCamera.Size.X / 2f) < 0)
+            if (_gameplayManager.GameCamera.Position.X - _gameplayManager.GameCamera.Size.X / 2f < 0)
             {
                 _gameplayManager.GameCamera.SetPosition(_gameplayManager.GameCamera.Size.X / 2f, _gameplayManager.GameCamera.Position.Y);
             }
-            else if (_gameplayManager.GameCamera.Position.X + (_gameplayManager.GameCamera.Size.X / 2f) > _levelData.Size.X)
+            else if (_gameplayManager.GameCamera.Position.X + _gameplayManager.GameCamera.Size.X / 2f > _levelData.Size.X)
             {
-                _gameplayManager.GameCamera.SetPosition(_levelData.Size.X - (_gameplayManager.GameCamera.Size.X / 2f), _gameplayManager.GameCamera.Position.Y);
+                _gameplayManager.GameCamera.SetPosition(_levelData.Size.X - _gameplayManager.GameCamera.Size.X / 2f, _gameplayManager.GameCamera.Position.Y);
             }
             // Y Bounds
-            if (_gameplayManager.GameCamera.Position.Y - (_gameplayManager.GameCamera.Size.Y / 2f) < 0)
+            if (_gameplayManager.GameCamera.Position.Y - _gameplayManager.GameCamera.Size.Y / 2f < 0)
             {
                 _gameplayManager.GameCamera.SetPosition(_gameplayManager.GameCamera.Position.X, _gameplayManager.GameCamera.Size.Y / 2f);
             }
-            else if (_gameplayManager.GameCamera.Position.Y + (_gameplayManager.GameCamera.Size.Y / 2f) > _levelData.Size.Y)
+            else if (_gameplayManager.GameCamera.Position.Y + _gameplayManager.GameCamera.Size.Y / 2f > _levelData.Size.Y)
             {
-                _gameplayManager.GameCamera.SetPosition(_gameplayManager.GameCamera.Position.X, _levelData.Size.Y - (_gameplayManager.GameCamera.Size.Y / 2f));
+                _gameplayManager.GameCamera.SetPosition(_gameplayManager.GameCamera.Position.X, _levelData.Size.Y - _gameplayManager.GameCamera.Size.Y / 2f);
             }
 
         }

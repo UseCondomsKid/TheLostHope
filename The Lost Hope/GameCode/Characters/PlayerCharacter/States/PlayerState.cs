@@ -19,7 +19,7 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
 
         public override void Update(float delta)
         {
-            _player.ApplyGravity();
+            _player.ApplyGravity(delta);
         }
     }
 }
