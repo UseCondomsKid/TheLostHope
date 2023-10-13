@@ -31,6 +31,13 @@ namespace TheLostHopeEngine.EngineCode.ContentManagement.Json
 
         public void SaveAsset<T>(string filePath, T asset) where T : ScriptableObject
         {
+            // Check if the directory exists, if it doesn't create it.
+            string directoryName = Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(directoryName))
+            {
+                Directory.CreateDirectory(directoryName);
+            }
+
             using (StreamWriter fileWriter = new StreamWriter(filePath))
             using (JsonTextWriter jsonWriter = new JsonTextWriter(fileWriter))
             {

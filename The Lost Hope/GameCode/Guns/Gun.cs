@@ -34,7 +34,7 @@ namespace TheLostHope.GameCode.Guns
 
         #region Inputs
         public ICondition ShootInput { get; private set; }
-        public ICondition ReloadInput { get; private set; }
+        public ICondition InitializeReloadInput { get; private set; }
         public ICondition UpReloadInput { get; private set; }
         public ICondition DownReloadInput { get; private set; }
         public ICondition LeftReloadInput { get; private set; }
@@ -61,6 +61,9 @@ namespace TheLostHope.GameCode.Guns
             }
 
             _currentReloadPatternState = null;
+
+            // Inputs
+            ShootInput = new AnyCondition(new KeyboardCondition())
         }
 
         public void SpawnGun()

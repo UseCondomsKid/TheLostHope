@@ -15,9 +15,25 @@ namespace TheLostHope.GameCode.ContentLoading
         private static bool _initialized = false;
 
         private static Dictionary<string, WeaponAsset> _weaponAssets;
+        private static InputAsset _inputAsset;
+
+
+        // Public getters
+        public static InputAsset InputAsset
+        {
+            get
+            {
+                if (!_initialized) return null;
+                return _inputAsset; 
+            }
+        }
 
         public static void Initialize()
         {
+            // Load input asset
+            _inputAsset = ContentLoader.AssetManager.LoadAsset<InputAsset>(
+                ContentLoader.GetApplicationRelativePath("Assets/Input/Inputs.asset"));
+
             // Load Weapon Assets
             _weaponAssets = new Dictionary<string, WeaponAsset>();
             string[] weaponFiles = Directory.GetFiles(ContentLoader.GetApplicationRelativePath("Assets/Guns"), "*.asset");

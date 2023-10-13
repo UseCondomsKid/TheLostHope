@@ -23,6 +23,7 @@ namespace TheLostHopeEditor
         // States
         public BaseEditorState EditorBaseState { get; private set; }
         public GunsEditorState GunsEditorState { get; private set; }
+        public InputsEditorState InputsEditorState { get; private set; }
 
         public SpriteBatch SpriteBatch { get { return _spriteBatch; } }
 
@@ -62,6 +63,7 @@ namespace TheLostHopeEditor
             // ---- Initialize States ----
             EditorBaseState = new BaseEditorState(this, _gameStateManager, "Base");
             GunsEditorState = new GunsEditorState(this, _gameStateManager, "Guns Editor");
+            InputsEditorState = new InputsEditorState(this, _gameStateManager, "Inputs Editor");
             // ---------------------------
 
             // Set starter state

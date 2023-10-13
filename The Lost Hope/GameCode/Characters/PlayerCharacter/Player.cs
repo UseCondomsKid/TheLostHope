@@ -10,6 +10,7 @@ using Apos.Input;
 using Track = Apos.Input.Track;
 using System.Collections.Generic;
 using MonoGame.Aseprite;
+using TheLostHope.GameCode.Guns;
 
 namespace TheLostHope.GameCode.Characters.PlayerCharacter
 {
@@ -29,15 +30,24 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
         public PlayerParryState PlayerParryState { get; private set; }
         // --------------------------
 
+        public Gun EquippedGun { get; private set; }
+
 
         // ------ Player Inputs -----
+        // Movement and abilities
         public ICondition MoveRightInput { get; private set; }
         public ICondition MoveLeftInput { get; private set; }
         public ICondition JumpInput { get; private set; }
         public ICondition RollInput { get; private set; }
         public ICondition ParryInput { get; private set; }
+        // Shooting
         public ICondition ShootInput { get; private set; }
-        public ICondition ReloadInput { get; private set; }
+        public ICondition InitializeReloadInput { get; private set; }
+        public ICondition ReloadUpInput { get; private set; }
+        public ICondition ReloadDownInput { get; private set; }
+        public ICondition ReloadLeftInput { get; private set; }
+        public ICondition ReloadRightInput { get; private set; }
+        // Interactions
         public ICondition InteractInput { get; private set; }
         // --------------------------
 
@@ -106,7 +116,7 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             //g = Game1.Settings.GPlayerReloadBinding;
             conditions.Add(new Track.KeyboardCondition(Keys.D));
             conditions.Add(new Track.GamePadCondition(GamePadButton.B, 0));
-            ReloadInput = new AnyCondition(conditions.ToArray());
+            InitializeReloadInput = new AnyCondition(conditions.ToArray());
             // Interact
             conditions = new List<ICondition>();
             //k = Game1.Settings.KPlayerInteractBinding;
@@ -134,6 +144,7 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             // Initialize state machine and Set active state
             StateMachine.Initialize(PlayerIdleState);
         }
+
         public override IBox CreateCharacterBox(float xPos, float yPos)
         {
             return _physicsWorld.Create(xPos, yPos, PlayerData.Size.X,

@@ -20,6 +20,10 @@ namespace TheLostHopeEditor.EditorCode.States.SuperStates
             {
                 _stateManager.SetState(_gameRef.GunsEditorState);
             }
+            if (ImGui.Button("Open Inputs Editor"))
+            {
+                _stateManager.SetState(_gameRef.InputsEditorState);
+            }
         }
 
         public override void Update(GameTime gameTime)
