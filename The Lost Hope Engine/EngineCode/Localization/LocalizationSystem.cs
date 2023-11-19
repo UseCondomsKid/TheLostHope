@@ -27,7 +27,7 @@ namespace TheLostHopeEngine.EngineCode.Localization
         /// Initilizes the localization system at runtime.
         /// Should be called at the start of the game
         /// </summary>
-        public static void Init()
+        public static void Initialize()
         {
             // Initializing dictionaries
             localizedEN = new Dictionary<string, string>();
@@ -46,7 +46,7 @@ namespace TheLostHopeEngine.EngineCode.Localization
         /// <returns></returns>
         public static string GetLocalizedValue(string key)
         {
-            if (!isInitialized) Init();
+            if (!isInitialized) Initialize();
 
             string value = key;
 
@@ -84,7 +84,7 @@ namespace TheLostHopeEngine.EngineCode.Localization
         /// <param name="new_language"></param>
         public static void ChangeLanguage(LocalizationStringData.Language new_language)
         {
-            if (!isInitialized) Init();
+            if (!isInitialized) Initialize();
 
             currentLanguage = new_language;
 

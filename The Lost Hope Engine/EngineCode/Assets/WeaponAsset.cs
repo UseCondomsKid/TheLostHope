@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using TheLostHopeEngine.EngineCode.Assets.Core;
 using TheLostHopeEngine.EngineCode.CustomAttributes;
 
@@ -14,7 +15,7 @@ namespace TheLostHopeEngine.EngineCode.Assets
     public class WeaponAsset : ScriptableObject
     {
         [Header("Weapon Properties")]
-        public string AsepriteFileName { get; set; } = "";
+        public string AsepriteFileName { get; set; }
         public int MagazineSize { get; set; }
         [Range(0.0f, 10.0f)]
         public float TimeBetweenShots { get; set; }

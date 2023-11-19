@@ -11,10 +11,12 @@ using Track = Apos.Input.Track;
 using System.Collections.Generic;
 using MonoGame.Aseprite;
 using TheLostHope.GameCode.Guns;
+using TheLostHopeEngine.EngineCode.Inputs.Interfaces;
+using TheLostHopeEngine.EngineCode.Inputs;
 
 namespace TheLostHope.GameCode.Characters.PlayerCharacter
 {
-    public class Player : Character
+    public class Player : Character, IInputBindingUser
     {
         // -----  Player Data  ------
         public LDtkPlayer PlayerData { get; private set; }
@@ -40,14 +42,6 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
         public ICondition JumpInput { get; private set; }
         public ICondition RollInput { get; private set; }
         public ICondition ParryInput { get; private set; }
-        // Shooting
-        public ICondition ShootInput { get; private set; }
-        public ICondition InitializeReloadInput { get; private set; }
-        public ICondition ReloadUpInput { get; private set; }
-        public ICondition ReloadDownInput { get; private set; }
-        public ICondition ReloadLeftInput { get; private set; }
-        public ICondition ReloadRightInput { get; private set; }
-        // Interactions
         public ICondition InteractInput { get; private set; }
         // --------------------------
 
@@ -63,68 +57,9 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             // Set the player data
             PlayerData = playerData;
 
-            // Create the input conditions
-            List<ICondition> conditions;
-
-            // Move Right
-            conditions = new List<ICondition>();
-            //k = Game1.Settings.KPlayerMoveRightBinding;
-            //g = Game1.Settings.GPlayerMoveRightBinding;
-            // if (k != -1)
-            conditions.Add(new Track.KeyboardCondition(Keys.Right));
-            // if (g != -1)
-            conditions.Add(new Track.GamePadCondition(GamePadButton.Right, 0));
-            MoveRightInput = new AnyCondition(conditions.ToArray());
-            // Move Left
-            conditions = new List<ICondition>();
-            //k = Game1.Settings.KPlayerMoveLeftBinding;
-            //g = Game1.Settings.GPlayerMoveLeftBinding;
-            conditions.Add(new Track.KeyboardCondition(Keys.Left));
-            conditions.Add(new Track.GamePadCondition(GamePadButton.Left, 0));
-            MoveLeftInput = new AnyCondition(conditions.ToArray());
-            // Jump
-            conditions = new List<ICondition>();
-            //k = Game1.Settings.KPlayerJumpBinding;
-            //g = Game1.Settings.GPlayerJumpBinding;
-            conditions.Add(new Track.KeyboardCondition(Keys.Up));
-            conditions.Add(new Track.GamePadCondition(GamePadButton.A, 0));
-            JumpInput = new AnyCondition(conditions.ToArray());
-            // Roll
-            conditions = new List<ICondition>();
-            //k = Game1.Settings.KPlayerRollBinding;
-            //g = Game1.Settings.GPlayerRollBinding;
-            conditions.Add(new Track.KeyboardCondition(Keys.LeftShift));
-            conditions.Add(new Track.GamePadCondition(GamePadButton.LeftShoulder, 0));
-            RollInput = new AnyCondition(conditions.ToArray());
-            // Parry
-            conditions = new List<ICondition>();
-            //k = Game1.Settings.KPlayerParryBinding;
-            //g = Game1.Settings.GPlayerParryBinding;
-            conditions.Add(new Track.KeyboardCondition(Keys.A));
-            conditions.Add(new Track.GamePadCondition(GamePadButton.X, 0));
-            ParryInput = new AnyCondition(conditions.ToArray());
-            // Shoot
-            conditions = new List<ICondition>();
-            //k = Game1.Settings.KPlayerShootBinding;
-            //g = Game1.Settings.GPlayerShootBinding;
-            conditions.Add(new Track.KeyboardCondition(Keys.S));
-            conditions.Add(new Track.GamePadCondition(GamePadButton.RightShoulder, 0));
-            ShootInput = new AnyCondition(conditions.ToArray());
-            // Reload
-            conditions = new List<ICondition>();
-            //k = Game1.Settings.KPlayerReloadBinding;
-            //g = Game1.Settings.GPlayerReloadBinding;
-            conditions.Add(new Track.KeyboardCondition(Keys.D));
-            conditions.Add(new Track.GamePadCondition(GamePadButton.B, 0));
-            InitializeReloadInput = new AnyCondition(conditions.ToArray());
-            // Interact
-            conditions = new List<ICondition>();
-            //k = Game1.Settings.KPlayerInteractBinding;
-            //g = Game1.Settings.GPlayerInteractBinding;
-            conditions.Add(new Track.KeyboardCondition(Keys.E));
-            conditions.Add(new Track.GamePadCondition(GamePadButton.Up, 0));
-            InteractInput = new AnyCondition(conditions.ToArray());
-
+            // Inputs
+            RegisterInputBindingsUser();
+            SetupInputBindings();
 
             // Initilize the states
             PlayerIdleState = new PlayerIdleState(this, "Idle");
@@ -143,6 +78,29 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
 
             // Initialize state machine and Set active state
             StateMachine.Initialize(PlayerIdleState);
+        }
+
+        public void RegisterInputBindingsUser()
+        {
+            InputBindingManager.RegisterUser(this);
+        }
+        public void SetupInputBindings()
+        {
+            InputBinding b = InputBindingManager.GetInputBinding("PlayerMoveRight");
+            MoveRightInput = new AnyCondition(
+                new KeyboardCondition(b.KeyboadKey), new GamePadCondition(b.GamepadButton, 0));
+
+            b = InputBindingManager.GetInputBinding("PlayerMoveLeft");
+            MoveLeftInput = new AnyCondition(
+                new KeyboardCondition(b.KeyboadKey), new GamePadCondition(b.GamepadButton, 0));
+
+            b = InputBindingManager.GetInputBinding("PlayerJump");
+            JumpInput = new AnyCondition(
+                new KeyboardCondition(b.KeyboadKey), new GamePadCondition(b.GamepadButton, 0));
+
+            b = InputBindingManager.GetInputBinding("PlayerJump");
+            JumpInput = new AnyCondition(
+                new KeyboardCondition(b.KeyboadKey), new GamePadCondition(b.GamepadButton, 0));
         }
 
         public override IBox CreateCharacterBox(float xPos, float yPos)

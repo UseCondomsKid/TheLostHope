@@ -11,6 +11,7 @@ using TheLostHopeEngine.EngineCode.Localization;
 using TheLostHopeEngine.EngineCode.Assets;
 using TheLostHope.GameCode.GameStates.SubStates;
 using TheLostHope.GameCode.ContentLoading;
+using TheLostHopeEngine.EngineCode.Inputs;
 
 namespace TheLostHope
 {
@@ -68,7 +69,9 @@ namespace TheLostHope
             // Game Assets
             GameAssetsLoader.Initialize();
             // Init the localization system
-            LocalizationSystem.Init();
+            LocalizationSystem.Initialize();
+            // Init the input bindings manager
+            InputBindingManager.Initialize(GameAssetsLoader.InputAsset);
 
             IsPaused = false;
 

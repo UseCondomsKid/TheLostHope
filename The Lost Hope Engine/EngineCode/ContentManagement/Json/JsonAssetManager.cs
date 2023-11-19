@@ -22,6 +22,13 @@ namespace TheLostHopeEngine.EngineCode.ContentManagement.Json
 
         public T LoadAsset<T>(string filePath) where T : ScriptableObject
         {
+            // Check if the directory exists, if it doesn't return null.
+            string directoryName = Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(directoryName))
+            {
+                return null;
+            }
+
             using (StreamReader fileReader = new StreamReader(filePath))
             using (JsonTextReader jsonReader = new JsonTextReader(fileReader))
             {

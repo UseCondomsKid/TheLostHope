@@ -2,17 +2,33 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.ImGui.Extensions;
+using Newtonsoft.Json.Linq;
 using System;
+using System.CodeDom;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Windows.Documents;
+using System.Windows.Media.Animation;
+using System.Xml;
 using TheLostHope.Engine.ContentManagement;
 using TheLostHopeEditor.EditorCode.Utils;
 using TheLostHopeEngine.EngineCode.Assets.Core;
 using TheLostHopeEngine.EngineCode.CustomAttributes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TheLostHopeEditor.EditorCode.Assets
 {
+
+    public class DictionaryPair
+    {
+        public object Key { get; set; }
+        public object Value { get; set; }
+    }
+
     public class EditorAssetManager
     {
         public string PathToAssetsFolder =>
@@ -39,8 +55,20 @@ namespace TheLostHopeEditor.EditorCode.Assets
         // Imgui Editor Stuff
         private bool _createNewAssetWindow = false;
         private string _newAssetName = "";
+
         private float _assetSavedMessageShowTime = 1.5f;
         private float _assetSavedTimer = -1.0f;
+
+        private bool _newDictionaryEntryWindow = false;
+        private IDictionary _currentDictionaryToAddTo = null;
+        private object _currentDictionaryKey = null;
+        private object _currentDictionaryValue = null;
+
+
+        private float _dictionaryMessageShowTime = 1.5f;
+        private float _dictionaryMessageTimer = -1.0f;
+        private string _dictionaryMessage = "";
+        private System.Numerics.Vector4 _dictionaryMessageColor;
 
         public EditorAssetManager(Func<string, ScriptableObject> createNewAssetFunction, Func<string, ScriptableObject> loadAssetFunction, string assetCutsomFolder = "")
         {
@@ -55,6 +83,9 @@ namespace TheLostHopeEditor.EditorCode.Assets
             _scriptableObjectMainPropCount = soType.GetProperties().Length;
 
             _createNewAssetWindow = false;
+            _newDictionaryEntryWindow = false;
+            _currentDictionaryToAddTo = null;
+            _dictionaryMessage = "";
             _newAssetName = "";
             _assetSavedTimer = -1.0f;
         }
@@ -94,6 +125,7 @@ namespace TheLostHopeEditor.EditorCode.Assets
 
             float delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _assetSavedTimer -= delta;
+            _dictionaryMessageTimer -= delta;
         }
 
         public void RenderEditorBase()
@@ -132,6 +164,54 @@ namespace TheLostHopeEditor.EditorCode.Assets
                     ImGui.End();
                 }
             }
+            // Dictionary entry
+            if (_newDictionaryEntryWindow)
+            {
+                if (_currentDictionaryToAddTo != null && _currentDictionaryKey != null && _currentDictionaryValue != null)
+                {
+                    if (ImGui.Begin($"Add Entry To Dictionary<{_currentDictionaryKey.GetType().Name}, {_currentDictionaryValue.GetType().Name}>"))
+                    {
+                        DrawNewDictionaryEntry();
+
+                        if (ImGui.Button("Add Entry"))
+                        {
+                            if (_currentDictionaryKey == null || _currentDictionaryValue == null)
+                            {
+                                _dictionaryMessage = "Either the key or the value (or both) are null.";
+                                _dictionaryMessageTimer = _dictionaryMessageShowTime;
+                                _dictionaryMessageColor = new System.Numerics.Vector4(1f, 0f, 0f, 1f);
+                            }
+                            else if (_currentDictionaryToAddTo.Contains(_currentDictionaryKey))
+                            {
+                                _dictionaryMessage = "The Dictionary already contains an entry with the same key.";
+                                _dictionaryMessageTimer = _dictionaryMessageShowTime;
+                                _dictionaryMessageColor = new System.Numerics.Vector4(1f, 0f, 0f, 1f);
+                            }
+                            else
+                            {
+                                _currentDictionaryToAddTo.Add(_currentDictionaryKey, _currentDictionaryValue);
+                                _dictionaryMessage = "Successfully added new entry to the list.";
+                                _dictionaryMessageTimer = _dictionaryMessageShowTime;
+                                _dictionaryMessageColor = new System.Numerics.Vector4(0f, 1f, 0f, 1f);
+                            }
+                        }
+                        if (ImGui.Button("Close"))
+                        {
+                            _newDictionaryEntryWindow = false;
+                            _currentDictionaryToAddTo = null;
+                            _currentDictionaryKey = null;
+                            _currentDictionaryValue = null;
+                        }
+
+                        if (_dictionaryMessageTimer > 0f)
+                        {
+                            ImGui.TextColored(_dictionaryMessageColor, _dictionaryMessage);
+                        }
+
+                        ImGui.End();
+                    }
+                }
+            }
             if (ImGui.Button("Load Existing Asset"))
             {
                 OpenLoadAssetFileDialog();
@@ -144,6 +224,8 @@ namespace TheLostHopeEditor.EditorCode.Assets
                 {
                     SaveAsset();
                 }
+
+                // Displaying Messages
                 if (_assetSavedTimer > 0f)
                 {
                     ImGui.TextColored(new System.Numerics.Vector4(0f, 1f, 0f, 1f), "Asset Saved!");
@@ -162,165 +244,378 @@ namespace TheLostHopeEditor.EditorCode.Assets
                 ImGui.Spacing();
                 ImGui.Separator();
                 ImGui.Spacing();
-                ImGui.TextColored(new System.Numerics.Vector4(1f, 1f, 0f, 1f), "Base Properties");
-                // Drawing asset properties
-                // Draw the base scriptable object properties separately
-                for (int i = _assetProperties.Length - _scriptableObjectMainPropCount; i < _assetProperties.Length; i++)
-                {
-                    DrawProperty(_assetProperties[i], _asset);
-                }
-                ImGui.Spacing();
-                ImGui.Separator();
-                ImGui.Spacing();
-                ImGui.TextColored(new System.Numerics.Vector4(1f, 1f, 0f, 1f), "Asset Specific Properties");
-                // Draw the rest of the properties
-                for (int i = 0; i < _assetProperties.Length - _scriptableObjectMainPropCount; i++)
-                {
-                    DrawProperty(_assetProperties[i], _asset);
-                    ImGui.Spacing();
-                }
+
+                DrawProperties(_asset);
             }
         }
 
-        private void DrawProperty(PropertyInfo property, object obj)
+        private void DrawProperties(object obj)
         {
-            if (property == null) return;
-
-            // Check for header attribute
-            HeaderAttribute headerAttribute = property.GetCustomAttribute<HeaderAttribute>();
-            if (headerAttribute != null)
+            if (obj == null)
             {
-                ImGui.TextColored(new System.Numerics.Vector4(1f, 1f, 0f, 1f), headerAttribute.Header);
+                return;
             }
 
-            // Check range attribute
-            RangeAttribute rangeAttribute = property.GetCustomAttribute<RangeAttribute>();
-            // TODO: Check for other attributes
-
-            if (property.CanRead && !property.CanWrite)
+            if (!IsSimpleType(obj.GetType()))
             {
-                var value = property.GetValue(obj);
-                ImGui.Text($"{property.Name}: {value}");
-            }
-            else if (property.CanRead && property.CanWrite)
-            {
-                if (rangeAttribute != null)
+                foreach (var property in obj.GetType().GetProperties())
                 {
-                    // This property has a RangeAttribute
-                    float minValue = rangeAttribute.MinValue;
-                    float maxValue = rangeAttribute.MaxValue;
+                    // Check for header attribute
+                    HeaderAttribute headerAttribute = property.GetCustomAttribute<HeaderAttribute>();
+                    if (headerAttribute != null)
+                    {
+                        ImGui.TextColored(new System.Numerics.Vector4(1f, 1f, 0f, 1f), headerAttribute.Header);
+                    }
 
-                    // Render an ImGui slider with the specified range
-                    float value = (float)property.GetValue(obj);
-                    ImGui.SliderFloat(property.Name, ref value, minValue, maxValue);
-                    property.SetValue(obj, value);
-                }
-                // TODO: Check for other attributes
-                else
-                {
-                    if (property.PropertyType == typeof(string))
+                    // Check range attribute
+                    RangeAttribute rangeAttribute = property.GetCustomAttribute<RangeAttribute>();
+
+                    if (property.CanRead && property.CanWrite)
                     {
-                        string value = (string)property.GetValue(obj);
-                        if (value == null) value = "";
-                        ImGui.InputText(property.Name, ref value, 255);
-                        property.SetValue(obj, value);
-                    }
-                    else if (property.PropertyType == typeof(int))
-                    {
-                        int value = (int)property.GetValue(obj);
-                        ImGui.InputInt(property.Name, ref value);
-                        property.SetValue(obj, value);
-                    }
-                    else if (property.PropertyType == typeof(float))
-                    {
-                        float value = (float)property.GetValue(obj);
-                        ImGui.InputFloat(property.Name, ref value);
-                        property.SetValue(obj, value);
-                    }
-                    else if (property.PropertyType == typeof(float))
-                    {
-                        float value = (float)property.GetValue(obj);
-                        ImGui.InputFloat(property.Name, ref value);
-                        property.SetValue(obj, value);
-                    }
-                    else if (property.PropertyType == typeof(bool))
-                    {
-                        bool value = (bool)property.GetValue(obj);
-                        ImGui.Checkbox(property.Name, ref value);
-                        property.SetValue(obj, value);
-                    }
-                    else if (property.PropertyType.IsEnum)
-                    {
-                        Enum enumValue = (Enum)property.GetValue(obj);
-                        // Convert enum to int
-                        int selectedIndex = Convert.ToInt32(enumValue); 
-                        string[] names = Enum.GetNames(property.PropertyType);
-                        if (ImGui.Combo(property.Name, ref selectedIndex, names, names.Length))
+                        if (rangeAttribute != null)
                         {
-                            // Convert int back to enum
-                            Enum newValue = (Enum)Enum.ToObject(property.PropertyType, selectedIndex);
-                            property.SetValue(obj, newValue);
+                            float minValue = rangeAttribute.MinValue;
+                            float maxValue = rangeAttribute.MaxValue;
+                            float value = (float)property.GetValue(obj);
+                            ImGui.SliderFloat(property.Name, ref value, minValue, maxValue);
+                            property.SetValue(obj, value);
                         }
-                    }
-                    else if (property.PropertyType == typeof(Vector2))
-                    {
-                        Vector2 value = (Vector2)property.GetValue(obj);
-                        var numericVector2 = value.ToNumerics();
-                        ImGui.InputFloat2(property.Name, ref numericVector2);
-                        value = numericVector2.ToXnaVector2();
-                        property.SetValue(obj, value);
-                    }
-                    // TODO: Add more types
-                    else if (typeof(System.Collections.IList).IsAssignableFrom(property.PropertyType))
-                    {
-                        IList list = (IList)property.GetValue(obj);
-
-                        if (list != null)
+                        else if (property.PropertyType == typeof(string))
                         {
-                            ImGui.BeginGroup();
-                            ImGui.Text($"{property.Name}:");
-                            for (int i = 0; i < list.Count; i++)
+                            string value = (string)property.GetValue(obj) ?? "";
+                            ImGui.InputText(property.Name, ref value, 255);
+                            property.SetValue(obj, value);
+                        }
+                        else if (property.PropertyType == typeof(int))
+                        {
+                            int value = (int)property.GetValue(obj);
+                            ImGui.InputInt(property.Name, ref value);
+                            property.SetValue(obj, value);
+                        }
+                        else if (property.PropertyType == typeof(float))
+                        {
+                            float value = (float)property.GetValue(obj);
+                            ImGui.InputFloat(property.Name, ref value);
+                            property.SetValue(obj, value);
+                        }
+                        else if (property.PropertyType == typeof(bool))
+                        {
+                            bool value = (bool)property.GetValue(obj);
+                            ImGui.Checkbox(property.Name, ref value);
+                            property.SetValue(obj, value);
+                        }
+                        else if (property.PropertyType.IsEnum)
+                        {
+                            Enum enumValue = (Enum)property.GetValue(obj);
+                            int selectedIndex = Convert.ToInt32(enumValue);
+                            string[] names = Enum.GetNames(property.PropertyType);
+                            if (ImGui.Combo(property.Name, ref selectedIndex, names, names.Length))
                             {
-                                // Create a unique name for each element
-                                string elementName = $"{property.Name}[{i}]";
-                                string elementId = $"{property.PropertyType.GUID}-{elementName}";
-                                if (ImGui.TreeNode(elementId, elementName))
-                                {
-                                    DrawListElement(list, i);
+                                Enum newValue = (Enum)Enum.ToObject(property.PropertyType, selectedIndex);
+                                property.SetValue(obj, newValue);
+                            }
+                        }
+                        else if (property.PropertyType == typeof(Vector2))
+                        {
+                            Vector2 value = (Vector2)property.GetValue(obj);
+                            var numericVector2 = value.ToNumerics();
+                            ImGui.InputFloat2(property.Name, ref numericVector2);
+                            value = numericVector2.ToXnaVector2();
+                            property.SetValue(obj, value);
+                        }
+                        else if (typeof(IDictionary).IsAssignableFrom(property.PropertyType))
+                        {
+                            IDictionary dictionary = (IDictionary)property.GetValue(obj);
+                            if (dictionary != null)
+                            {
+                                ImGui.BeginGroup();
+                                ImGui.Text($"{property.Name}:");
 
-                                    // Display a button to remove the element
-                                    if (ImGui.Button($"Remove {elementName}"))
+                                int i = 0;
+                                foreach (DictionaryEntry entry in dictionary)
+                                {
+                                    string elementName = $"{property.Name}[{i}]";
+                                    string elementId = $"{property.PropertyType.GUID}-{elementName}-{i}";
+
+                                    ImGui.BeginGroup();
+                                    if (ImGui.TreeNode(elementId, elementName))
                                     {
-                                        list.RemoveAt(i);
-                                        i--; // Adjust the loop counter
+                                        // Draw entry
+                                        ImGui.Indent();
+                                        DrawDictionaryEntry(entry);
+
+                                        // Display a button to remove the entry
+                                        if (ImGui.Button($"Remove {elementName}"))
+                                        {
+                                            dictionary.Remove(entry.Key);
+                                        }
+                                        ImGui.Unindent();
+
+                                        ImGui.Spacing();
                                     }
+                                    ImGui.EndGroup();
 
-                                    ImGui.TreePop();
+                                    i++;
                                 }
-                            }
 
-                            // Display a button to add elements
-                            if (ImGui.Button($"Add {property.Name} Element"))
+                                // Display a button to add entries
+                                string newDictionaryEntryWindowStatus = _newDictionaryEntryWindow ? "Open" : "Closed";
+                                if (ImGui.Button($"Add {property.Name} Entry (Window {newDictionaryEntryWindowStatus})"))
+                                {
+                                    _currentDictionaryToAddTo = dictionary;
+                                    _currentDictionaryKey = CreateDefaultElement(dictionary.GetType().GetGenericArguments()[0]);
+                                    _currentDictionaryValue = CreateDefaultElement(dictionary.GetType().GetGenericArguments()[1]);
+
+                                    _newDictionaryEntryWindow = !_newDictionaryEntryWindow;
+                                }
+
+                                ImGui.EndGroup();
+                            }
+                        }
+                        else if (typeof(IList).IsAssignableFrom(property.PropertyType))
+                        {
+                            IList list = (IList)property.GetValue(obj);
+                            if (list != null)
                             {
-                                Type elementType = property.PropertyType.IsArray ? property.PropertyType.GetElementType() : property.PropertyType.GetGenericArguments()[0];
+                                ImGui.BeginGroup();
+                                ImGui.Text($"{property.Name}:");
 
-                                object newElement = null;
-                                if (elementType == typeof(string))
+                                for (int i = 0; i < list.Count; i++)
                                 {
-                                    newElement = "";
-                                }
-                                else
-                                {
-                                    newElement = Activator.CreateInstance(elementType);
+                                    // Create a unique name for each element
+                                    string elementName = $"{property.Name}[{i}]";
+                                    string elementId = $"{property.PropertyType.GUID}-{elementName}-{i}"; // Include the index in the ID
+                                    if (ImGui.TreeNode(elementId, elementName))
+                                    {
+                                        ImGui.Indent();
+                                        // Check if the list element is a simple type
+                                        if (IsSimpleType(list[i].GetType()))
+                                        {
+                                            DrawListElement(list, i);
+                                        }
+                                        else
+                                        {
+                                            DrawProperties(list[i]);
+                                        }
+
+                                        // Display a button to remove the element
+                                        if (ImGui.Button($"Remove {elementName}"))
+                                        {
+                                            list.RemoveAt(i);
+                                            i--; // Adjust the loop counter
+                                        }
+                                        ImGui.Unindent();
+
+                                        ImGui.Spacing();
+                                        ImGui.TreePop();
+                                    }
                                 }
 
-                                list.Add(newElement);
+                                // Display a button to add elements
+                                if (ImGui.Button($"Add {property.Name} Element"))
+                                {
+                                    Type elementType = property.PropertyType.IsArray ? property.PropertyType.GetElementType() : property.PropertyType.GetGenericArguments()[0];
+                                    object newElement = CreateDefaultElement(elementType);
+                                    list.Add(newElement);
+                                }
+
+                                ImGui.EndGroup();
                             }
-                            ImGui.EndGroup();
+                        }
+                        else if (property.PropertyType.IsClass)
+                        {
+                            object propertyValue = property.GetValue(obj);
+                            if (propertyValue != null)
+                            {
+                                ImGui.BeginGroup();
+                                ImGui.Text($"{property.Name}:");
+                                DrawProperties(propertyValue);
+                                ImGui.EndGroup();
+                            }
                         }
                     }
+                    else if (property.CanRead && !property.CanWrite)
+                    {
+                        var value = property.GetValue(obj);
+                        ImGui.Text($"{property.Name}: {value}");
+                    }
+                }
+
+            }
+        }
+
+        private bool IsSimpleType(Type type)
+        {
+            return type.IsPrimitive || type == typeof(string) || type.IsEnum || type == typeof(Vector2);
+        }
+
+        private object CreateDefaultElement(Type elementType)
+        {
+            if (elementType == typeof(string))
+            {
+                return "";
+            }
+            else if (elementType.IsEnum)
+            {
+                Array enumValues = Enum.GetValues(elementType);
+                return enumValues.GetValue(0);
+            }
+            else
+            {
+                return Activator.CreateInstance(elementType);
+            }
+        }
+
+        public void DrawNewDictionaryEntry()
+        {
+            // Key
+            Type keyType = _currentDictionaryKey.GetType();
+            ImGui.Text("Key:");
+            if (IsSimpleType(_currentDictionaryKey.GetType()))
+            {
+                if (keyType == typeof(string))
+                {
+                    string value = (string)_currentDictionaryKey;
+                    ImGui.InputText(keyType.Name, ref value, 255);
+                    _currentDictionaryKey = value;
+                }
+                else if (keyType == typeof(int))
+                {
+                    int value = (int)_currentDictionaryKey;
+                    ImGui.InputInt(keyType.Name, ref value);
+                    _currentDictionaryKey = value;
+                }
+                else if (keyType == typeof(float))
+                {
+                    float value = (float)_currentDictionaryKey;
+                    ImGui.InputFloat(keyType.Name, ref value);
+                    _currentDictionaryKey = value;
+                }
+                else if (keyType == typeof(bool))
+                {
+                    bool value = (bool)_currentDictionaryKey;
+                    ImGui.Checkbox(keyType.Name, ref value);
+                    _currentDictionaryKey = value;
+                }
+                else if (keyType.IsEnum)
+                {
+                    Enum enumValue = (Enum)_currentDictionaryKey;
+                    int selectedIndex = Convert.ToInt32(enumValue);
+                    string[] names = Enum.GetNames(keyType);
+                    if (ImGui.Combo(keyType.Name, ref selectedIndex, names, names.Length))
+                    {
+                        Enum newValue = (Enum)Enum.ToObject(keyType, selectedIndex);
+                        _currentDictionaryKey = newValue;
+                    }
+                }
+                else if (keyType == typeof(Vector2))
+                {
+                    Vector2 value = (Vector2)_currentDictionaryKey;
+                    var numericVector2 = value.ToNumerics();
+                    ImGui.InputFloat2(keyType.Name, ref numericVector2);
+                    value = numericVector2.ToXnaVector2();
+                    _currentDictionaryKey = value;
                 }
             }
+            else
+            {
+                DrawProperties(_currentDictionaryKey);
+            }
+
+
+            // Value
+            Type valueType = _currentDictionaryValue.GetType();
+            ImGui.Text("Value:");
+            if (IsSimpleType(_currentDictionaryValue.GetType()))
+            {
+                if (valueType == typeof(string))
+                {
+                    string value = (string)_currentDictionaryValue;
+                    ImGui.InputText(valueType.Name, ref value, 255);
+                    _currentDictionaryValue = value;
+                }
+                else if (valueType == typeof(int))
+                {
+                    int value = (int)_currentDictionaryValue;
+                    ImGui.InputInt(valueType.Name, ref value);
+                    _currentDictionaryValue = value;
+                }
+                else if (valueType == typeof(float))
+                {
+                    float value = (float)_currentDictionaryValue;
+                    ImGui.InputFloat(valueType.Name, ref value);
+                    _currentDictionaryValue = value;
+                }
+                else if (valueType == typeof(bool))
+                {
+                    bool value = (bool)_currentDictionaryValue;
+                    ImGui.Checkbox(valueType.Name, ref value);
+                    _currentDictionaryValue = value;
+                }
+                else if (valueType.IsEnum)
+                {
+                    Enum enumValue = (Enum)_currentDictionaryValue;
+                    int selectedIndex = Convert.ToInt32(enumValue);
+                    string[] names = Enum.GetNames(valueType);
+                    if (ImGui.Combo(valueType.Name, ref selectedIndex, names, names.Length))
+                    {
+                        Enum newValue = (Enum)Enum.ToObject(valueType, selectedIndex);
+                        _currentDictionaryValue = newValue;
+                    }
+                }
+                else if (valueType == typeof(Vector2))
+                {
+                    Vector2 value = (Vector2)_currentDictionaryValue;
+                    var numericVector2 = value.ToNumerics();
+                    ImGui.InputFloat2(valueType.Name, ref numericVector2);
+                    value = numericVector2.ToXnaVector2();
+                    _currentDictionaryValue = value;
+                }
+            }
+            else
+            {
+                DrawProperties(_currentDictionaryValue);
+            }
+        }
+
+        private void DrawDictionaryEntry(DictionaryEntry entry)
+        {
+            Type keyType = entry.Key.GetType();
+            Type valueType = entry.Value.GetType();
+
+            ImGui.Text($"Key ({keyType.Name}):");
+            ImGui.Indent();
+            if (IsSimpleType(keyType))
+            {
+                ImGui.Text(entry.Key.ToString());
+            }
+            else
+            {
+                foreach (var property in entry.Key.GetType().GetProperties())
+                {
+                    if (!property.CanRead) continue;
+                    ImGui.Text($"{property.Name}:");
+                    ImGui.Text(property.GetValue(entry.Key).ToString());
+                }
+            }
+            ImGui.Unindent();
+
+            ImGui.Text($"Value ({valueType.Name}):");
+            ImGui.Indent();
+            if (IsSimpleType(valueType))
+            {
+                ImGui.Text(entry.Value.ToString());
+            }
+            else
+            {
+                foreach (var property in entry.Value.GetType().GetProperties())
+                {
+                    if (!property.CanRead) continue;
+                    ImGui.Text($"{property.Name}:");
+                    ImGui.Text(property.GetValue(entry.Value).ToString());
+                }
+            }
+            ImGui.Unindent();
         }
 
         private void DrawListElement(IList list, int index)
@@ -346,7 +641,13 @@ namespace TheLostHopeEditor.EditorCode.Assets
                 ImGui.InputText(elementType.Name, ref value, 255);
                 list[index] = value;
             }
-            else if (elementType.BaseType == typeof(Enum))
+            else if (elementType == typeof(bool))
+            {
+                bool value = (bool)list[index];
+                ImGui.Checkbox(elementType.Name, ref value);
+                list[index] = value;
+            }
+            else if (elementType.IsEnum)
             {
                 Enum enumValue = (Enum)list[index];
                 // Convert enum to int
@@ -370,3 +671,6 @@ namespace TheLostHopeEditor.EditorCode.Assets
         }
     }
 }
+
+
+
