@@ -2,10 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TheLostHope.Engine.ContentManagement;
 using TheLostHopeEditor.EditorCode.StateManagement;
 using TheLostHopeEditor.EditorCode.States.SuperStates;
@@ -39,7 +35,7 @@ namespace TheLostHopeEditor.EditorCode.States.SubStates
             if (_editorAssetManager.Asset != null)
             {
                 string windowStatus = _newInputActionWindow ? "Open" : "Closed";
-                if (ImGui.Button($"Add New Input Action (Window {windowStatus})"))
+                if (ImGui.Button($"Add New Input Action ({windowStatus})"))
                 {
                     _newInputActionWindow = !_newInputActionWindow;
                 }
@@ -90,7 +86,7 @@ namespace TheLostHopeEditor.EditorCode.States.SubStates
                                     switch (_inputDeviceType)
                                     {
                                         case InputDeviceType.Gamepad:
-                                            action.InputBindings.Add(new ButtonInputBinding<GamepadButton>());
+                                            action.InputBindings.Add(new ButtonInputBinding<Buttons>());
                                             break;
                                         case InputDeviceType.Keyboard:
                                             action.InputBindings.Add(new ButtonInputBinding<Keys>());
@@ -101,7 +97,7 @@ namespace TheLostHopeEditor.EditorCode.States.SubStates
                                     switch (_inputDeviceType)
                                     {
                                         case InputDeviceType.Gamepad:
-                                            action.InputBindings.Add(new AxisInputBinding<GamepadButton>());
+                                            action.InputBindings.Add(new AxisInputBinding<Buttons>());
                                             break;
                                         case InputDeviceType.Keyboard:
                                             action.InputBindings.Add(new AxisInputBinding<Keys>());

@@ -32,7 +32,7 @@ namespace TheLostHope.GameCode.ContentLoading
         {
             // Load input asset
             _inputAsset = ContentLoader.AssetManager.LoadAsset<InputAsset>(
-                ContentLoader.GetApplicationRelativePath("Assets/Input/Inputs.asset"));
+                ContentLoader.GetApplicationRelativePath("Assets/Input/InputAsset.asset"));
 
             // Load Weapon Assets
             _weaponAssets = new Dictionary<string, WeaponAsset>();

@@ -21,6 +21,8 @@ namespace TheLostHopeEngine.EngineCode.Pooling
             this._objects = new Queue<T>(maxSize);
         }
 
+        public int GetPoolSize() { return _objects.Count; }
+
         public T GetObject()
         {
             lock (_objects)
