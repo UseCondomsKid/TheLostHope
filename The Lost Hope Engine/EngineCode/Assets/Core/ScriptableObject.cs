@@ -1,9 +1,11 @@
 ﻿using System;
+using TheLostHopeEngine.EngineCode.CustomAttributes;
 
 namespace TheLostHopeEngine.EngineCode.Assets.Core
 {
     public abstract class ScriptableObject
     {
+        [Header("Base Scriptable Object Properties")]
         public Guid AssetId { get; private set; } // Unique identifier for the asset
         public string Name { get; set; } // Name of the asset
 

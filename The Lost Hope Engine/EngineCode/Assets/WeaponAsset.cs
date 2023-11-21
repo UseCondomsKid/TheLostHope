@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using TheLostHopeEngine.EngineCode.Assets.Core;
 using TheLostHopeEngine.EngineCode.CustomAttributes;
 

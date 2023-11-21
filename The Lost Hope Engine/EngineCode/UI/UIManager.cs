@@ -1,5 +1,4 @@
-﻿using Apos.Input;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
@@ -31,56 +30,56 @@ namespace TheLostHopeEngine.EngineCode.UI
         private Menu _activeMenu;
 
         // Input
-        private ICondition _up;
-        private ICondition _down;
-        private ICondition _left;
-        private ICondition _right;
-        private ICondition _enter;
-        private ICondition _back;
-        private ICondition _escape;
+        //private ICondition _up;
+        //private ICondition _down;
+        //private ICondition _left;
+        //private ICondition _right;
+        //private ICondition _enter;
+        //private ICondition _back;
+        //private ICondition _escape;
 
-        public UIManager()
-        {
-            _up = new AnyCondition(
-                new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Up),
-                new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.W),
-                new GamePadCondition(GamePadButton.Up, 0)
-                );
+        //public UIManager()
+        //{
+        //    _up = new AnyCondition(
+        //        new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Up),
+        //        new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.W),
+        //        new GamePadCondition(GamePadButton.Up, 0)
+        //        );
 
-            _down = new AnyCondition(
-                new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Down),
-                new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.S),
-                new GamePadCondition(GamePadButton.Down, 0)
-                );
+        //    _down = new AnyCondition(
+        //        new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Down),
+        //        new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.S),
+        //        new GamePadCondition(GamePadButton.Down, 0)
+        //        );
 
-            _left = new AnyCondition(
-                new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Left),
-                new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.A),
-                new GamePadCondition(GamePadButton.Left, 0)
-                );
+        //    _left = new AnyCondition(
+        //        new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Left),
+        //        new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.A),
+        //        new GamePadCondition(GamePadButton.Left, 0)
+        //        );
 
-            _right = new AnyCondition(
-                new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Right),
-                new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.D),
-                new GamePadCondition(GamePadButton.Right, 0)
-                );
+        //    _right = new AnyCondition(
+        //        new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Right),
+        //        new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.D),
+        //        new GamePadCondition(GamePadButton.Right, 0)
+        //        );
 
-            _enter = new AnyCondition(
-                new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Enter),
-                new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Space),
-                new GamePadCondition(GamePadButton.A, 0)
-                );
+        //    _enter = new AnyCondition(
+        //        new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Enter),
+        //        new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Space),
+        //        new GamePadCondition(GamePadButton.A, 0)
+        //        );
 
-            _back = new AnyCondition(
-                new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Escape),
-                new GamePadCondition(GamePadButton.B, 0)
-                );
+        //    _back = new AnyCondition(
+        //        new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Escape),
+        //        new GamePadCondition(GamePadButton.B, 0)
+        //        );
 
-            _escape = new AnyCondition(
-                new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Escape),
-                new GamePadCondition(GamePadButton.Start, 0)
-                );
-        }
+        //    _escape = new AnyCondition(
+        //        new KeyboardCondition(Microsoft.Xna.Framework.Input.Keys.Escape),
+        //        new GamePadCondition(GamePadButton.Start, 0)
+        //        );
+        //}
 
         public void Update(GameTime gameTime)
         {
@@ -122,42 +121,42 @@ namespace TheLostHopeEngine.EngineCode.UI
             int selectedIndex = _activeMenu.Children.IndexOf(_activeMenu.SelectedSelectable);
             int newIndex = selectedIndex;
 
-            if (_activeMenu.SelectedSelectable != null)
-            {
-                if (_up.Pressed())
-                {
-                    newIndex = FindSelectableInDirection(selectedIndex, NavigationDirection.Up);
-                }
-                else if (_down.Pressed())
-                {
-                    newIndex = FindSelectableInDirection(selectedIndex, NavigationDirection.Down);
-                }
-                else if (_left.Pressed())
-                {
-                    newIndex = FindSelectableInDirection(selectedIndex, NavigationDirection.Left);
-                }
-                else if (_right.Pressed())
-                {
-                    newIndex = FindSelectableInDirection(selectedIndex, NavigationDirection.Right);
-                }
-            }
+            //if (_activeMenu.SelectedSelectable != null)
+            //{
+            //    if (_up.Pressed())
+            //    {
+            //        newIndex = FindSelectableInDirection(selectedIndex, NavigationDirection.Up);
+            //    }
+            //    else if (_down.Pressed())
+            //    {
+            //        newIndex = FindSelectableInDirection(selectedIndex, NavigationDirection.Down);
+            //    }
+            //    else if (_left.Pressed())
+            //    {
+            //        newIndex = FindSelectableInDirection(selectedIndex, NavigationDirection.Left);
+            //    }
+            //    else if (_right.Pressed())
+            //    {
+            //        newIndex = FindSelectableInDirection(selectedIndex, NavigationDirection.Right);
+            //    }
+            //}
 
-            if (_enter.Pressed())
-            {
-                // Call Enter function on the selectedSelectable
-                _activeMenu.SelectedSelectable?.Enter();
-            }
+            //if (_enter.Pressed())
+            //{
+            //    // Call Enter function on the selectedSelectable
+            //    _activeMenu.SelectedSelectable?.Enter();
+            //}
 
-            if (_escape.Pressed())
-            {
-                // Handle Escape (e.g., go back to the previous menu or perform menu-specific action)
-                _activeMenu.HandleEscape();
-            }
-            else if (_back.Pressed())
-            {
-                // Handle Back (e.g., go back to the previous menu or perform menu-specific action)
-                _activeMenu.HandleBack();
-            }
+            //if (_escape.Pressed())
+            //{
+            //    // Handle Escape (e.g., go back to the previous menu or perform menu-specific action)
+            //    _activeMenu.HandleEscape();
+            //}
+            //else if (_back.Pressed())
+            //{
+            //    // Handle Back (e.g., go back to the previous menu or perform menu-specific action)
+            //    _activeMenu.HandleBack();
+            //}
 
             if (newIndex != selectedIndex)
             {

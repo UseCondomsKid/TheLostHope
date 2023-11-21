@@ -2,27 +2,17 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.ImGui.Extensions;
-using Newtonsoft.Json.Linq;
 using System;
-using System.CodeDom;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Windows.Documents;
-using System.Windows.Media.Animation;
-using System.Xml;
 using TheLostHope.Engine.ContentManagement;
 using TheLostHopeEditor.EditorCode.Utils;
 using TheLostHopeEngine.EngineCode.Assets.Core;
 using TheLostHopeEngine.EngineCode.CustomAttributes;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace TheLostHopeEditor.EditorCode.Assets
 {
-
     public class DictionaryPair
     {
         public object Key { get; set; }
@@ -40,7 +30,6 @@ namespace TheLostHopeEditor.EditorCode.Assets
 
         private string _assetPath;
         private ScriptableObject _asset;
-        private PropertyInfo[] _assetProperties;
 
         // Function that returns the name of the asset
         private Func<string, ScriptableObject> _createNewAssetFunction;
@@ -48,8 +37,6 @@ namespace TheLostHopeEditor.EditorCode.Assets
         private string _assetCutsomFolder;
 
         private bool _loaded;
-
-        private int _scriptableObjectMainPropCount;
 
 
         // Imgui Editor Stuff
@@ -79,9 +66,6 @@ namespace TheLostHopeEditor.EditorCode.Assets
             _loadAssetFunction = loadAssetFunction;
             _assetCutsomFolder = assetCutsomFolder;
 
-            Type soType = typeof(ScriptableObject);
-            _scriptableObjectMainPropCount = soType.GetProperties().Length;
-
             _createNewAssetWindow = false;
             _newDictionaryEntryWindow = false;
             _currentDictionaryToAddTo = null;
@@ -99,7 +83,6 @@ namespace TheLostHopeEditor.EditorCode.Assets
         {
             _assetPath = path;
             _asset = _loadAssetFunction?.Invoke(path);
-            _assetProperties = _asset.GetType().GetProperties();
             OnLoadedAsset?.Invoke(_asset);
             _loaded = true;
         }
@@ -190,17 +173,14 @@ namespace TheLostHopeEditor.EditorCode.Assets
                             else
                             {
                                 _currentDictionaryToAddTo.Add(_currentDictionaryKey, _currentDictionaryValue);
-                                _dictionaryMessage = "Successfully added new entry to the list.";
+                                _dictionaryMessage = "Successfully added new entry to the dictionary.";
                                 _dictionaryMessageTimer = _dictionaryMessageShowTime;
                                 _dictionaryMessageColor = new System.Numerics.Vector4(0f, 1f, 0f, 1f);
                             }
                         }
                         if (ImGui.Button("Close"))
                         {
-                            _newDictionaryEntryWindow = false;
-                            _currentDictionaryToAddTo = null;
-                            _currentDictionaryKey = null;
-                            _currentDictionaryValue = null;
+                            CloseNewDictionaryEntryWindow();
                         }
 
                         if (_dictionaryMessageTimer > 0f)
@@ -210,6 +190,10 @@ namespace TheLostHopeEditor.EditorCode.Assets
 
                         ImGui.End();
                     }
+                }
+                else
+                {
+                    CloseNewDictionaryEntryWindow();
                 }
             }
             if (ImGui.Button("Load Existing Asset"))
@@ -235,6 +219,13 @@ namespace TheLostHopeEditor.EditorCode.Assets
             ImGui.Spacing();
             ImGui.Separator();
         }
+        private void CloseNewDictionaryEntryWindow()
+        {
+            _newDictionaryEntryWindow = false;
+            _currentDictionaryToAddTo = null;
+            _currentDictionaryKey = null;
+            _currentDictionaryValue = null;
+        }
 
         public void RenderAsset()
         {
@@ -258,6 +249,11 @@ namespace TheLostHopeEditor.EditorCode.Assets
 
             if (!IsSimpleType(obj.GetType()))
             {
+                //foreach (var method in obj.GetType().GetMethods())
+                //{
+                //    // Check for button attribute
+
+                //}
                 foreach (var property in obj.GetType().GetProperties())
                 {
                     // Check for header attribute
@@ -358,15 +354,25 @@ namespace TheLostHopeEditor.EditorCode.Assets
                                     i++;
                                 }
 
-                                // Display a button to add entries
-                                string newDictionaryEntryWindowStatus = _newDictionaryEntryWindow ? "Open" : "Closed";
-                                if (ImGui.Button($"Add {property.Name} Entry (Window {newDictionaryEntryWindowStatus})"))
-                                {
-                                    _currentDictionaryToAddTo = dictionary;
-                                    _currentDictionaryKey = CreateDefaultElement(dictionary.GetType().GetGenericArguments()[0]);
-                                    _currentDictionaryValue = CreateDefaultElement(dictionary.GetType().GetGenericArguments()[1]);
 
-                                    _newDictionaryEntryWindow = !_newDictionaryEntryWindow;
+                                var dictGenericArgs = dictionary.GetType().GetGenericArguments();
+                                if (dictGenericArgs[0].IsAbstract || dictGenericArgs[1].IsAbstract)
+                                {
+                                    ImGui.TextColored(new System.Numerics.Vector4(0f, 0f, 1f, 1f),
+                                        "The Entry type of this dictionary (Key or Value) is abstract. Cannot create instances of it to add.");
+                                }
+                                else
+                                {
+                                    // Display a button to add entries
+                                    string newDictionaryEntryWindowStatus = _newDictionaryEntryWindow ? "Open" : "Closed";
+                                    if (ImGui.Button($"Add {property.Name} Entry (Window {newDictionaryEntryWindowStatus})"))
+                                    {
+                                        _currentDictionaryToAddTo = dictionary;
+                                        _currentDictionaryKey = CreateDefaultElement(dictGenericArgs[0]);
+                                        _currentDictionaryValue = CreateDefaultElement(dictGenericArgs[1]);
+
+                                        _newDictionaryEntryWindow = true;
+                                    }
                                 }
 
                                 ImGui.EndGroup();
@@ -411,12 +417,21 @@ namespace TheLostHopeEditor.EditorCode.Assets
                                     }
                                 }
 
-                                // Display a button to add elements
-                                if (ImGui.Button($"Add {property.Name} Element"))
+
+                                Type elementType = property.PropertyType.IsArray ? property.PropertyType.GetElementType() : property.PropertyType.GetGenericArguments()[0];
+                                if (elementType.IsAbstract)
                                 {
-                                    Type elementType = property.PropertyType.IsArray ? property.PropertyType.GetElementType() : property.PropertyType.GetGenericArguments()[0];
-                                    object newElement = CreateDefaultElement(elementType);
-                                    list.Add(newElement);
+                                    ImGui.TextColored(new System.Numerics.Vector4(0f, 0f, 1f, 1f),
+                                        "The Element type of this list is abstract. Cannot create instances of it to add.");
+                                }
+                                else
+                                {
+                                    // Display a button to add elements
+                                    if (ImGui.Button($"Add {property.Name} Element"))
+                                    {
+                                        object newElement = CreateDefaultElement(elementType);
+                                        list.Add(newElement);
+                                    }
                                 }
 
                                 ImGui.EndGroup();
