@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Xml;
 using TheLostHopeEngine.EngineCode.Assets;
 using TheLostHopeEngine.EngineCode.Pooling;
 
@@ -46,7 +44,7 @@ namespace TheLostHopeEngine.EngineCode.Inputs
                     {
                         ictx.Set(InputActionPhase.None, -100f);
                     },
-                    maxSize: 100
+                    maxSize: 50
                 );
         }
 
@@ -78,14 +76,14 @@ namespace TheLostHopeEngine.EngineCode.Inputs
                 var axisBinding = (AxisInputBinding<Keys>)binding;
                 HandleAxisBinding(axisBinding, runtimeInputAction);
             }
-            else if (binding is ButtonInputBinding<Buttons>)
+            else if (binding is ButtonInputBinding<GamepadButton>)
             {
-                var buttonBinding = (ButtonInputBinding<Buttons>)binding;
+                var buttonBinding = (ButtonInputBinding<GamepadButton>)binding;
                 HandleButtonBinding(buttonBinding, runtimeInputAction);
             }
-            else if (binding is AxisInputBinding<Buttons>)
+            else if (binding is AxisInputBinding<GamepadButton>)
             {
-                var axisBinding = (AxisInputBinding<Buttons>)binding;
+                var axisBinding = (AxisInputBinding<GamepadButton>)binding;
                 HandleAxisBinding(axisBinding, runtimeInputAction);
             }
         }
@@ -166,10 +164,10 @@ namespace TheLostHopeEngine.EngineCode.Inputs
                 // Check the current state of the keyboard key
                 return _currentKeyboardState.IsKeyDown((Keys)(object)button + 21);
             }
-            else if (typeof(TButton) == typeof(Buttons))
+            else if (typeof(TButton) == typeof(GamepadButton))
             {
                 // Check the current state of the gamepad button
-                return _currentGamePadState.IsButtonDown((Buttons)(object)button);
+                return _currentGamePadState.IsButtonDown(ConvertToXnaButtons((GamepadButton)(object)button));
             }
             // Handle other input types if needed
 
@@ -183,14 +181,72 @@ namespace TheLostHopeEngine.EngineCode.Inputs
                 // Check the previous state of the keyboard key
                 return _previousKeyboardState.IsKeyDown((Keys)(object)button + 21);
             }
-            else if (typeof(TButton) == typeof(Buttons))
+            else if (typeof(TButton) == typeof(GamepadButton))
             {
                 // Check the previous state of the gamepad button
-                return _previousGamePadState.IsButtonDown((Buttons)(object)button);
+                return _previousGamePadState.IsButtonDown(ConvertToXnaButtons((GamepadButton)(object)button));
             }
             // Handle other input types if needed
 
             return false;
+        }
+
+
+        private Buttons ConvertToXnaButtons(GamepadButton button)
+        {
+            switch (button)
+            {
+                case GamepadButton.ButtonEast:
+                    return Buttons.B;
+                case GamepadButton.ButtonWest:
+                    return Buttons.X;
+                case GamepadButton.ButtonNorth:
+                    return Buttons.Y;
+                case GamepadButton.ButtonSouth:
+                    return Buttons.A;
+                case GamepadButton.RightShoulder:
+                    return Buttons.RightShoulder;
+                case GamepadButton.LeftShoulder:
+                    return Buttons.LeftShoulder;
+                case GamepadButton.RightTrigger:
+                    return Buttons.RightTrigger;
+                case GamepadButton.LeftTrigger:
+                    return Buttons.LeftTrigger;
+                case GamepadButton.DpadRight:
+                    return Buttons.DPadRight;
+                case GamepadButton.DpadLeft:
+                    return Buttons.DPadLeft;
+                case GamepadButton.DpadUp:
+                    return Buttons.DPadUp;
+                case GamepadButton.DpadDown:
+                    return Buttons.DPadDown;
+                case GamepadButton.RightStickButton:
+                    return Buttons.RightStick;
+                case GamepadButton.LeftStickButton:
+                    return Buttons.LeftStick;
+                case GamepadButton.RightStickUp:
+                    return Buttons.RightThumbstickUp;
+                case GamepadButton.RightStickDown:
+                    return Buttons.RightThumbstickDown;
+                case GamepadButton.RightStickLeft:
+                    return Buttons.RightThumbstickLeft;
+                case GamepadButton.RightStickRight:
+                    return Buttons.RightThumbstickRight;
+                case GamepadButton.LeftStickUp:
+                    return Buttons.LeftThumbstickUp;
+                case GamepadButton.LeftStickDown:
+                    return Buttons.LeftThumbstickDown;
+                case GamepadButton.LeftStickLeft:
+                    return Buttons.LeftThumbstickLeft;
+                case GamepadButton.LeftStickRight:
+                    return Buttons.LeftThumbstickRight;
+                case GamepadButton.Start:
+                    return Buttons.Start;
+                case GamepadButton.Select:
+                    return Buttons.Back;
+                default:
+                    return Buttons.None;
+            }
         }
     }
 
@@ -345,10 +401,17 @@ namespace TheLostHopeEngine.EngineCode.Inputs
             // If there is a gamepad attached, handle it
             if (_currentGamePadCapabilities.IsConnected)
             {
+                if (!_previousGamePadCapabilities.IsConnected)
+                {
+                    // THe gamepad was just connected
+                    Debug.WriteLine("Gamepad Connected");
+                }
+
                 _currentGamePadState = GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One);
             }
             else if (_previousGamePadCapabilities.IsConnected)
             {
+                Debug.WriteLine("Gamepad Disconnected");
                 // Here the gamepad was connected the previous frame, but is not this frame.
                 // Aka the gamepad was just disconnected.
             }
@@ -382,6 +445,36 @@ namespace TheLostHopeEngine.EngineCode.Inputs
 
             // TODO: Implement this later
         }
+    }
+
+
+    public enum GamepadButton
+    {
+        None,
+        ButtonEast,
+        ButtonWest,
+        ButtonNorth,
+        ButtonSouth,
+        DpadRight,
+        DpadLeft,
+        DpadUp,
+        DpadDown,
+        LeftStickButton,
+        RightStickButton,
+        LeftStickRight,
+        LeftStickLeft,
+        LeftStickUp,
+        LeftStickDown,
+        RightStickRight,
+        RightStickLeft,
+        RightStickUp,
+        RightStickDown,
+        LeftTrigger,
+        LeftShoulder,
+        RightTrigger,
+        RightShoulder,
+        Start,
+        Select,
     }
 
     public enum InputActionPhase

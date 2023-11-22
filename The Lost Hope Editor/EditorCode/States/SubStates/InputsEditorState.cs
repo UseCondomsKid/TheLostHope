@@ -86,7 +86,7 @@ namespace TheLostHopeEditor.EditorCode.States.SubStates
                                     switch (_inputDeviceType)
                                     {
                                         case InputDeviceType.Gamepad:
-                                            action.InputBindings.Add(new ButtonInputBinding<Buttons>());
+                                            action.InputBindings.Add(new ButtonInputBinding<GamepadButton>());
                                             break;
                                         case InputDeviceType.Keyboard:
                                             action.InputBindings.Add(new ButtonInputBinding<Keys>());
@@ -97,7 +97,7 @@ namespace TheLostHopeEditor.EditorCode.States.SubStates
                                     switch (_inputDeviceType)
                                     {
                                         case InputDeviceType.Gamepad:
-                                            action.InputBindings.Add(new AxisInputBinding<Buttons>());
+                                            action.InputBindings.Add(new AxisInputBinding<GamepadButton>());
                                             break;
                                         case InputDeviceType.Keyboard:
                                             action.InputBindings.Add(new AxisInputBinding<Keys>());
