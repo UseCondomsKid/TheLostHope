@@ -373,8 +373,7 @@ namespace TheLostHopeEngine.EngineCode.Inputs
         {
             if (!_isInitialized)
             {
-                // Handle uninitialized state
-                return null;
+                throw new Exception("Input System was not initialized.");
             }
 
             if (_runtimeActionsMap.TryGetValue(actionName, out var action))
@@ -389,8 +388,7 @@ namespace TheLostHopeEngine.EngineCode.Inputs
         {
             if (!_isInitialized)
             {
-                // Handle uninitialized state
-                return;
+                throw new Exception("Input System was not initialized.");
             }
 
             // Get States

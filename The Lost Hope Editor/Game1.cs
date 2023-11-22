@@ -43,13 +43,6 @@ namespace TheLostHopeEditor
             // Initialize the content loader
             ContentLoader.Initialize(Content);
 
-            // Initialize the Input System
-            InputSystem.Instance.Initialize(ContentLoader.AssetManager.LoadAsset<InputAsset>(
-                "C:\\000\\Programming\\The Lost Hope\\The Lost Hope\\bin\\Debug\\net6.0\\Assets\\Input\\InputAsset.asset"));
-
-            InputSystem.Instance.GetAction("Walk").OnChange += WalkActionChange;
-            InputSystem.Instance.GetAction("Jump").OnChange += JumpActionChange;
-
             // Window properties
             Window.AllowUserResizing = true;
             IsMouseVisible = true;
@@ -83,18 +76,6 @@ namespace TheLostHopeEditor
             base.Initialize();
         }
 
-        private void WalkActionChange(InputActionContext context)
-        {
-            Debug.WriteLine(context.Phase.ToString());
-            Debug.WriteLine(context.Value.ToString());
-        }
-
-        private void JumpActionChange(InputActionContext context)
-        {
-            Debug.WriteLine(context.Phase.ToString());
-            Debug.WriteLine(context.Value.ToString());
-        }
-
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -105,8 +86,6 @@ namespace TheLostHopeEditor
         protected override void Update(GameTime gameTime)
         {
             _camera.Update(gameTime);
-
-            InputSystem.Instance.Update();
             _gameStateManager.Update(gameTime);
 
             base.Update(gameTime);

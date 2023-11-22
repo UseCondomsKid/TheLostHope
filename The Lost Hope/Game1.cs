@@ -1,14 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TheLostHope.GameCode.GameStates;
-using TheLostHope.GameCode;
 using TheLostHope.Engine.ContentManagement;
-using Apos.Input;
-using FontStashSharp;
 using TheLostHopeEngine.EngineCode.StateManagement;
 using TheLostHopeEngine.EngineCode.UI;
 using TheLostHopeEngine.EngineCode.Localization;
-using TheLostHopeEngine.EngineCode.Assets;
 using TheLostHope.GameCode.GameStates.SubStates;
 using TheLostHope.GameCode.ContentLoading;
 using TheLostHopeEngine.EngineCode.Inputs;
@@ -39,10 +35,6 @@ namespace TheLostHope
             Content.RootDirectory = "Content";
         }
 
-        protected override void LoadContent()
-        {
-            InputHelper.Setup(this);
-        }
         protected override void UnloadContent()
         {
             //if (_settings.IsFullscreen)
@@ -70,8 +62,8 @@ namespace TheLostHope
             GameAssetsLoader.Initialize();
             // Init the localization system
             LocalizationSystem.Initialize();
-            // Init the input bindings manager
-            InputBindingManager.Initialize(GameAssetsLoader.InputAsset);
+            // Init the input system
+            InputSystem.Instance.Initialize(GameAssetsLoader.InputAsset);
 
             IsPaused = false;
 
@@ -195,8 +187,8 @@ namespace TheLostHope
 
         protected override void Update(GameTime gameTime)
         {
-            //Call UpdateSetup at the start.
-            InputHelper.UpdateSetup();
+            // Update the input system
+            InputSystem.Instance.Update();
 
             GameplayManager.Instance.Update(gameTime);
             _uiManager.Update(gameTime);
@@ -205,9 +197,6 @@ namespace TheLostHope
             {
                 base.Update(gameTime);
             }
-
-            //Call UpdateCleanup at the end.
-            InputHelper.UpdateCleanup();
         }
 
         protected override void Draw(GameTime gameTime)

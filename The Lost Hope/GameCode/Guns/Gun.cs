@@ -1,5 +1,4 @@
-﻿using LDtkTypes;
-using TheLostHope.GameCode.Characters.PlayerCharacter;
+﻿using TheLostHope.GameCode.Characters.PlayerCharacter;
 using TheLostHope.GameCode.GameStates;
 using Microsoft.Xna.Framework;
 using MonoGame.Aseprite;
@@ -9,7 +8,6 @@ using TheLostHope.GameCode.Guns.States;
 using TheLostHopeEngine.EngineCode.Assets;
 using TheLostHopeEngine.EngineCode.Pooling;
 using TheLostHope.GameCode.Guns.Bullets;
-using Apos.Input;
 
 namespace TheLostHope.GameCode.Guns
 {
@@ -32,15 +30,6 @@ namespace TheLostHope.GameCode.Guns
         private GunReloadPatternState _currentReloadPatternState;
         #endregion
 
-        #region Inputs
-        public ICondition ShootInput { get; private set; }
-        public ICondition InitializeReloadInput { get; private set; }
-        public ICondition UpReloadInput { get; private set; }
-        public ICondition DownReloadInput { get; private set; }
-        public ICondition LeftReloadInput { get; private set; }
-        public ICondition RightReloadInput { get; private set; }
-        #endregion
-
         public Gun(Game game, AsepriteFile asepriteFile, WeaponAsset weaponAsset, GameplayManager gameplayManager) : base(game, asepriteFile)
         {
             // Get from constructor
@@ -61,9 +50,6 @@ namespace TheLostHope.GameCode.Guns
             }
 
             _currentReloadPatternState = null;
-
-            // Inputs
-            ShootInput = new AnyCondition(new KeyboardCondition())
         }
 
         public void SpawnGun()

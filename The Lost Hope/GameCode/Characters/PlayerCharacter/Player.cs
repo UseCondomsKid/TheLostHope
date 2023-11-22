@@ -4,19 +4,14 @@ using Microsoft.Xna.Framework;
 using TheLostHope.GameCode.Characters.PlayerCharacter.States;
 using Humper.Responses;
 using System;
-using Microsoft.Xna.Framework.Input;
 using LDtkTypes;
-using Apos.Input;
-using Track = Apos.Input.Track;
-using System.Collections.Generic;
 using MonoGame.Aseprite;
 using TheLostHope.GameCode.Guns;
-using TheLostHopeEngine.EngineCode.Inputs.Interfaces;
 using TheLostHopeEngine.EngineCode.Inputs;
 
 namespace TheLostHope.GameCode.Characters.PlayerCharacter
 {
-    public class Player : Character, IInputBindingUser
+    public class Player : Character
     {
         // -----  Player Data  ------
         public LDtkPlayer PlayerData { get; private set; }
