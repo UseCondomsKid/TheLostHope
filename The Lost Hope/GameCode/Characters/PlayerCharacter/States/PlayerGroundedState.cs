@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TheLostHopeEngine.EngineCode.Inputs;
 
 namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
 {
@@ -33,7 +34,7 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
                 return;
             }
 
-            if (_player.ParryInput.Pressed())
+            if (_player.PlayerParryInputPressed)
             {
                 _stateMachine.ChangeState(_player.PlayerParryState);
                 return;

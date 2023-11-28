@@ -1,5 +1,4 @@
-﻿using Apos.Input;
-using LDtkTypes;
+﻿using LDtkTypes;
 using TheLostHope.Engine.ContentManagement;
 using TheLostHope.GameCode.UI.Elements;
 using Microsoft.Xna.Framework;

@@ -89,7 +89,7 @@ namespace TheLostHopeEditor.EditorCode.States.SubStates
                                             action.InputBindings.Add(new ButtonInputBinding<GamepadButton>());
                                             break;
                                         case InputDeviceType.Keyboard:
-                                            action.InputBindings.Add(new ButtonInputBinding<Keys>());
+                                            action.InputBindings.Add(new ButtonInputBinding<KeyboardKey>());
                                             break;
                                     }
                                     break;
@@ -100,7 +100,7 @@ namespace TheLostHopeEditor.EditorCode.States.SubStates
                                             action.InputBindings.Add(new AxisInputBinding<GamepadButton>());
                                             break;
                                         case InputDeviceType.Keyboard:
-                                            action.InputBindings.Add(new AxisInputBinding<Keys>());
+                                            action.InputBindings.Add(new AxisInputBinding<KeyboardKey>());
                                             break;
                                     }
                                     break;

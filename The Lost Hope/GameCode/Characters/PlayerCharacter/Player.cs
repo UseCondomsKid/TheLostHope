@@ -8,6 +8,7 @@ using LDtkTypes;
 using MonoGame.Aseprite;
 using TheLostHope.GameCode.Guns;
 using TheLostHopeEngine.EngineCode.Inputs;
+using System.Diagnostics;
 
 namespace TheLostHope.GameCode.Characters.PlayerCharacter
 {
@@ -30,21 +31,14 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
         public Gun EquippedGun { get; private set; }
 
 
-        // ------ Player Inputs -----
-        // Movement and abilities
-        public ICondition MoveRightInput { get; private set; }
-        public ICondition MoveLeftInput { get; private set; }
-        public ICondition JumpInput { get; private set; }
-        public ICondition RollInput { get; private set; }
-        public ICondition ParryInput { get; private set; }
-        public ICondition InteractInput { get; private set; }
-        // --------------------------
-
         // ---- Player Movement Variables -----
+        private float _movementDirection;
         public float PlayerLastGroundedTime { get; private set; }
         public float PlayerLastJumpTime { get; private set; }
         public float PlayerLastRollTime { get; private set; }
         public bool PlayerJumping { get; private set; }
+        public bool PlayerJumpInputReleased { get; private set; }
+        public bool PlayerParryInputPressed { get; private set; }
         // ------------------------------------
 
         public Player(Game game, AsepriteFile asepriteFile, LDtkPlayer playerData) : base(game, asepriteFile)
@@ -53,8 +47,10 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             PlayerData = playerData;
 
             // Inputs
-            RegisterInputBindingsUser();
-            SetupInputBindings();
+            InputSystem.Instance.GetAction("Player_Move").OnChange += PlayerMoveInput;
+            InputSystem.Instance.GetAction("Player_Jump").OnChange += PlayerJumpInput;
+            InputSystem.Instance.GetAction("Player_Roll").OnChange += PlayerRollInput;
+            InputSystem.Instance.GetAction("Player_Parry").OnChange += PlayerParryInput;
 
             // Initilize the states
             PlayerIdleState = new PlayerIdleState(this, "Idle");
@@ -75,28 +71,43 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             StateMachine.Initialize(PlayerIdleState);
         }
 
-        public void RegisterInputBindingsUser()
+        private void PlayerMoveInput(InputActionContext context)
         {
-            InputBindingManager.RegisterUser(this);
+            _movementDirection = context.Value;
         }
-        public void SetupInputBindings()
+
+        private void PlayerJumpInput(InputActionContext context)
         {
-            InputBinding b = InputBindingManager.GetInputBinding("PlayerMoveRight");
-            MoveRightInput = new AnyCondition(
-                new KeyboardCondition(b.KeyboadKey), new GamePadCondition(b.GamepadButton, 0));
+            switch (context.Phase)
+            {
+                case InputActionPhase.Started:
+                    PlayerLastJumpTime = PlayerData.JumpBufferTime;
+                    break;
+                case InputActionPhase.Released:
+                    PlayerJumpInputReleased = true;
+                    break;
 
-            b = InputBindingManager.GetInputBinding("PlayerMoveLeft");
-            MoveLeftInput = new AnyCondition(
-                new KeyboardCondition(b.KeyboadKey), new GamePadCondition(b.GamepadButton, 0));
-
-            b = InputBindingManager.GetInputBinding("PlayerJump");
-            JumpInput = new AnyCondition(
-                new KeyboardCondition(b.KeyboadKey), new GamePadCondition(b.GamepadButton, 0));
-
-            b = InputBindingManager.GetInputBinding("PlayerJump");
-            JumpInput = new AnyCondition(
-                new KeyboardCondition(b.KeyboadKey), new GamePadCondition(b.GamepadButton, 0));
+            }
         }
+        private void PlayerRollInput(InputActionContext context)
+        {
+            switch (context.Phase)
+            {
+                case InputActionPhase.Started:
+                    PlayerLastRollTime = PlayerData.RollBufferTime;
+                    break;
+            }
+        }
+        private void PlayerParryInput(InputActionContext context)
+        {
+            switch (context.Phase)
+            {
+                case InputActionPhase.Started:
+                    PlayerParryInputPressed = true;
+                    break;
+            }
+        }
+
 
         public override IBox CreateCharacterBox(float xPos, float yPos)
         {
@@ -124,14 +135,6 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             PlayerLastJumpTime -= delta;
             PlayerLastRollTime -= delta;
 
-            if (JumpInput.Pressed())
-            {
-                PlayerLastJumpTime = PlayerData.JumpBufferTime;
-            }
-            if (RollInput.Pressed())
-            {
-                PlayerLastRollTime = PlayerData.RollBufferTime;
-            }
             if (IsGrounded())
             {
                 PlayerJumping = false;
@@ -139,6 +142,10 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             }
 
             base.Update(gameTime);
+
+
+            PlayerJumpInputReleased = false;
+            PlayerParryInputPressed = false;
         }
         public override void Draw(GameTime gameTime)
         {
@@ -173,16 +180,12 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
 
         public void MoveGround(float delta)
         {
-            int movement = (MoveRightInput.Held() ? 1 : 0) - (MoveLeftInput.Held() ? 1 : 0);
-
-            MoveX(delta, movement, PlayerData.GroundSpeed, PlayerData.Acceleration,
+            MoveX(delta, (int)_movementDirection, PlayerData.GroundSpeed, PlayerData.Acceleration,
                 PlayerData.Deacceleration, 1.2f);
         }
         public void MoveAir(float delta)
         {
-            int movement = (MoveRightInput.Held() ? 1 : 0) - (MoveLeftInput.Held() ? 1 : 0);
-
-            MoveX(delta, movement, PlayerData.AirSpeed, PlayerData.Acceleration,
+            MoveX(delta, (int)_movementDirection, PlayerData.AirSpeed, PlayerData.Acceleration,
                 PlayerData.Deacceleration, 1.2f);
         }
         public void ApplyGravity(float delta)

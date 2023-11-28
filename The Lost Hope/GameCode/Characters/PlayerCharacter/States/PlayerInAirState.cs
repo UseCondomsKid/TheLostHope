@@ -19,7 +19,7 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
             base.Enter();
 
             // Make sure we catch all released inputs
-            if (_player.JumpInput.Released())
+            if (_player.PlayerJumpInputReleased)
             {
                 _player.SetVelocityY(_player.Velocity.Y * _player.PlayerData.JumpForceCutOnJumpRelease);
             }
@@ -41,7 +41,7 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
             }
             else
             {
-                if (_player.JumpInput.Released() && _player.PlayerJumping)
+                if (_player.PlayerJumpInputReleased && _player.PlayerJumping)
                 {
                     _player.SetVelocityY(_player.Velocity.Y * _player.PlayerData.JumpForceCutOnJumpRelease);
                 }
