@@ -8,6 +8,7 @@ using MonoGame.Aseprite;
 using TheLostHope.GameCode.Objects;
 using TheLostHope.GameCode.ObjectStateMachine;
 using System.Reflection.Metadata.Ecma335;
+using System.Diagnostics;
 
 namespace TheLostHope.GameCode.Characters.FSM
 {
@@ -20,21 +21,22 @@ namespace TheLostHope.GameCode.Characters.FSM
         public bool IFrame { get; set; }
         public IMovement CurrentMovement { get; private protected set; }
 
-        // The collider
+        // Colliders
         protected IBox _body;
         // The physics world
         protected World _physicsWorld;
+
         protected int _facingDirection;
         protected int _currentHealth;
 
         private float _iFrameTimer;
-
         private Vector2 velWorkspace;
 
         // Every child has to implement these functions
         public abstract Func<ICollision, CollisionResponses> GetCollisionFilter();
         // Required funtion that creates the collider, when inheriting from this class,
-        public abstract IBox CreateCharacterBox(float xPos, float yPos);
+        public abstract CollisionTags GetCollisionTag();
+        public abstract Vector2 GetBoxSize();
         public abstract int GetMaxHealth();
         public abstract float GetIFrameTimer();
         protected abstract void OnTakeDamage();
@@ -57,12 +59,22 @@ namespace TheLostHope.GameCode.Characters.FSM
         {
             _physicsWorld = physicsWorld;
 
-            _body = CreateCharacterBox(position.X, position.Y);
+            _body = physicsWorld.Create(position.X + 1f, position.Y + 1f, GetBoxSize().X - 1f, GetBoxSize().Y - 1f)
+                .AddTags(GetCollisionTag());
             _body.Data = this;
+
+            //_ceilingCheckBody = physicsWorld.Create(_body.X + _body.Width/4, _body.Y - 1f, _body.Width - (_body.Width/4)*2f, 1f)
+            //    .AddTags(CollisionTags.TriggerCheck);
 
             SpawnObject(position, Vector2.Zero);
 
             _currentHealth = GetMaxHealth();
+        }
+        public virtual void DespawnCharacter()
+        {
+            _physicsWorld.Remove(_body);
+            Enabled = false;
+            Visible = false;
         }
 
         public override void Update(GameTime gameTime)
@@ -82,9 +94,11 @@ namespace TheLostHope.GameCode.Characters.FSM
             // Update Physics
             CurrentMovement = MovementStep(delta);
 
-            // Set facing direction
-            if (Math.Abs(Velocity.X) > 0f && Math.Sign(Velocity.X) != Math.Sign(_facingDirection))
-                _facingDirection *= -1;
+            // Reset y velocity whenever character touches ceiling
+            if (IsTouchingCeiling())
+            {
+                SetVelocityY(0);
+            }
         }
         
         public override void Draw(GameTime gameTime)
@@ -102,13 +116,16 @@ namespace TheLostHope.GameCode.Characters.FSM
 
         #region Health
         public int GetCurrentHealth() => _currentHealth;
-        public virtual void TakeDamage(int damage)
+        public virtual void TakeDamage(int damage, Vector2 knockback = default)
         {
             if (_iFrameTimer > 0 || IFrame) return;
 
             _iFrameTimer = GetIFrameTimer();
             SetCurrentHealth(_currentHealth - damage);
             OnTakeDamage();
+
+            // Knockback
+            SetVelocity(knockback);
 
             if (_currentHealth <= 0)
             {
@@ -178,6 +195,10 @@ namespace TheLostHope.GameCode.Characters.FSM
 
             Velocity = new Vector2(Velocity.X + (delta * movementX),
                         Velocity.Y);
+
+            // Set facing direction
+            if (Math.Abs(Velocity.X) > 0f && Math.Sign(Velocity.X) != Math.Sign(_facingDirection))
+                _facingDirection *= -1;
         }
         public void MoveY(float delta, int yInput, float speed, float accel, float deaccel, float velocityPower)
         {
@@ -200,6 +221,11 @@ namespace TheLostHope.GameCode.Characters.FSM
         {
             var movement = _body.Move(_body.X + delta * Velocity.X,
                 _body.Y + delta * Velocity.Y, GetCollisionFilter());
+
+            //_ceilingCheckMovement = _ceilingCheckBody.Move(_body.X + _body.Width/4, _body.Y - 2f,
+            //    (collision) => { return CollisionResponses.None; });
+
+            Debug.WriteLine(Velocity.Y);
 
             Position = new Vector2(_body.X, _body.Y);
 

@@ -29,7 +29,8 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
                     _stateMachine.ChangeState(_player.PlayerIdleState);
                 }
             }
-            else if (_player.PlayerLastGroundedTime > 0f && _player.PlayerLastJumpTime > 0f && !_player.PlayerJumping)
+            else if (_player.PlayerLastGroundedTime > 0f && _player.PlayerLastJumpTime > 0f && !_player.PlayerJumping &&
+                !_player.IsEquippedGunReloading())
             {
                 _stateMachine.ChangeState(_player.PlayerJumpState);
             }

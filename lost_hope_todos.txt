@@ -1,0 +1,12 @@
+- Add IsReloading to the gun, check this boolean in player states (jump/parry) before transitioning :)
+- Stop reload when player on roll event triggered :)
+
+---------------------------------------------------------------------------------------------------------
+
+- Add proper Knockback function to character
+	- Fix enemy knockback applied by bullet
+	- Fix player knockback applied by gun on fire
+- Player take damage on collision with enemy + knockback
+- Fix weird collision bug when colliding with enemy
+- Add parent character class / character state class for enemies to extend
+- Figure out how to fix facing direction changing on knockback

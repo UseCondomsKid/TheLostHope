@@ -11,6 +11,7 @@ using TheLostHope.GameCode.LDtkExtensions;
 using TheLostHopeEngine.EngineCode.StateManagement;
 using Microsoft.Xna.Framework.Graphics;
 using TheLostHope.GameCode.GameStates.Core;
+using TheLostHope.GameCode.Characters.Enemies.Crawler;
 
 namespace TheLostHope.GameCode.GameStates.SubStates
 {
@@ -185,7 +186,18 @@ namespace TheLostHope.GameCode.GameStates.SubStates
             AddComponent(_gameplayManager.Player);
 
             // Load and Setup Enemies
-            // TODO: Create enemies and other characters and add their boxes to the list
+            ContentLoader.LoadAsepriteFile("Crawler", "AsepriteFiles/Crawler");
+            foreach (var enemy in enemyDataList)
+            {
+                switch (enemy.Type)
+                {
+                    case EnemyType.Crawler:
+                        Crawler crawler = new Crawler(_gameRef, ContentLoader.GetAsepriteFile("Crawler"));
+                        crawler.SpawnCharacter(enemy.Position, GameplayManager.Instance.PhysicsWorld);
+                        AddComponent(crawler);
+                        break;
+                }
+            }
 
             // Final thing to do is load and setup interactables
             // Load and Setup Level transitions

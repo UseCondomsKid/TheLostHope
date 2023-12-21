@@ -24,7 +24,7 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
             _player.MoveGround(delta);
 
             if (_player.PlayerLastGroundedTime > 0f && _player.PlayerLastJumpTime > 0f && !_player.PlayerJumping
-                && !_player.IsTouchingCeiling())
+                && !_player.IsTouchingCeiling() && !_player.IsEquippedGunReloading())
             {
                 _stateMachine.ChangeState(_player.PlayerJumpState);
             }
@@ -33,10 +33,15 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
                 _stateMachine.ChangeState(_player.PlayerRollState);
                 return;
             }
-
-            if (_player.PlayerParryInputPressed)
+            if (_player.PlayerParryInputPressed && !_player.IsEquippedGunReloading())
             {
                 _stateMachine.ChangeState(_player.PlayerParryState);
+                return;
+            }
+
+            if (!_player.IsGrounded())
+            {
+                _stateMachine.ChangeState(_player.PlayerInAirState);
                 return;
             }
 
@@ -47,11 +52,6 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
             else
             {
                 _stateMachine.ChangeState(_player.PlayerIdleState);
-            }
-
-            if (!_player.IsGrounded())
-            {
-                _stateMachine.ChangeState(_player.PlayerInAirState);
             }
         }
     }

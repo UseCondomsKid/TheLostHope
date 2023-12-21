@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using TheLostHope.Engine.ContentManagement;
+using TheLostHope.GameCode.Characters.FSM;
 using TheLostHope.GameCode.GameStates;
 using TheLostHopeEngine.EngineCode.Assets;
 
@@ -145,7 +146,13 @@ namespace TheLostHope.GameCode.Guns
                 {
                     if(_enemyJustHit != hit.Box)
                     {
-                        // TODO: Deal Damage
+                        // Deal Damage
+                        var damageable = (Character)hit.Box.Data;
+                        if (damageable != null)
+                        {
+                            damageable.TakeDamage(_weaponAsset.Damage,
+                                new Vector2(_weaponAsset.EnemyKnockbackForceOnHit) * -damageable.FacingDirection);
+                        }
                     }
 
                     if (_currentPenetration < 0)

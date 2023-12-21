@@ -25,10 +25,12 @@ namespace TheLostHope.GameCode.Guns
 
         private List<Bullet> _activeBullets;
         private List<Bullet> _bulletsToRemove;
+        public event Action OnCancelReload;
 
         public WeaponAsset WeaponAsset { get { return _weaponAsset; } }
         public ObjectPool<Bullet> BulletPool { get; private set; }
         public int CurrentMagCount { get { return _currentMagCount; } }
+        public bool IsReloading { get; set; }
         #endregion
 
         #region States
@@ -100,6 +102,28 @@ namespace TheLostHope.GameCode.Guns
                 b.Fire(_weaponAsset, Position, _facingDirection, _shootDirection);
                 b.OnBulletReleased += BulletReleased;
                 _activeBullets.Add(b);
+
+                switch (_shootDirection)
+                {
+                    case WeaponShootDirection.Up:
+                        if (!_player.IsGrounded())
+                        {
+                            _player.SetVelocityY(_weaponAsset.PlayerKnockbackForceOnFire);
+                        }
+                        break;
+                    case WeaponShootDirection.Down:
+                        _player.SetVelocityY(-_weaponAsset.PlayerKnockbackForceOnFire);
+                        break;
+                    case WeaponShootDirection.Left:
+                        _player.SetVelocityX(_weaponAsset.PlayerKnockbackForceOnFire);
+                        break;
+                    case WeaponShootDirection.Right:
+                        _player.SetVelocityX(-_weaponAsset.PlayerKnockbackForceOnFire);
+                        break;
+                    default:
+                        _player.SetVelocityX(-_facingDirection * _weaponAsset.PlayerKnockbackForceOnFire);
+                        break;
+                }
             }
         }
 
@@ -128,7 +152,12 @@ namespace TheLostHope.GameCode.Guns
 
         private void PlayerRoll()
         {
-            // TODO: Figure this out
+            CancelReload();
+        }
+        private void CancelReload()
+        {
+            OnCancelReload?.Invoke();
+            IsReloading = false;
         }
 
         public void SetCurrentMagCount(int magCount)

@@ -15,7 +15,19 @@ namespace TheLostHope.GameCode.Guns.States
         {
             base.Enter();
 
+            _gun.OnCancelReload += CancelReload;
             _pattern = _gun.ReloadStep();
+        }
+        public override void Exit()
+        {
+            base.Exit();
+
+            _gun.OnCancelReload -= CancelReload;
+        }
+
+        private void CancelReload()
+        {
+            _stateMachine.ChangeState(_gun.GunIdleState);
         }
 
         protected override void AnimationFinished()
@@ -24,6 +36,7 @@ namespace TheLostHope.GameCode.Guns.States
 
             if (_pattern == null)
             {
+                _gun.IsReloading = false;
                 if (_gun.ShootInputPressed)
                 {
                     _stateMachine.ChangeState(_gun.GunShootState);

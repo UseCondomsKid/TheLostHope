@@ -109,10 +109,13 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
         }
 
 
-        public override IBox CreateCharacterBox(float xPos, float yPos)
+        public override CollisionTags GetCollisionTag()
         {
-            return _physicsWorld.Create(xPos, yPos, PlayerData.Size.X,
-                PlayerData.Size.Y).AddTags(CollisionTags.Player);
+            return CollisionTags.Player;
+        }
+        public override Vector2 GetBoxSize()
+        {
+            return PlayerData.Size;
         }
 
         public override int GetMaxHealth()
@@ -133,13 +136,13 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             PlayerLastJumpTime -= delta;
             PlayerLastRollTime -= delta;
 
+            base.Update(gameTime);
+
             if (IsGrounded())
             {
                 PlayerJumping = false;
                 PlayerLastGroundedTime = PlayerData.JumpCayoteTime;
             }
-
-            base.Update(gameTime);
 
             if (EquippedGun != null)
             {
@@ -169,9 +172,9 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             return 0.7f;
         }
 
-        public override void TakeDamage(int damage)
+        public override void TakeDamage(int damage, Vector2 knockback = default)
         {
-            base.TakeDamage(damage);
+            base.TakeDamage(damage, knockback);
 
             if (EquippedGun != null)
             {
@@ -191,7 +194,7 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             {
                 if (collision.Other.HasTag(CollisionTags.Damageable))
                 {
-                    return CollisionResponses.Cross;
+                    return CollisionResponses.Slide;
                 }
                 else if (collision.Other.HasTag(CollisionTags.Bullet))
                 {
@@ -225,10 +228,19 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             EquippedGun = gun;
             EquippedGun.EquipGun(this);
         }
+        public bool IsEquippedGunReloading()
+        {
+            if (EquippedGun != null)
+            {
+                return EquippedGun.IsReloading;
+            }
+            return false;
+        }
 
         public void InvokePlayerOnRoll()
         {
             PlayerOnRoll?.Invoke();
         }
+
     }
 }

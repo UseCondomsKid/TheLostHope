@@ -28,7 +28,7 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
             {
                 if (!_player.IsGrounded())
                 {
-                    _stateMachine.ChangeState(_player.PlayerJumpState);
+                    _stateMachine.ChangeState(_player.PlayerInAirState);
                 }
                 else
                 {
