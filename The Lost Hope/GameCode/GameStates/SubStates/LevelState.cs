@@ -37,7 +37,6 @@ namespace TheLostHope.GameCode.GameStates.SubStates
         // Room Data
         private LDtkLevel _levelData;
         private ModifiedLDtkRenderer _levelRenderer;
-        private World _physicsWorld;
 
         private List<CharacterBox> _characterBoxes;
 
@@ -78,7 +77,7 @@ namespace TheLostHope.GameCode.GameStates.SubStates
 
             // Physics
             LDtkIntGrid collisions = _levelData.GetIntGrid("Collisions");
-            _physicsWorld = new World(_levelData.Size.X, _levelData.Size.Y, collisions.TileSize);
+            _gameplayManager.PhysicsWorld = new World(_levelData.Size.X, _levelData.Size.Y, collisions.TileSize);
 
             // Initialize lists for rectangles
             List<Rectangle> rectangles = new List<Rectangle>();
@@ -160,7 +159,7 @@ namespace TheLostHope.GameCode.GameStates.SubStates
                 int width = rect.Width / tileSize;
                 int height = rect.Height / tileSize;
 
-                IBox tile = _physicsWorld.Create(x * tileSize, y * tileSize,
+                IBox tile = _gameplayManager.PhysicsWorld.Create(x * tileSize, y * tileSize,
                     width * tileSize, height * tileSize);
 
                 tile.AddTags(CollisionTags.Ground);
@@ -180,7 +179,7 @@ namespace TheLostHope.GameCode.GameStates.SubStates
             Vector2 playerSpawnPos = (levelTransitionId == null ? playerData.Position :
                 levelTransitionDataList.Find(lt => lt.Id == levelTransitionId).SpawnPosition.ToVector2()) - _levelData.Position.ToVector2();
 
-            _gameplayManager.Player.SpawnCharacter(playerSpawnPos, _physicsWorld);
+            _gameplayManager.Player.SpawnCharacter(playerSpawnPos, _gameplayManager.PhysicsWorld);
 
             _characterBoxes.Add(new CharacterBox(CollisionTags.Player, _gameplayManager.Player.Body));
             AddComponent(_gameplayManager.Player);

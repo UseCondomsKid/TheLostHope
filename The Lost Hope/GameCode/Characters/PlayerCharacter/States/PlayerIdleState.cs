@@ -7,5 +7,10 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
         public PlayerIdleState(Character character, object animKey) : base(character, animKey)
         {
         }
+
+        public override void Enter()
+        {
+            base.Enter();
+        }
     }
 }

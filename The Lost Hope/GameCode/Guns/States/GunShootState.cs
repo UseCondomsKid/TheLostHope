@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TheLostHope.GameCode.ObjectStateMachine;
+﻿using TheLostHope.GameCode.ObjectStateMachine;
 
 namespace TheLostHope.GameCode.Guns.States
 {
@@ -29,12 +24,24 @@ namespace TheLostHope.GameCode.Guns.States
         {
             base.AnimationFinished();
 
-            // Return to idle state?
+            _stateMachine.ChangeState(_gun.GunIdleState);
+        }
+
+        public override void Update(float delta)
+        {
+            base.Update(delta);
+
+            if (_gun.ReloadInputPressed)
+            {
+                _stateMachine.ChangeState(_gun.GunReloadState);
+                return;
+            }
         }
 
         private void FireBullet()
         {
-            // TODO: Fire the bullet
+            _gun.FireBullet();
+            _gun.SetCurrentMagCount(_gun.CurrentMagCount - 1);
         }
     }
 }

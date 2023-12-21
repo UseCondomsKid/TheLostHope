@@ -7,6 +7,7 @@ using System.Linq;
 using MonoGame.Aseprite;
 using TheLostHope.GameCode.Objects;
 using TheLostHope.GameCode.ObjectStateMachine;
+using System.Reflection.Metadata.Ecma335;
 
 namespace TheLostHope.GameCode.Characters.FSM
 {
@@ -30,12 +31,14 @@ namespace TheLostHope.GameCode.Characters.FSM
 
         private Vector2 velWorkspace;
 
-        // Required funtion that creates the collider, when inheriting from this class,
-        // every child has to implement these functions
+        // Every child has to implement these functions
         public abstract Func<ICollision, CollisionResponses> GetCollisionFilter();
+        // Required funtion that creates the collider, when inheriting from this class,
+        public abstract IBox CreateCharacterBox(float xPos, float yPos);
         public abstract int GetMaxHealth();
         public abstract float GetIFrameTimer();
         protected abstract void OnTakeDamage();
+        protected abstract void OnHealthChanged();
         protected abstract void OnDeath();
 
         // Constructor
@@ -49,8 +52,6 @@ namespace TheLostHope.GameCode.Characters.FSM
 
             _currentHealth = GetMaxHealth();
         }
-
-        public abstract IBox CreateCharacterBox(float xPos, float yPos);
 
         public virtual void SpawnCharacter(Vector2 position, World physicsWorld)
         {
@@ -100,12 +101,13 @@ namespace TheLostHope.GameCode.Characters.FSM
         }
 
         #region Health
+        public int GetCurrentHealth() => _currentHealth;
         public virtual void TakeDamage(int damage)
         {
             if (_iFrameTimer > 0 || IFrame) return;
 
             _iFrameTimer = GetIFrameTimer();
-            _currentHealth -= damage;
+            SetCurrentHealth(_currentHealth - damage);
             OnTakeDamage();
 
             if (_currentHealth <= 0)
@@ -113,6 +115,19 @@ namespace TheLostHope.GameCode.Characters.FSM
                 _currentHealth = 0;
                 OnDeath();
             }
+        }
+        public virtual void SetCurrentHealth(int health)
+        {
+            if (health > GetMaxHealth())
+            {
+                _currentHealth = GetMaxHealth();
+            }
+            else
+            {
+                _currentHealth = health;
+            }
+
+            OnHealthChanged();
         }
         #endregion
 

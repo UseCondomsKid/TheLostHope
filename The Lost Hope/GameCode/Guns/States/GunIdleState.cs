@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TheLostHope.GameCode.ObjectStateMachine;
+﻿using TheLostHope.GameCode.ObjectStateMachine;
 
 namespace TheLostHope.GameCode.Guns.States
 {
@@ -15,7 +10,14 @@ namespace TheLostHope.GameCode.Guns.States
 
         public override void Update(float delta)
         {
-            // TODO: Check if shoot input pressed, if so switch to shoot state if we have bullets left in mag.
+            if (_gun.CanShoot())
+            {
+                _stateMachine.ChangeState(_gun.GunShootState);
+            }
+            else if (_gun.ReloadInputPressed)
+            {
+                _stateMachine.ChangeState(_gun.GunReloadState);
+            }
         }
     }
 }

@@ -9,6 +9,11 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
         {
         }
 
+        public override void Enter()
+        {
+            base.Enter();
+        }
+
         public override void Update(float delta)
         {
             base.Update(delta);

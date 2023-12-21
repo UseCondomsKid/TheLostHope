@@ -268,15 +268,7 @@ namespace TheLostHopeEditor.EditorCode.Assets
 
                     if (property.CanRead && property.CanWrite)
                     {
-                        if (rangeAttribute != null)
-                        {
-                            float minValue = rangeAttribute.MinValue;
-                            float maxValue = rangeAttribute.MaxValue;
-                            float value = (float)property.GetValue(obj);
-                            ImGui.SliderFloat(property.Name, ref value, minValue, maxValue);
-                            property.SetValue(obj, value);
-                        }
-                        else if (property.PropertyType == typeof(string))
+                        if (property.PropertyType == typeof(string))
                         {
                             string value = (string)property.GetValue(obj) ?? "";
                             ImGui.InputText(property.Name, ref value, 255);
@@ -290,9 +282,20 @@ namespace TheLostHopeEditor.EditorCode.Assets
                         }
                         else if (property.PropertyType == typeof(float))
                         {
-                            float value = (float)property.GetValue(obj);
-                            ImGui.InputFloat(property.Name, ref value);
-                            property.SetValue(obj, value);
+                            if (rangeAttribute != null)
+                            {
+                                float minValue = rangeAttribute.MinValue;
+                                float maxValue = rangeAttribute.MaxValue;
+                                float value = (float)property.GetValue(obj);
+                                ImGui.SliderFloat(property.Name, ref value, minValue, maxValue);
+                                property.SetValue(obj, value);
+                            }
+                            else
+                            {
+                                float value = (float)property.GetValue(obj);
+                                ImGui.InputFloat(property.Name, ref value);
+                                property.SetValue(obj, value);
+                            }
                         }
                         else if (property.PropertyType == typeof(bool))
                         {
@@ -313,11 +316,24 @@ namespace TheLostHopeEditor.EditorCode.Assets
                         }
                         else if (property.PropertyType == typeof(Vector2))
                         {
-                            Vector2 value = (Vector2)property.GetValue(obj);
-                            var numericVector2 = value.ToNumerics();
-                            ImGui.InputFloat2(property.Name, ref numericVector2);
-                            value = numericVector2.ToXnaVector2();
-                            property.SetValue(obj, value);
+                            if (rangeAttribute != null)
+                            {
+                                float minValue = rangeAttribute.MinValue;
+                                float maxValue = rangeAttribute.MaxValue;
+                                Vector2 value = (Vector2)property.GetValue(obj);
+                                var numericVector2 = value.ToNumerics();
+                                ImGui.SliderFloat2(property.Name, ref numericVector2, minValue, maxValue);
+                                value = numericVector2.ToXnaVector2();
+                                property.SetValue(obj, value);
+                            }
+                            else
+                            {
+                                Vector2 value = (Vector2)property.GetValue(obj);
+                                var numericVector2 = value.ToNumerics();
+                                ImGui.InputFloat2(property.Name, ref numericVector2);
+                                value = numericVector2.ToXnaVector2();
+                                property.SetValue(obj, value);
+                            }
                         }
                         else if (typeof(IDictionary).IsAssignableFrom(property.PropertyType))
                         {

@@ -13,6 +13,7 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter.States
         {
             base.Enter();
 
+            _player.InvokePlayerOnRoll();
             _player.IFrame = true; 
         }
         public override void Exit()

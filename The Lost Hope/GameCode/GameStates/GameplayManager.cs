@@ -14,6 +14,8 @@ using TheLostHopeEngine.EngineCode.Assets;
 using MonoGame.Aseprite;
 using TheLostHope.GameCode.GameStates.SubStates;
 using TheLostHope.GameCode.ContentLoading;
+using TheLostHopeEngine.EngineCode.Inputs;
+using Humper;
 
 namespace TheLostHope.GameCode.GameStates
 {
@@ -42,6 +44,7 @@ namespace TheLostHope.GameCode.GameStates
         public LDtkWorld CurrentWorld { get; private set; }
         public LevelState CurrentLevelState { get; private set; }
         public bool Started { get; private set; }
+        public World PhysicsWorld { get; set; }
 
         // UI Menus
         private Menu _gameMenu;
@@ -55,6 +58,11 @@ namespace TheLostHope.GameCode.GameStates
 
         private Game1 _gameRef;
         private StateManager _stateManager;
+
+
+        // Debug
+        private string _playerHealthString => $"Health: {(Player == null ? -100 : Player.GetCurrentHealth())}";
+        UIEText _playerHealth;
 
         public GameplayManager()
         {
@@ -86,6 +94,9 @@ namespace TheLostHope.GameCode.GameStates
             UIEText gameMenuText = new UIEText(_gameRef.GraphicsDevice, UIAnchor.Top, 0f, .1f, _gameMenu, "I'm the game menu", 20f, Color.White);
             _gameMenu.Children.Add(gameMenuText);
 
+            _playerHealth = new UIEText(_gameRef.GraphicsDevice, UIAnchor.Top, 0f, .2f, _gameMenu, _playerHealthString, 20f, Color.White);
+            _gameMenu.Children.Add(_playerHealth);
+
             UIEText pauseMenuTitle = new UIEText(_gameRef.GraphicsDevice, UIAnchor.Top, 0f, .2f, _pauseMenu, "Paused", 35f, Color.White);
 
             UIEButton resumeButton = new UIEButton(_gameRef.GraphicsDevice, UIAnchor.Center, 0f, -.1f, _pauseMenu, new Vector2(100, 100), ContentLoader.GetTexture("button"),
@@ -103,6 +114,18 @@ namespace TheLostHope.GameCode.GameStates
             _pauseMenu.Children.Add(exitButton);
 
             _pauseMenu.SetSelected(resumeButton);
+
+            InputSystem.Instance.GetAction("Player_Parry").OnChange += Test;
+        }
+
+        private void Test(InputActionContext context)
+        {
+            switch (context.Phase)
+            {
+                case InputActionPhase.Started:
+                    Player.TakeDamage(1);
+                    break;
+            }
         }
 
         private void BackToMainMenuState()
@@ -126,6 +149,8 @@ namespace TheLostHope.GameCode.GameStates
         {
             if (!Started) return;
             _camera.Update(gameTime);
+
+            _playerHealth.SetText(_playerHealthString, 20f);
         }
 
 
@@ -170,23 +195,14 @@ namespace TheLostHope.GameCode.GameStates
         {
             if (!Started) return;
 
-            if (gunData == null)
-            {
-                EquippedGun = null;
-            }
-            else if (HasGun(gunData))
+            if (gunData != null && HasGun(gunData))
             {
                 WeaponAsset weaponAsset = GameAssetsLoader.GetWeaponAsset(gunData.Name);
 
                 ContentLoader.LoadAsepriteFile(gunData.Name, weaponAsset.AsepriteFileName);
                 AsepriteFile asepriteFile = ContentLoader.GetAsepriteFile(gunData.Name);
 
-                EquippedGun = new Gun(_gameRef, asepriteFile, weaponAsset, this);
-                EquippedGun.SpawnGun();
-            }
-            else
-            {
-                EquippedGun = null;
+                Player.EquipGun(new Gun(_gameRef, asepriteFile, weaponAsset));
             }
         }
     }

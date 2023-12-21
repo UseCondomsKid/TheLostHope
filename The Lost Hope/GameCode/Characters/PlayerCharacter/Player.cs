@@ -8,7 +8,6 @@ using LDtkTypes;
 using MonoGame.Aseprite;
 using TheLostHope.GameCode.Guns;
 using TheLostHopeEngine.EngineCode.Inputs;
-using System.Diagnostics;
 
 namespace TheLostHope.GameCode.Characters.PlayerCharacter
 {
@@ -29,6 +28,7 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
         // --------------------------
 
         public Gun EquippedGun { get; private set; }
+        public event Action PlayerOnRoll;
 
 
         // ---- Player Movement Variables -----
@@ -117,10 +117,8 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
 
         public override int GetMaxHealth()
         {
-            // if (HeldGun == null) return 666;
-            // return HeldGun.CurrentClip;
-
-            return 10;
+            if (EquippedGun == null) return 1;
+            return EquippedGun.WeaponAsset.MagazineSize;
         }
 
         public void SetPlayerJumping(bool jumping)
@@ -143,13 +141,23 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
 
             base.Update(gameTime);
 
+            if (EquippedGun != null)
+            {
+                EquippedGun.Update(gameTime);
+            }
 
+            // Reset inputs
             PlayerJumpInputReleased = false;
             PlayerParryInputPressed = false;
         }
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
+
+            if (EquippedGun != null)
+            {
+                EquippedGun.Draw(gameTime);
+            }
         }
 
         protected override void OnDeath()
@@ -161,7 +169,19 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             return 0.7f;
         }
 
+        public override void TakeDamage(int damage)
+        {
+            base.TakeDamage(damage);
+
+            if (EquippedGun != null)
+            {
+                EquippedGun.SetCurrentMagCount(GetCurrentHealth());
+            }
+        }
         protected override void OnTakeDamage()
+        {
+        }
+        protected override void OnHealthChanged()
         {
         }
 
@@ -169,9 +189,13 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
         {
             return new Func<ICollision, CollisionResponses>((collision) =>
             {
-                if (collision.Other.HasTag(CollisionTags.Enemy))
+                if (collision.Other.HasTag(CollisionTags.Damageable))
                 {
                     return CollisionResponses.Cross;
+                }
+                else if (collision.Other.HasTag(CollisionTags.Bullet))
+                {
+                    return CollisionResponses.None;
                 }
                 return CollisionResponses.Slide;
             });
@@ -194,6 +218,17 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             {
                 MoveY(delta, 1, PlayerData.MaxGravityVelocity, PlayerData.GravityScale, PlayerData.GravityScale, 1.2f);
             }
+        }
+
+        public void EquipGun(Gun gun)
+        {
+            EquippedGun = gun;
+            EquippedGun.EquipGun(this);
+        }
+
+        public void InvokePlayerOnRoll()
+        {
+            PlayerOnRoll?.Invoke();
         }
     }
 }

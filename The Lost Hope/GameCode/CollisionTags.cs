@@ -8,6 +8,7 @@ namespace TheLostHope.GameCode
     {
         Player = 1 << 0, // Player Tag
         Ground = 1 << 1, // Platform/Solid Block Tag
-        Enemy = 1 << 2,
+        Damageable = 1 << 2,
+        Bullet = 1 << 3,
     }
 }

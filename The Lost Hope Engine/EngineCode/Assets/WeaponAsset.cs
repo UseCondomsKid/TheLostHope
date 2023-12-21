@@ -11,22 +11,39 @@ namespace TheLostHopeEngine.EngineCode.Assets
         Up, Down, Left, Right
     }
 
+    public enum WeaponShootDirection
+    {
+        None, Right, Left, Up, Down
+    }
+
     public class WeaponAsset : ScriptableObject
     {
         [Header("Weapon Properties")]
         public string AsepriteFileName { get; set; }
+        public Vector2 SpriteHalfSize { get; set; }
         public int MagazineSize { get; set; }
-        [Range(0.0f, 10.0f)]
-        public float TimeBetweenShots { get; set; }
         public bool HoldToShoot { get; set; }
         public float PlayerKnockbackForceOnFire { get; set; }
+        public float RightDirectionRotation { get; set; }
+        public float LeftDirectionRotation { get; set; }
+        public float UpDirectionRotation { get; set; }
+        public float DownDirectionRotation { get; set; }
         public List<WeaponReloadPatternAction> ReloadPattern { get; set; } = new List<WeaponReloadPatternAction>();
         public int ReloadFailedMagazineSize { get; set; }
 
         [Header("Bullet Properties")]
         public float Speed { get; set; }
         public int Damage { get; set; }
-        public Vector2 FirePosition { get; set; }
+
+        [Range(-50f, 50f)]
+        public Vector2 RightFirePosition { get; set; }
+        [Range(-50f, 50f)]
+        public Vector2 LeftFirePosition { get; set; }
+        [Range(-50f, 50f)]
+        public Vector2 UpFirePosition { get; set; }
+        [Range(-50f, 50f)]
+        public Vector2 DownFirePosition { get; set; }
+
         public Vector2 Size { get; set; }
         public float MaxRange { get; set; }
         public float MaxLifeTime { get; set; }

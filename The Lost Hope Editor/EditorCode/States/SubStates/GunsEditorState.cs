@@ -24,6 +24,10 @@ namespace TheLostHopeEditor.EditorCode.States.SubStates
         private System.Numerics.Vector4 _gunShootPositionPixelColor = new System.Numerics.Vector4(0f, 0f, 0f, 1f);
         private Vector2 _gunShootPositionDrawPosition;
 
+        private WeaponShootDirection _currentWeaponShootDirection;
+
+        private float _rotation;
+
         public GunsEditorState(Game1 gameRef, EditorStateManager stateManager, string name) : base(gameRef, stateManager, name)
         {
         }
@@ -33,8 +37,11 @@ namespace TheLostHopeEditor.EditorCode.States.SubStates
             base.Enter();
 
             _editorAssetManager.OnLoadedAsset += AssetLoaded;
+
             _gunShootPositionPixel = new Texture2D(_gameRef.GraphicsDevice, 1, 1);
             _gunShootPositionPixel.SetData(new Color[] { Color.White });
+
+            _currentWeaponShootDirection = WeaponShootDirection.Right;
         }
 
         private void AssetLoaded(ScriptableObject asset)
@@ -49,13 +56,19 @@ namespace TheLostHopeEditor.EditorCode.States.SubStates
             {
                 // Draw Gun
                 _gameRef.SpriteBatch.Draw(_gunAnimator.SpriteSheetTexture, _gunDrawPosition, _gunAnimator.GetSourceRectangle(),
-                    Color.White);
+                    Color.White,
+                    _rotation,
+                    _weaponAsset.SpriteHalfSize, 1f,
+                    _currentWeaponShootDirection == WeaponShootDirection.Left ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
+                    0.0f);
 
                 // Draw Gun Shoot Position
                 _gameRef.SpriteBatch.Draw(_gunShootPositionPixel, _gunShootPositionDrawPosition,
                         new Rectangle((int)_gunShootPositionDrawPosition.X, (int)_gunShootPositionDrawPosition.Y,
                         (int)_weaponAsset.Size.X, (int)_weaponAsset.Size.Y), new Color(_gunShootPositionPixelColor),
-                        0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                        0.0f, 
+                        Vector2.Zero, 1f,
+                        SpriteEffects.None, 0f);
             }
         }
 
@@ -65,7 +78,25 @@ namespace TheLostHopeEditor.EditorCode.States.SubStates
 
             if (_weaponAsset != null)
             {
-                _gunShootPositionDrawPosition = _weaponAsset.FirePosition + _gunDrawPosition;
+                switch (_currentWeaponShootDirection)
+                {
+                    case WeaponShootDirection.Up:
+                        _gunShootPositionDrawPosition = _weaponAsset.UpFirePosition + _gunDrawPosition;
+                        _rotation = _weaponAsset.UpDirectionRotation;
+                        break;
+                    case WeaponShootDirection.Down:
+                        _gunShootPositionDrawPosition = _weaponAsset.DownFirePosition + _gunDrawPosition;
+                        _rotation = _weaponAsset.DownDirectionRotation;
+                        break;
+                    case WeaponShootDirection.Left:
+                        _gunShootPositionDrawPosition = _weaponAsset.LeftFirePosition + _gunDrawPosition;
+                        _rotation = _weaponAsset.LeftDirectionRotation;
+                        break;
+                    case WeaponShootDirection.Right:
+                        _gunShootPositionDrawPosition = _weaponAsset.RightFirePosition + _gunDrawPosition;
+                        _rotation = _weaponAsset.RightDirectionRotation;
+                        break;
+                }
             }
         }
 
@@ -130,6 +161,23 @@ namespace TheLostHopeEditor.EditorCode.States.SubStates
 
                 if (_gunAnimator != null)
                 {
+                    if (ImGui.Button("Right"))
+                    {
+                        _currentWeaponShootDirection = WeaponShootDirection.Right;
+                    }
+                    if (ImGui.Button("Left"))
+                    {
+                        _currentWeaponShootDirection = WeaponShootDirection.Left;
+                    }
+                    if (ImGui.Button("Up"))
+                    {
+                        _currentWeaponShootDirection = WeaponShootDirection.Up;
+                    }
+                    if (ImGui.Button("Down"))
+                    {
+                        _currentWeaponShootDirection = WeaponShootDirection.Down;
+                    }
+
                     System.Numerics.Vector2 pos = _gunDrawPosition.ToNumerics();
                     ImGui.SliderFloat2("Gun Draw Position", ref pos, -200f, 200f);
                     _gunDrawPosition = pos.ToXnaVector2();

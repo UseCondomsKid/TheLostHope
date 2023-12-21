@@ -1,23 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TheLostHope.GameCode.ObjectStateMachine;
+﻿using TheLostHope.GameCode.ObjectStateMachine;
+using TheLostHopeEngine.EngineCode.Assets;
 
 namespace TheLostHope.GameCode.Guns.States
 {
     public class GunReloadState : GunState
     {
+        private WeaponReloadPatternAction? _pattern;
+
         public GunReloadState(StatefullObject statefullObject, object animKey) : base(statefullObject, animKey)
         {
         }
 
-        protected override void AnimationFinished()
+        public override void Enter()
         {
-            base.AnimationFinished();
+            base.Enter();
 
-            // TODO: Switch to the reload pattern states somehow?
+            _pattern = _gun.ReloadStep();
+        }
+
+        public override void Update(float delta)
+        {
+            base.Update(delta);
+
+            _gun.ReloadWaitForInput(_pattern);
         }
     }
 }
