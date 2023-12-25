@@ -2,11 +2,27 @@
 - Stop reload when player on roll event triggered :)
 
 ---------------------------------------------------------------------------------------------------------
-
+# Any
 - Add proper Knockback function to character
 	- Fix enemy knockback applied by bullet
 	- Fix player knockback applied by gun on fire
 - Player take damage on collision with enemy + knockback
-- Fix weird collision bug when colliding with enemy
-- Add parent character class / character state class for enemies to extend
 - Figure out how to fix facing direction changing on knockback
+
+
+# Collisions
+- Fix weird collision bug when colliding with enemy
+- Either try fixing with Humper, or use something else
+
+
+# Editor
+- Weapon placement relative to player in editor (for both facing directions)
+
+
+# Enemies
+- Add (parent character class and character state class) for enemies to extend
+
+
+# UI
+- Change the UI library to make menus abstract, and make them responsible of all ui elements they want to draw/update
+- Add horizontal and vertical layout groups for UI

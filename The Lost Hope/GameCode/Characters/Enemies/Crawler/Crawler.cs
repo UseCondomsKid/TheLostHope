@@ -35,7 +35,7 @@ namespace TheLostHope.GameCode.Characters.Enemies.Crawler
             {
                 if (collision.Other.HasTag(CollisionTags.Player))
                 {
-                    return CollisionResponses.Slide;
+                    return CollisionResponses.None;
                 }
                 else if (collision.Other.HasTag(CollisionTags.Bullet))
                 {

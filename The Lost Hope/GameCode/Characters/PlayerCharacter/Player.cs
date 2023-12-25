@@ -194,6 +194,10 @@ namespace TheLostHope.GameCode.Characters.PlayerCharacter
             {
                 if (collision.Other.HasTag(CollisionTags.Damageable))
                 {
+                    if (IFrame)
+                    {
+                        return CollisionResponses.None;
+                    }
                     return CollisionResponses.Slide;
                 }
                 else if (collision.Other.HasTag(CollisionTags.Bullet))
